@@ -118,7 +118,12 @@ if not st.session_state.logged_in:
     st.stop()
 
 # --- Navigation (Centered Layout) ---
-st.markdown("### 🔽 Select a Feature Below")
+st.markdown("""
+    <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
+        🔽 Select a Feature Below  🔽
+    </h2>
+""", unsafe_allow_html=True)
+
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     selected = option_menu(
@@ -154,6 +159,7 @@ if selected == "Home":
     &copy; 2025 TNEA Info App. All rights reserved.
     </div>
     """, unsafe_allow_html=True)
+
 
 
 # --- PAGE 2: TNEA CHOICE LIST ---
