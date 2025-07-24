@@ -247,20 +247,24 @@ elif selected == "Create TNEA Choice List":
         )
     else:
         st.info("Please apply filters to see the results.")
+
+
+
 # --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
 elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
-    
-excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
-response = requests.get(excel_url)
-excel_file = io.BytesIO(response.content)
 
+    # ✅ Download Excel from Google Drive (make sure it's set to public)
+    excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
+    response = requests.get(excel_url)
+    excel_file = io.BytesIO(response.content)
 
-    def load_excel_sheets_safe(path):
-        wb = load_workbook(path, data_only=True)
+    def load_excel_sheets_safe(file_bytes):
+        wb = load_workbook(file_bytes, data_only=True)
         sheet_names = wb.sheetnames
         data_dict = {}
+
         for sheet in sheet_names:
             ws = wb[sheet]
             data = list(ws.values)
@@ -270,6 +274,7 @@ excel_file = io.BytesIO(response.content)
             rows = data[1:]
             df = pd.DataFrame(rows, columns=header)
             data_dict[sheet] = df
+
         return sheet_names, data_dict
 
     sheet_names, data_dict = load_excel_sheets_safe(excel_file)
@@ -315,7 +320,6 @@ excel_file = io.BytesIO(response.content)
         community_options = ['All'] + sorted(df1_melted['Community'].dropna().unique())
         selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Filter by Community (Optional)", community_options)
 
-    # --- Filtered data for Category 1 ---
     branch_df = df1_melted[df1_melted['Branch Code'] == selected_branch_1]
     if selected_community_1 != "All":
         branch_df = branch_df[branch_df['Community'] == selected_community_1]
@@ -351,7 +355,6 @@ excel_file = io.BytesIO(response.content)
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
     st.markdown("## 🏫 Select College and Branch")
-
     col_cat2_1, col_cat2_2, col_cat2_3 = st.columns(3)
 
     with col_cat2_1:
