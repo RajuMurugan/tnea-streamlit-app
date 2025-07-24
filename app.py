@@ -252,7 +252,10 @@ elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
 
-    excel_file = "Vacancy_list/all_vacancies.xlsx"  # 🔁 Ensure relative path or update if using absolute path
+  excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
+response = requests.get(excel_url)
+excel_file = io.BytesIO(response.content)
+
 
     def load_excel_sheets_safe(path):
         wb = load_workbook(path, data_only=True)
