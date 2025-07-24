@@ -14,10 +14,35 @@ from openpyxl import load_workbook
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
-# --- Style ---
+# --- Dark Mode CSS ---
 st.markdown("""
     <style>
-    .stDataFrame div { color: black !important; }
+    body, .stApp {
+        background-color: #1e1e1e;
+        color: #ffffff;
+    }
+    .stMarkdown, .stTextInput > div > div, .stTextInput input,
+    .stDataFrame div, .css-1d391kg, .stSelectbox, .stButton, .css-1cpxqw2 {
+        color: white !important;
+        background-color: #2b2b2b !important;
+    }
+    .stSelectbox > div > div {
+        color: white !important;
+    }
+    .stButton>button {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .stDownloadButton button {
+        background-color: #0d6efd;
+        color: white;
+    }
+    .stDownloadButton button:hover {
+        background-color: #0b5ed7;
+    }
+    .css-1aumxhk {
+        background-color: #333 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -118,7 +143,7 @@ if not st.session_state.logged_in:
     st.stop()
 
 # --- Navigation (Centered Layout) ---
-st.markdown("### 🔽 Select a Feature Below")
+st.markdown("### 🔽 Select a Feature Below", unsafe_allow_html=True)
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     selected = option_menu(
@@ -128,15 +153,16 @@ with col2:
         default_index=0,
         orientation="horizontal",
         styles={
-            "container": {"padding": "0!important", "background-color": "#f9f9f9"},
-            "icon": {"color": "#0d6efd", "font-size": "20px"},
+            "container": {"padding": "0!important", "background-color": "#2b2b2b"},
+            "icon": {"color": "#ffffff", "font-size": "20px"},
             "nav-link": {
                 "font-size": "18px",
                 "text-align": "center",
                 "margin": "0px",
-                "--hover-color": "#eee",
+                "--hover-color": "#3a3a3a",
+                "color": "#ffffff"
             },
-            "nav-link-selected": {"background-color": "#0d6efd", "color": "white"},
+            "nav-link-selected": {"background-color": "#0d6efd", "color": "#ffffff"},
         }
     )
 
