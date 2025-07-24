@@ -90,11 +90,10 @@ if st.session_state.logged_in:
         st.stop()
     else:
         update_session(st.session_state.mobile, st.session_state.device_id)
-        with st.sidebar:
-            st.info(f"⏳ Session expires in {str(timedelta(seconds=remaining_time))}")
-        with st.sidebar:
+        with st.expander("🔐 Session Info", expanded=False):
+            st.info(f"⏳ Session expires in: {str(timedelta(seconds=remaining_time))}")
             st.success(f"👤 Logged in as: {st.session_state.mobile}")
-            if st.button("Logout"):
+            if st.button("🚪 Logout"):
                 logout_user()
                 st.rerun()
 
@@ -117,33 +116,45 @@ if not st.session_state.logged_in:
         else:
             st.error("❌ Invalid mobile number or password")
     st.stop()
-# --- Navigation ---
-with st.sidebar:
+
+# --- Navigation (Centered Layout) ---
+st.markdown("### 🔽 Select a Feature Below")
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
     selected = option_menu(
-        menu_title="TNEA Navigation",
+        menu_title=None,
         options=["Home", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"],
         icons=["house", "list-check", "table"],
-        menu_icon="cast",
-        default_index=0
+        default_index=0,
+        orientation="horizontal",
+        styles={
+            "container": {"padding": "0!important", "background-color": "#f9f9f9"},
+            "icon": {"color": "#0d6efd", "font-size": "20px"},
+            "nav-link": {
+                "font-size": "18px",
+                "text-align": "center",
+                "margin": "0px",
+                "--hover-color": "#eee",
+            },
+            "nav-link-selected": {"background-color": "#0d6efd", "color": "white"},
+        }
     )
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    st.title("📘 Welcome to TNEA Info App")
+    st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
     st.markdown("""
-    ### Choose a Feature
-    1. **Create TNEA Choice List** - View and filter colleges by cutoff, department, and community  
-    2. **TNEA Vacancy Seat Matrix** - Analyze current vacant seats by branch, college, and community
-
-    Use the **left sidebar** to navigate between pages.
-
-    ---
-    📞 Contact: +91-8248696926  
-    📧 Email: rajumurugannp@gmail.com  
-    👨‍💻 Developed by Dr. Raju Murugan
-
+    <div style='text-align: center; font-size: 18px;'>
+    Choose a Feature:<br><br>
+    <b>✅ Create TNEA Choice List</b> – View and filter colleges by cutoff, department, and community<br><br>
+    <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
+    📞 Contact: +91-8248696926<br>
+    📧 Email: rajumurugannp@gmail.com<br>
+    👨‍💻 Developed by Dr. Raju Murugan<br><br>
     &copy; 2025 TNEA Info App. All rights reserved.
-    """)
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # --- PAGE 2: TNEA CHOICE LIST ---
 elif selected == "Create TNEA Choice List":
