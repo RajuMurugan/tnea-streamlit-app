@@ -251,8 +251,8 @@ elif selected == "Create TNEA Choice List":
 elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
-
-  excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
+    
+excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
 response = requests.get(excel_url)
 excel_file = io.BytesIO(response.content)
 
