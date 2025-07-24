@@ -1,6 +1,7 @@
 streamlit
+streamlit-option-menu
 pandas
-pyyaml
 openpyxl
+pyyaml
 plotly
 requests
