@@ -120,7 +120,7 @@ if not st.session_state.logged_in:
 # --- Navigation (Centered Layout) ---
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
-        🔽 Select a Feature Below  🔽
+        🔽 Select a Feature Below 🔽
     </h2>
 """, unsafe_allow_html=True)
 
@@ -142,12 +142,12 @@ with col2:
                 "font-size": "20px"
             },
             "nav-link": {
-                "font-size": "18px",
+                "font-size": "20px",  # Bigger text
                 "font-weight": "bold",
                 "text-align": "center",
                 "margin": "0px",
-                "color": "#003366",  # or "#000000" for black
-                "--hover-color": "#eee"
+                "color": "#000000",  # High contrast black text
+                "--hover-color": "#e0e0e0"
             },
             "nav-link-selected": {
                 "background-color": "#0d6efd",
@@ -157,9 +157,22 @@ with col2:
         }
     )
 
-
 # --- PAGE 1: HOME ---
 if selected == "Home":
+    # Referral Bonus Banner
+    st.markdown("""
+        <div style="background-color:#ffe066; padding: 15px; border-radius: 10px; text-align:center; margin-bottom: 20px;">
+            <h2 style="color:#d9534f; font-size: 28px; font-weight: bold;">
+                💰 Earn More with Referral Bonus!
+            </h2>
+            <p style="font-size: 20px; color:#333;">
+                Share and Refer this App – Get exciting bonuses when your referrals make sales!
+                The more you share, the more you earn!
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Welcome Message
     st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
     st.markdown("""
     <div style='text-align: center; font-size: 18px;'>
