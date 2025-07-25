@@ -350,12 +350,15 @@ elif selected == "Create TNEA Choice List":
 elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
+    import time
 
     # ✅ Download Excel from Google Drive
     excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
     response = requests.get(excel_url)
     excel_file = io.BytesIO(response.content)
 
+    # ✅ Cache the sheet loading function for 10 mins
+    @st.cache_data(ttl=600)
     def load_excel_sheets_safe(file_bytes):
         wb = load_workbook(file_bytes, data_only=True)
         sheet_names = wb.sheetnames
@@ -373,7 +376,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
         return sheet_names, data_dict
 
+    # ✅ Timer for performance display
+    start_time = time.time()
     sheet_names, data_dict = load_excel_sheets_safe(excel_file)
+    load_duration = time.time() - start_time
+    st.success(f"⏱️ Excel loaded in {load_duration:.3f} seconds (cached for 10 mins)")
 
     # ----------------------------- CATEGORY 1 -----------------------------
     st.markdown("## 🗂️ Select Branch and Community")
@@ -427,7 +434,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
         total_seats = summary_df['Seats'].sum()
         summary_df.loc[len(summary_df.index)] = ['Total', total_seats]
 
-        # ✅ Bar chart with values on top
         fig = px.bar(
             summary_df[summary_df['Community'] != 'Total'],
             x='Community',
@@ -513,7 +519,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
         total2 = summary2['Seats'].sum()
         summary2.loc[len(summary2.index)] = ['Total', total2]
 
-        # ✅ Bar chart with values on top
         fig2 = px.bar(
             summary2[summary2['Community'] != 'Total'],
             x='Community',
