@@ -372,30 +372,28 @@ elif selected == "TNEA Vacancy Seat Matrix":
     response = requests.get(excel_url)
     excel_file = io.BytesIO(response.content)
 
-    # ✅ Cache the sheet loading function for 10 mins
-    @st.cache_data(ttl=600)
-    def load_excel_sheets_safe(file_bytes):
-        wb = load_workbook(file_bytes, data_only=True)
-        sheet_names = wb.sheetnames
-        data_dict = {}
+   # ✅ Cache the sheet loading function for 10 mins
+@st.cache_data(ttl=600)
+def load_excel_sheets_safe(file_bytes):
+    wb = load_workbook(file_bytes, data_only=True)
+    sheet_names = wb.sheetnames
+    data_dict = {}
 
-        for sheet in sheet_names:
-            ws = wb[sheet]
-            data = list(ws.values)
-            if not data:
-                continue
-            header = data[0]
-            rows = data[1:]
-            df = pd.DataFrame(rows, columns=header)
-            data_dict[sheet] = df
+    for sheet in sheet_names:
+        ws = wb[sheet]
+        data = list(ws.values)
+        if not data:
+            continue
+        header = data[0]
+        rows = data[1:]
+        df = pd.DataFrame(rows, columns=header)
+        data_dict[sheet] = df
 
-        return sheet_names, data_dict
+    return sheet_names, data_dict
 
-    # ✅ Timer for performance display
-    start_time = time.time()
-    sheet_names, data_dict = load_excel_sheets_safe(excel_file)
-    load_duration = time.time() - start_time
-    st.success(f"⏱️ Excel loaded in {load_duration:.3f} seconds (cached for 10 mins)")
+# ✅ Just call the function (no timer or message shown)
+sheet_names, data_dict = load_excel_sheets_safe(excel_file)
+
 
     # ----------------------------- CATEGORY 1 -----------------------------
     st.markdown("## 🗂️ Select Branch and Community")
