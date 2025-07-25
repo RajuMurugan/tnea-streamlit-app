@@ -11,6 +11,8 @@ import os
 import plotly.express as px
 from openpyxl import load_workbook
 
+st.info("Last updated on: 25 July 2025")
+
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
