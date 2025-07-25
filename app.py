@@ -133,17 +133,30 @@ with col2:
         default_index=0,
         orientation="horizontal",
         styles={
-            "container": {"padding": "0!important", "background-color": "#f9f9f9"},
-            "icon": {"color": "#0d6efd", "font-size": "20px"},
+            "container": {
+                "padding": "0!important",
+                "background-color": "#f9f9f9"
+            },
+            "icon": {
+                "color": "#0d6efd",
+                "font-size": "20px"
+            },
             "nav-link": {
                 "font-size": "18px",
+                "font-weight": "bold",
                 "text-align": "center",
                 "margin": "0px",
-                "--hover-color": "#eee",
+                "color": "#003366",  # or "#000000" for black
+                "--hover-color": "#eee"
             },
-            "nav-link-selected": {"background-color": "#0d6efd", "color": "white"},
+            "nav-link-selected": {
+                "background-color": "#0d6efd",
+                "color": "white",
+                "font-weight": "bold"
+            }
         }
     )
+
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
