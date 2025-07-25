@@ -194,7 +194,7 @@ if selected == "Home":
         '>
             <h2 style='color: #b31b1b; font-weight: bold;'>🎁 Big Referral Bonus Alert!</h2>
             <p style='font-size: 18px; color: #333; font-weight: 500;'>
-                💡 Sell this app to your friends, students, or institutions.<br><br>
+                💡 Sell this app to your friends, students,etc..<br><br>
                 💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>
                 🔁 No limits. More sales = More rewards!<br><br>
                 📢 Start referring today and grow your earnings!
