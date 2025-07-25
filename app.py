@@ -175,6 +175,7 @@ with col2:
 
 
 
+
 # --- PAGE 1: HOME ---
 if selected == "Home":
 
@@ -182,29 +183,26 @@ if selected == "Home":
     st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
 
     # --- Referral Bonus Message (below welcome) ---
-    st.markdown(
-        """
+    st.markdown("""
         <div style='
-            background-color: #fff3cd;
-            border: 3px solid #ffc107;
+            background-color: #e6f7ff;
+            border: 3px solid #0d6efd;
             border-radius: 15px;
             padding: 25px;
-            margin: 20px auto 30px auto;
+            margin: 20px auto;
             text-align: center;
-            width: 90%;
+            width: 100%;
         '>
-            <h2 style='color: #c1121f; font-size: 28px; font-weight: bold;'>
-                🎁 Special Referral Bonus – Start Earning Now!
+            <h2 style='color: #d63384; font-size: 28px; font-weight: bold;'>
+                🎁 Refer and Earn Big – Special Bonus Inside!
             </h2>
-            <p style='font-size: 20px; color: #212529; font-weight: 600;'>
-                📢 Invite friends to use & sell this app and earn exciting rewards!<br>
-                💰 The more they sell, the more <span style='color:#198754;'>you earn</span>.<br>
-                🚀 Start referring now and boost your income effortlessly!
+            <p style='font-size: 20px; color: #000; font-weight: 600;'>
+                💡 Share this app and invite your friends to join the mission!<br>
+                💰 Earn referral rewards every time someone installs and sells the app.<br>
+                🏆 The more you share, the more you earn. Start now!
             </p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
     # --- Feature Descriptions ---
     st.markdown(
