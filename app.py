@@ -175,16 +175,16 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    # ✅ Eye-catching Referral Offer
+    # ✅ Eye-catching Referral Offer Banner
     st.markdown("""
-        <div style="background-color: #fff3cd; padding: 25px; border-radius: 15px; border: 2px solid #ffdd57; margin-bottom: 30px;">
-            <h2 style="color: #d63384; font-size: 32px; font-weight: bold; text-align: center;">
-                🎉 Refer & Earn Big – Exclusive Offer for Referees! 🎉
+        <div style="background-color: #fff3cd; padding: 20px; border-radius: 12px; border: 2px solid #ffc107; margin-top: 10px; margin-bottom: 30px;">
+            <h2 style="color: #c1121f; font-size: 30px; font-weight: bold; text-align: center;">
+                🎉 Refer and Earn Big! 💸
             </h2>
-            <p style="font-size: 22px; color: #333333; text-align: center; font-weight: 600;">
-                💵 Earn amazing referral bonuses by promoting this app.<br>
-                🚀 The more apps your referrals sell, the more money you make!<br>
-                📲 Share now and start earning today!
+            <p style="font-size: 20px; font-weight: 600; color: #212529; text-align: center;">
+                Earn amazing <span style="color: #d63384;">referral bonuses</span> by sharing this app with friends.<br>
+                The more apps your referees sell, the more you earn!<br>
+                💰 <span style="color:#0d6efd; font-weight: bold;">Start referring today and boost your earnings!</span>
             </p>
         </div>
     """, unsafe_allow_html=True)
@@ -195,15 +195,16 @@ if selected == "Home":
     # ✅ Feature Descriptions
     st.markdown("""
     <div style='text-align: center; font-size: 18px;'>
-    Choose a Feature:<br><br>
-    <b>✅ Create TNEA Choice List</b> – View and filter colleges by cutoff, department, and community<br><br>
-    <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
-    📞 Contact: +91-8248696926<br>
-    📧 Email: rajumurugannp@gmail.com<br>
-    👨‍💻 Developed by Dr. Raju Murugan<br><br>
-    &copy; 2025 TNEA Info App. All rights reserved.
+        Choose a Feature:<br><br>
+        <b>✅ Create TNEA Choice List</b> – View and filter colleges by cutoff, department, and community<br><br>
+        <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
+        📞 Contact: +91-8248696926<br>
+        📧 Email: rajumurugannp@gmail.com<br>
+        👨‍💻 Developed by Dr. Raju Murugan<br><br>
+        &copy; 2025 TNEA Info App. All rights reserved.
     </div>
     """, unsafe_allow_html=True)
+
 
 # Add logic for other pages like "Create TNEA Choice List", etc. here if needed.
 
