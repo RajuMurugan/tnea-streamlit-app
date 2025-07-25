@@ -14,7 +14,7 @@ from openpyxl import load_workbook
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
-# --- Style ---
+# --- Style for DataFrame text ---
 st.markdown("""
     <style>
     .stDataFrame div { color: black !important; }
@@ -117,13 +117,14 @@ if not st.session_state.logged_in:
             st.error("❌ Invalid mobile number or password")
     st.stop()
 
-# --- Navigation (Centered Layout) ---
+# --- Navigation Title ---
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
         🔽 Select a Feature Below 🔽
     </h2>
 """, unsafe_allow_html=True)
 
+# --- Option Menu with Custom Styling ---
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     selected = option_menu(
@@ -135,31 +136,33 @@ with col2:
         styles={
             "container": {
                 "padding": "0!important",
-                "background-color": "#f9f9f9"
+                "background-color": "#ffffff"
             },
             "icon": {
-                "color": "#0d6efd",
+                "color": "#3399ff",  # Light blue for icons
                 "font-size": "20px"
             },
             "nav-link": {
-                "font-size": "20px",  # Bigger text
+                "font-size": "18px",
                 "font-weight": "bold",
                 "text-align": "center",
                 "margin": "0px",
-                "color": "#000000",  # High contrast black text
-                "--hover-color": "#e0e0e0"
+                "color": "#3399ff",  # Light blue text before selection
+                "--hover-color": "#d0e7ff",
+                "background-color": "#f4faff",  # Light background for unselected
+                "border-radius": "8px"
             },
             "nav-link-selected": {
-                "background-color": "#0d6efd",
-                "color": "white",
-                "font-weight": "bold"
+                "background-color": "#0d6efd",  # Dark blue
+                "color": "white",               # White text on selection
+                "font-weight": "bold",
+                "border-radius": "8px"
             }
         }
     )
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    # Referral Bonus Banner
     st.markdown("""
         <div style="background-color:#ffe066; padding: 15px; border-radius: 10px; text-align:center; margin-bottom: 20px;">
             <h2 style="color:#d9534f; font-size: 28px; font-weight: bold;">
@@ -172,7 +175,6 @@ if selected == "Home":
         </div>
     """, unsafe_allow_html=True)
 
-    # Welcome Message
     st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
     st.markdown("""
     <div style='text-align: center; font-size: 18px;'>
@@ -185,6 +187,9 @@ if selected == "Home":
     &copy; 2025 TNEA Info App. All rights reserved.
     </div>
     """, unsafe_allow_html=True)
+
+# --- Add logic for other pages like "Create TNEA Choice List" and "TNEA Vacancy Seat Matrix" as needed below
+
 
 
 
