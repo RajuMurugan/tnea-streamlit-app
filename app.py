@@ -11,8 +11,6 @@ import os
 import plotly.express as px
 from openpyxl import load_workbook
 
-
-
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
@@ -100,7 +98,25 @@ if st.session_state.logged_in:
 
     if is_session_expired(st.session_state.mobile, st.session_state.device_id):
         logout_user()
-        st.warning("⚠️ Session expired. Please log in again.")
+        st.warning("⚠️ Session expired. Please log in again below.")
+
+        # Inline Login Form
+        st.markdown("### 🔐 Login Form")
+        mobile = st.text_input("📱 Mobile Number", key="relogin_mobile")
+        password = st.text_input("🔑 Password", type="password", key="relogin_pass")
+        if st.button("Login Again"):
+            if mobile in user_data and user_data[mobile]["password"] == password:
+                existing = session_data["active_users"].get(mobile)
+                if existing and existing["device_id"] != st.session_state.device_id and (time.time() - existing["timestamp"]) < SESSION_TIMEOUT:
+                    st.error("⚠️ Already logged in on another device. Logout there first.")
+                else:
+                    update_session(mobile, st.session_state.device_id)
+                    st.session_state.logged_in = True
+                    st.session_state.mobile = mobile
+                    st.success(f"✅ Welcome back, {mobile}!")
+                    st.rerun()
+            else:
+                st.error("❌ Invalid mobile number or password")
         st.stop()
     else:
         update_session(st.session_state.mobile, st.session_state.device_id)
@@ -154,10 +170,10 @@ with col2:
             },
             "icon": {
                 "color": "#3399ff",
-                "font-size": "18px"  # Slightly smaller icon
+                "font-size": "18px"
             },
             "nav-link": {
-                "font-size": "13px",  # ✅ Reduced font size for mobile
+                "font-size": "13px",
                 "font-weight": "bold",
                 "text-align": "center",
                 "margin": "2px",
