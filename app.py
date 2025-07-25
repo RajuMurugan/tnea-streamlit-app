@@ -175,19 +175,24 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
+    # ✅ Eye-catching Referral Offer
     st.markdown("""
-        <div style="background-color:#ffe066; padding: 15px; border-radius: 10px; text-align:center; margin-bottom: 20px;">
-            <h2 style="color:#d9534f; font-size: 28px; font-weight: bold;">
-                💰 Earn More with Referral Bonus!
+        <div style="background-color: #fff3cd; padding: 25px; border-radius: 15px; border: 2px solid #ffdd57; margin-bottom: 30px;">
+            <h2 style="color: #d63384; font-size: 32px; font-weight: bold; text-align: center;">
+                🎉 Refer & Earn Big – Exclusive Offer for Referees! 🎉
             </h2>
-            <p style="font-size: 20px; color:#333;">
-                Share and Refer this App – Get exciting bonuses when your referrals make sales!
-                The more you share, the more you earn!
+            <p style="font-size: 22px; color: #333333; text-align: center; font-weight: 600;">
+                💵 Earn amazing referral bonuses by promoting this app.<br>
+                🚀 The more apps your referrals sell, the more money you make!<br>
+                📲 Share now and start earning today!
             </p>
         </div>
     """, unsafe_allow_html=True)
 
+    # ✅ Welcome Message
     st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
+
+    # ✅ Feature Descriptions
     st.markdown("""
     <div style='text-align: center; font-size: 18px;'>
     Choose a Feature:<br><br>
@@ -201,11 +206,6 @@ if selected == "Home":
     """, unsafe_allow_html=True)
 
 # Add logic for other pages like "Create TNEA Choice List", etc. here if needed.
-
-
-# Add logic for the other pages if needed
-
-
 
 
 # --- PAGE 2: TNEA CHOICE LIST ---
