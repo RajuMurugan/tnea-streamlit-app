@@ -180,26 +180,30 @@ with col2:
 if selected == "Home":
 
     # --- Welcome Heading ---
-    st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='text-align: center; margin-top: 20px;'>
+            <h1 style='color: #0d6efd;'>📘 Welcome to TNEA Info App</h1>
+        </div>
+    """, unsafe_allow_html=True)
 
-    # --- Referral Bonus Message (below welcome) ---
+    # --- Referral Bonus Block ---
     st.markdown("""
         <div style='
-            background-color: #e6f7ff;
-            border: 3px solid #0d6efd;
+            background-color: #fff3cd;
+            border: 3px solid #ffc107;
             border-radius: 15px;
-            padding: 25px;
-            margin: 20px auto;
+            padding: 20px;
+            margin: 25px auto 30px auto;
             text-align: center;
-            width: 100%;
+            width: 95%;
         '>
-            <h2 style='color: #d63384; font-size: 28px; font-weight: bold;'>
-                🎁 Refer and Earn Big – Special Bonus Inside!
+            <h2 style='color: #c1121f; font-size: 26px; font-weight: bold;'>
+                🎁 Refer & Earn – Special Bonus Inside!
             </h2>
-            <p style='font-size: 20px; color: #000; font-weight: 600;'>
-                💡 Share this app and invite your friends to join the mission!<br>
-                💰 Earn referral rewards every time someone installs and sells the app.<br>
-                🏆 The more you share, the more you earn. Start now!
+            <p style='font-size: 18px; color: #000; font-weight: 500;'>
+                🔗 Invite your friends to use and sell this app.<br>
+                💰 The more they refer and sell, the more <b style='color:#198754;'>you earn</b>!<br>
+                🚀 Share and start earning today!
             </p>
         </div>
     """, unsafe_allow_html=True)
