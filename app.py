@@ -177,26 +177,22 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-
-    # --- 🎁 Referral Bonus First Block ---
+    # --- Referral Bonus Message (at the top, clearly visible) ---
     st.markdown(
         """
         <div style='
             background-color: #fff3cd;
-            border-left: 10px solid #ffc107;
+            border: 2px solid #ffc107;
             border-radius: 10px;
-            padding: 20px 30px;
-            margin: 20px auto;
-            width: 95%;
+            padding: 20px;
+            margin-bottom: 25px;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            font-family: Arial, sans-serif;
         '>
-            <h2 style='color: #b31b1b; font-weight: bold;'>🎁 Big Referral Bonus Alert!</h2>
-            <p style='font-size: 18px; color: #333; font-weight: 500;'>
-                💡 Sell this app to your friends, students, or institutions.<br><br>
-                💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>
-                🔁 No limits. More sales = More rewards!<br><br>
-                📢 Start referring today and grow your earnings!
+            <h2 style='color: #b31b1b;'>🎁 Referral Bonus Available!</h2>
+            <p style='font-size: 18px; color: #000;'>
+                💼 Sell this app to others and <span style='color: green; font-weight: bold;'>earn rewards</span>!<br><br>
+                🚀 The more you refer, the more you earn. Start now!
             </p>
         </div>
         """,
@@ -204,14 +200,16 @@ if selected == "Home":
     )
 
     # --- Main Heading ---
-    st.markdown("<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
+    st.markdown(
+        "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info App</h1>",
+        unsafe_allow_html=True
+    )
 
     # --- Feature Description ---
     st.markdown(
         """
-        <div style='text-align: center; font-size: 18px;'>
-            Choose a Feature:<br><br>
-            <b>✅ Create TNEA Choice List</b> – View and filter colleges by cutoff, department, and community<br><br>
+        <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
+            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
             <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
             📞 Contact: +91-8248696926<br>
             📧 Email: rajumurugannp@gmail.com<br>
