@@ -17,10 +17,11 @@ st.set_page_config(page_title="TNEA Full App", layout="wide")
 # --- Force icon + label always visible on mobile ---
 st.markdown("""
     <style>
-    /* Always show text with icon even on mobile */
-    .nav-link span {
-        display: inline-block !important;
-        vertical-align: middle !important;
+    /* Force menu label to always show even in mobile view */
+    @media (max-width: 768px) {
+        .nav-link > span {
+            display: inline !important;
+        }
     }
     </style>
 """, unsafe_allow_html=True)
@@ -158,13 +159,13 @@ with col2:
                 "font-weight": "bold",
                 "text-align": "center",
                 "margin": "2px",
-                "color": "#3399ff",  # Light blue unselected
+                "color": "#3399ff",
                 "--hover-color": "#d0e7ff",
                 "background-color": "#f4faff",
                 "border-radius": "8px"
             },
             "nav-link-selected": {
-                "background-color": "#0d6efd",  # Dark blue selected
+                "background-color": "#0d6efd",
                 "color": "white",
                 "font-weight": "bold",
                 "border-radius": "8px"
@@ -199,7 +200,8 @@ if selected == "Home":
     </div>
     """, unsafe_allow_html=True)
 
-# Add logic for the other pages below if needed
+# Add logic for the other pages if needed
+
 
 
 
