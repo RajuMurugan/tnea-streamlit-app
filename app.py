@@ -180,33 +180,30 @@ with col2:
 if selected == "Home":
 
     # --- Welcome Heading ---
-    st.markdown("""
-        <div style='text-align: center; margin-top: 20px;'>
-            <h1 style='color: #0d6efd;'>📘 Welcome to TNEA Info App</h1>
-        </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center;'>📘 Welcome to TNEA Info App</h1>", unsafe_allow_html=True)
 
-    # --- Referral Bonus Block ---
-    st.markdown("""
+    # --- Referral Bonus Block --- (MUST WORKING)
+    st.markdown("### 🎁 Refer & Earn Bonus")
+    st.markdown(
+        """
         <div style='
-            background-color: #fff3cd;
-            border: 3px solid #ffc107;
-            border-radius: 15px;
+            background-color: #fffae6;
+            border-left: 6px solid #ffc107;
             padding: 20px;
-            margin: 25px auto 30px auto;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
             text-align: center;
-            width: 95%;
         '>
-            <h2 style='color: #c1121f; font-size: 26px; font-weight: bold;'>
-                🎁 Refer & Earn – Special Bonus Inside!
-            </h2>
-            <p style='font-size: 18px; color: #000; font-weight: 500;'>
-                🔗 Invite your friends to use and sell this app.<br>
-                💰 The more they refer and sell, the more <b style='color:#198754;'>you earn</b>!<br>
-                🚀 Share and start earning today!
-            </p>
+            💸 <span style="color: #d63384;">Refer your friends to use & sell this app</span><br><br>
+            🚀 More referrals = More Sales = <span style='color:#28a745;'>More Bonus for You!</span><br><br>
+            🎯 Start referring today and earn extra income effortlessly!
         </div>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
     # --- Feature Descriptions ---
     st.markdown(
