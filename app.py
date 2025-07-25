@@ -251,18 +251,17 @@ elif selected == "Create TNEA Choice List":
 
     import time
 
-    # ✅ Performance-optimized loader with caching
+    # ✅ Performance-optimized loader with caching (10 minutes)
     @st.cache_data(ttl=600)
     def load_excel_file_from_url(url):
-        start_time = time.time()
         response = requests.get(url)
         df_loaded = pd.read_excel(io.BytesIO(response.content))
-        elapsed = time.time() - start_time
-        st.info(f"⏱️ Excel loaded in {elapsed:.3f} seconds (cached for 10 mins)")
         return df_loaded
 
     excel_url = "https://docs.google.com/spreadsheets/d/1rASGgYC9RZA0vgmtuFYRG0QO3DOGH_jW/export?format=xlsx"
-    df = load_excel_file_from_url(excel_url)
+    
+    with st.spinner("📥 Loading TNEA cutoff data..."):
+        df = load_excel_file_from_url(excel_url)
 
     for col in df.columns:
         if col.endswith("_C") or col.endswith("_GR"):
