@@ -14,12 +14,11 @@ from openpyxl import load_workbook
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
-# --- Force icon + label always visible on mobile ---
+# --- Always show labels with icons (even on mobile) ---
 st.markdown("""
     <style>
-    /* Force menu label to always show even in mobile view */
     @media (max-width: 768px) {
-        .nav-link > span {
+        .nav-link span {
             display: inline !important;
         }
     }
@@ -62,7 +61,8 @@ def save_session():
 
 def is_session_expired(mobile, device_id):
     user = session_data["active_users"].get(mobile, None)
-    if not user: return True
+    if not user:
+        return True
     saved_device_id = user.get("device_id", "")
     timestamp = user.get("timestamp", 0)
     return saved_device_id != device_id or (time.time() - timestamp) > SESSION_TIMEOUT
@@ -136,7 +136,7 @@ st.markdown("""
     </h2>
 """, unsafe_allow_html=True)
 
-# --- Option Menu with Custom Styling ---
+# --- Option Menu (Mobile + Laptop Friendly) ---
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     selected = option_menu(
@@ -152,10 +152,10 @@ with col2:
             },
             "icon": {
                 "color": "#3399ff",
-                "font-size": "20px"
+                "font-size": "18px"  # Slightly smaller icon
             },
             "nav-link": {
-                "font-size": "16px",
+                "font-size": "13px",  # ✅ Reduced font size for mobile
                 "font-weight": "bold",
                 "text-align": "center",
                 "margin": "2px",
@@ -199,6 +199,9 @@ if selected == "Home":
     &copy; 2025 TNEA Info App. All rights reserved.
     </div>
     """, unsafe_allow_html=True)
+
+# Add logic for other pages like "Create TNEA Choice List", etc. here if needed.
+
 
 # Add logic for the other pages if needed
 
