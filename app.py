@@ -177,31 +177,10 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    # --- Referral Bonus Message (at the top, clearly visible) ---
-    st.markdown(
-        """
-        <div style='
-            background-color: #fff3cd;
-            border: 2px solid #ffc107;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        '>
-            <h2 style='color: #b31b1b;'>🎁 Referral Bonus Available!</h2>
-            <p style='font-size: 18px; color: #000;'>
-                💼 Sell this app to others and <span style='color: green; font-weight: bold;'>earn rewards</span>!<br><br>
-                🚀 The more you refer, the more you earn. Start now!
-            </p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
     # --- Main Heading ---
     st.markdown(
         "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info App</h1>",
+        "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome </h1>",
         unsafe_allow_html=True
     )
 
