@@ -14,6 +14,17 @@ from openpyxl import load_workbook
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
+# --- Force icon + label always visible on mobile ---
+st.markdown("""
+    <style>
+    /* Always show text with icon even on mobile */
+    .nav-link span {
+        display: inline-block !important;
+        vertical-align: middle !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # --- Style for DataFrame text ---
 st.markdown("""
     <style>
@@ -139,22 +150,22 @@ with col2:
                 "background-color": "#ffffff"
             },
             "icon": {
-                "color": "#3399ff",  # Light blue for icons
+                "color": "#3399ff",
                 "font-size": "20px"
             },
             "nav-link": {
-                "font-size": "18px",
+                "font-size": "16px",
                 "font-weight": "bold",
                 "text-align": "center",
-                "margin": "0px",
-                "color": "#3399ff",  # Light blue text before selection
+                "margin": "2px",
+                "color": "#3399ff",  # Light blue unselected
                 "--hover-color": "#d0e7ff",
-                "background-color": "#f4faff",  # Light background for unselected
+                "background-color": "#f4faff",
                 "border-radius": "8px"
             },
             "nav-link-selected": {
-                "background-color": "#0d6efd",  # Dark blue
-                "color": "white",               # White text on selection
+                "background-color": "#0d6efd",  # Dark blue selected
+                "color": "white",
                 "font-weight": "bold",
                 "border-radius": "8px"
             }
@@ -188,8 +199,7 @@ if selected == "Home":
     </div>
     """, unsafe_allow_html=True)
 
-# --- Add logic for other pages like "Create TNEA Choice List" and "TNEA Vacancy Seat Matrix" as needed below
-
+# Add logic for the other pages below if needed
 
 
 
