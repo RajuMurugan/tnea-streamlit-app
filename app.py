@@ -179,8 +179,8 @@ with col2:
 if selected == "Home":
     # --- Main Heading ---
     st.markdown(
-        "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info App</h1>",
-        "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome </h1>",
+        "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>",
+       
         unsafe_allow_html=True
     )
 
