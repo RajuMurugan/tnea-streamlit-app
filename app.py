@@ -314,6 +314,7 @@ elif selected == "Create TNEA Choice List":
 
 
 # --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
+# --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
 elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
@@ -394,9 +395,18 @@ elif selected == "TNEA Vacancy Seat Matrix":
         total_seats = summary_df['Seats'].sum()
         summary_df.loc[len(summary_df.index)] = ['Total', total_seats]
 
-        fig = px.bar(summary_df[summary_df['Community'] != 'Total'], x='Community', y='Seats', color='Community',
-                     title=f"Community-wise Seat Distribution (Total: {total_seats} seats)",
-                     labels={'Seats': 'Number of Seats'}, height=400)
+        # ✅ Bar chart with values
+        fig = px.bar(
+            summary_df[summary_df['Community'] != 'Total'],
+            x='Community',
+            y='Seats',
+            color='Community',
+            title=f"Community-wise Seat Distribution (Total: {total_seats} seats)",
+            labels={'Seats': 'Number of Seats'},
+            text='Seats',
+            height=400
+        )
+        fig.update_traces(textposition='outside')
         st.plotly_chart(fig, use_container_width=True)
 
         st.subheader("🧾 College-wise Seat Data")
@@ -465,9 +475,18 @@ elif selected == "TNEA Vacancy Seat Matrix":
         total2 = summary2['Seats'].sum()
         summary2.loc[len(summary2.index)] = ['Total', total2]
 
-        fig2 = px.bar(summary2[summary2['Community'] != 'Total'], x='Community', y='Seats', color='Community',
-                      title=f"Community-wise Seat Distribution for College (Total: {total2} seats)",
-                      labels={'Seats': 'Number of Seats'}, height=400)
+        # ✅ Bar chart with values
+        fig2 = px.bar(
+            summary2[summary2['Community'] != 'Total'],
+            x='Community',
+            y='Seats',
+            color='Community',
+            title=f"Community-wise Seat Distribution for College (Total: {total2} seats)",
+            labels={'Seats': 'Number of Seats'},
+            text='Seats',
+            height=400
+        )
+        fig2.update_traces(textposition='outside')
         st.plotly_chart(fig2, use_container_width=True)
 
         excel_buffer2 = io.BytesIO()
