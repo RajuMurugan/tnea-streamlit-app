@@ -366,18 +366,15 @@ elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
 
-    # ✅ Download Excel from Google Drive
     excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
     response = requests.get(excel_url)
     excel_file = io.BytesIO(response.content)
 
-    # ✅ Cache the sheet loading function for 10 mins
     @st.cache_data(ttl=600)
     def load_excel_sheets_safe(file_bytes):
         wb = load_workbook(file_bytes, data_only=True)
         sheet_names = wb.sheetnames
         data_dict = {}
-
         for sheet in sheet_names:
             ws = wb[sheet]
             data = list(ws.values)
@@ -387,10 +384,8 @@ elif selected == "TNEA Vacancy Seat Matrix":
             rows = data[1:]
             df = pd.DataFrame(rows, columns=header)
             data_dict[sheet] = df
-
         return sheet_names, data_dict
 
-    # ✅ Load sheets
     sheet_names, data_dict = load_excel_sheets_safe(excel_file)
 
     # ----------------------------- CATEGORY 1 -----------------------------
@@ -467,8 +462,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.subheader("🧾 College-wise Seat Data")
         st.dataframe(branch_df, use_container_width=True)
 
+        # ✅ Save Wide Format Excel
         excel_buffer = io.BytesIO()
-        branch_df.to_excel(excel_buffer, index=False, engine='openpyxl')
+        wide_df = df1[df1['Branch Code'] == selected_branch_1].copy()
+        wide_df = wide_df[required_id_vars + community_cols]
+        wide_df.to_excel(excel_buffer, index=False, engine='openpyxl')
         excel_buffer.seek(0)
 
         st.download_button(
@@ -479,7 +477,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
         )
     else:
         st.warning("⚠️ No data found for the selected branch/community.")
-
 
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
@@ -550,8 +547,19 @@ elif selected == "TNEA Vacancy Seat Matrix":
         )
         st.plotly_chart(fig2, use_container_width=True)
 
+        # ✅ Save Wide Format Excel
         excel_buffer2 = io.BytesIO()
-        college_df.to_excel(excel_buffer2, index=False, engine='openpyxl')
+        wide_df2 = df2.copy()
+        if selected_college_combined != "All":
+            wide_df2 = wide_df2[
+                (wide_df2['College Code'].astype(str) == selected_code.strip()) &
+                (wide_df2['College Name'].str.strip() == selected_name.strip())
+            ]
+        if selected_branch_code != "All":
+            wide_df2 = wide_df2[wide_df2['Branch Code'] == selected_branch_code]
+
+        wide_df2 = wide_df2[required_id_vars + community_cols]
+        wide_df2.to_excel(excel_buffer2, index=False, engine='openpyxl')
         excel_buffer2.seek(0)
 
         st.download_button(
