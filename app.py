@@ -417,7 +417,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
             rename_map[col] = 'Branch Name'
 
     df1.rename(columns=rename_map, inplace=True)
-
     df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
     df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
@@ -437,9 +436,17 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.header(f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}")
         st.dataframe(branch_df, use_container_width=True)
 
-        # ✅ Bar Chart
-        summary = branch_df.groupby('College Name')['Selected Community Seats'].sum().reset_index()
-        fig1 = px.bar(summary, x='College Name', y='Selected Community Seats', title='Community-wise Seat Distribution by College')
+        # ✅ Bar Chart - Community wise seat distribution for selected branch
+        bar1 = df1[df1['Branch Code'] == selected_branch_1]
+        community_summary = bar1[community_cols].sum().reset_index()
+        community_summary.columns = ['Community', 'Seats']
+        fig1 = px.bar(
+            community_summary,
+            x='Community', y='Seats', color='Community',
+            title='Community-wise Seat Distribution for Selected Branch',
+            text='Seats', height=450
+        )
+        fig1.update_traces(textposition='outside')
         st.plotly_chart(fig1, use_container_width=True)
 
         excel_buffer = io.BytesIO()
@@ -505,10 +512,28 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.subheader("🏧 College-wise Community Seat Distribution")
         st.dataframe(college_df, use_container_width=True)
 
-        # ✅ Bar Chart
-        summary2 = college_df.groupby('Branch Code')['Selected Community Seats'].sum().reset_index()
-        fig2 = px.bar(summary2, x='Branch Code', y='Selected Community Seats', title='Seat Distribution by Branch Code')
+        # ✅ Bar Chart - All branches for selected college & community
+        fig2 = px.bar(
+            college_df,
+            x='Branch Code', y='Selected Community Seats',
+            color='Branch Code', text='Selected Community Seats',
+            title='Selected Community Seat Distribution Across Branches', height=450
+        )
+        fig2.update_traces(textposition='outside')
         st.plotly_chart(fig2, use_container_width=True)
+
+        # ✅ Bar Chart - All branches for selected community across selected college
+        if selected_college_combined != "All":
+            summary3 = df2[(df2['College Code'].astype(str) == selected_code.strip()) &
+                           (df2['College Name'].str.strip() == selected_name.strip())]
+            fig3 = px.bar(
+                summary3,
+                x='Branch Code', y=selected_community_2,
+                color='Branch Code', text=selected_community_2,
+                title=f'{selected_community_2} Seat Distribution for All Branches', height=450
+            )
+            fig3.update_traces(textposition='outside')
+            st.plotly_chart(fig3, use_container_width=True)
 
         excel_buffer2 = io.BytesIO()
         college_df.to_excel(excel_buffer2, index=False, engine='openpyxl')
