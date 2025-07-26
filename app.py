@@ -394,56 +394,63 @@ elif selected == "TNEA Vacancy Seat Matrix":
     required_id_vars = ['College Name', 'College Code', 'Branch Code', 'Branch Name']
 
     # ----------------------------- CATEGORY 1 -----------------------------
-    st.markdown("## 📂 Select Branch and Community")
-    col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(3)
+st.markdown("## 📂 Select Branch and Community")
+col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(3)
 
-    with col_cat1_1:
-        selected_sheet_1 = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat1_sheet")
-        df1 = data_dict[selected_sheet_1]
+with col_cat1_1:
+    selected_sheet_1 = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat1_sheet")
+    df1 = data_dict[selected_sheet_1]
 
-    if df1.empty:
-        st.error("❌ No data found in the selected sheet.")
-        st.stop()
+if df1.empty:
+    st.error("❌ No data found in the selected sheet.")
+    st.stop()
 
-    df1.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df1.columns]
+df1.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df1.columns]
 
-    rename_map = {}
-    for col in df1.columns:
-        if "COLLEGE CODE" in col:
-            rename_map[col] = 'College Code'
-        elif "COLLEGE NAME" in col:
-            rename_map[col] = 'College Name'
-        elif "BRANCH CODE" in col:
-            rename_map[col] = 'Branch Code'
-        elif "BRANCH NAME" in col:
-            rename_map[col] = 'Branch Name'
+rename_map = {}
+for col in df1.columns:
+    if "COLLEGE CODE" in col:
+        rename_map[col] = 'College Code'
+    elif "COLLEGE NAME" in col:
+        rename_map[col] = 'College Name'
+    elif "BRANCH CODE" in col:
+        rename_map[col] = 'Branch Code'
+    elif "BRANCH NAME" in col:
+        rename_map[col] = 'Branch Name'
 
-    df1.rename(columns=rename_map, inplace=True)
-    df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
-    df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
+df1.rename(columns=rename_map, inplace=True)
+df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
+df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
-    with col_cat1_2:
-        branch_codes = sorted(df1['Branch Code'].dropna().unique())
-        selected_branch_1 = st.selectbox("🔍 Select Branch Code", branch_codes)
+with col_cat1_2:
+    branch_codes = sorted(df1['Branch Code'].dropna().unique())
+    selected_branch_1 = st.selectbox("🔍 Select Branch Code", ['All'] + branch_codes)
 
-    with col_cat1_3:
-        selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Select Community", ['All'] + community_cols)
+with col_cat1_3:
+    selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Select Community", ['All'] + community_cols)
 
+# Branch filter
+if selected_branch_1 == 'All':
+    branch_df = df1.copy()
+else:
     branch_df = df1[df1['Branch Code'] == selected_branch_1].copy()
 
-    if selected_community_1 == 'All':
-        branch_df['Total Seats (All Communities)'] = branch_df[community_cols].sum(axis=1)
-        branch_df = branch_df[[*required_id_vars, 'Total Seats (All Communities)']]
-    else:
-        branch_df = branch_df[[*required_id_vars, selected_community_1]]
-        branch_df = branch_df.rename(columns={selected_community_1: 'Selected Community Seats'})
-        branch_df.insert(4, 'Selected Community', selected_community_1)
+# Community filter
+if selected_community_1 == 'All':
+    branch_df['Total Seats (All Communities)'] = branch_df[community_cols].sum(axis=1)
+    branch_df = branch_df[[*required_id_vars, 'Total Seats (All Communities)']]
+else:
+    branch_df = branch_df[[*required_id_vars, selected_community_1]]
+    branch_df = branch_df.rename(columns={selected_community_1: 'Selected Community Seats'})
+    branch_df.insert(4, 'Selected Community', selected_community_1)
 
-    if not branch_df.empty:
-        title_text = f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}"
-        st.header(title_text)
-        st.dataframe(branch_df, use_container_width=True)
+if not branch_df.empty:
+    title_text = f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}"
+    st.header(title_text)
+    st.dataframe(branch_df, use_container_width=True)
 
+    # Plot only if a specific branch is selected
+    if selected_branch_1 != 'All':
         bar1 = df1[df1['Branch Code'] == selected_branch_1]
         community_summary = bar1[community_cols].sum().reset_index()
         community_summary.columns = ['Community', 'Seats']
@@ -456,24 +463,25 @@ elif selected == "TNEA Vacancy Seat Matrix":
         fig1.update_traces(textposition='outside')
         st.plotly_chart(fig1, use_container_width=True)
 
-        excel_buffer = io.BytesIO()
-        branch_df.to_excel(excel_buffer, index=False, engine='openpyxl')
-        excel_buffer.seek(0)
+    # Download
+    excel_buffer = io.BytesIO()
+    branch_df.to_excel(excel_buffer, index=False, engine='openpyxl')
+    excel_buffer.seek(0)
 
-        file_name = (
-            f"Branch_{selected_branch_1}_All_Seats.xlsx"
-            if selected_community_1 == 'All'
-            else f"Branch_{selected_branch_1}_{selected_community_1}_Seats.xlsx"
-        )
+    file_name = (
+        f"Branch_{selected_branch_1}_All_Seats.xlsx"
+        if selected_community_1 == 'All'
+        else f"Branch_{selected_branch_1}_{selected_community_1}_Seats.xlsx"
+    )
 
-        st.download_button(
-            label="📥 Download Branch-wise Community Seats",
-            data=excel_buffer,
-            file_name=file_name,
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-    else:
-        st.warning("⚠️ No data found for the selected branch/community.")
+    st.download_button(
+        label="📥 Download Branch-wise Community Seats",
+        data=excel_buffer,
+        file_name=file_name,
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+else:
+    st.warning("⚠️ No data found for the selected branch/community.")
 
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
