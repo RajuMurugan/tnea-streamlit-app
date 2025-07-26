@@ -388,8 +388,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     sheet_names, data_dict = load_excel_sheets_safe(excel_file)
 
+    community_cols = ['OC', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST']
+    required_id_vars = ['College Name', 'College Code', 'Branch Code', 'Branch Name']
+
     # ----------------------------- CATEGORY 1 -----------------------------
-    st.markdown("## 🗂️ Select Branch and Community")
+    st.markdown("## 📂 Select Branch and Community")
     col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(3)
 
     with col_cat1_1:
@@ -415,8 +418,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     df1.rename(columns=rename_map, inplace=True)
 
-    required_id_vars = ['College Name', 'College Code', 'Branch Code', 'Branch Name']
-    community_cols = ['OC', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST']
     df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
     df1_melted = df1.melt(id_vars=required_id_vars, value_vars=community_cols, var_name='Community', value_name='Seats')
     df1_melted['Seats'] = pd.to_numeric(df1_melted['Seats'], errors='coerce').fillna(0).astype(int)
@@ -427,7 +428,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     with col_cat1_3:
         community_options = ['All'] + sorted(df1_melted['Community'].dropna().unique())
-        selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Filter by Community (Optional)", community_options)
+        selected_community_1 = st.selectbox("🧑‍🧑 Filter by Community (Optional)", community_options)
 
     branch_df = df1_melted[df1_melted['Branch Code'] == selected_branch_1]
     if selected_community_1 != "All":
@@ -462,32 +463,26 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.subheader("🧾 College-wise Seat Data")
         st.dataframe(branch_df, use_container_width=True)
 
-        # ✅ Format download with community labels, seats, and total seats in one row
         pivot_df = branch_df.pivot_table(
-            index=['College Name', 'College Code', 'Branch Code', 'Branch Name'],
+            index=required_id_vars,
             columns='Community',
             values='Seats',
             aggfunc='sum',
             fill_value=0
         ).reset_index()
 
-        formatted_cols = []
-        for col in community_cols:
-            pivot_df[col] = col  # community label
-            pivot_df[f"{col} Seats"] = pivot_df.get(col, 0)
-            formatted_cols.append(col)
-            formatted_cols.append(f"{col} Seats")
-
-        pivot_df['Total Seats'] = pivot_df[[f"{col} Seats" for col in community_cols]].sum(axis=1)
-
-        final_df = pivot_df[['College Name', 'College Code', 'Branch Code', 'Branch Name'] + formatted_cols + ['Total Seats']]
+        final_df = pivot_df[required_id_vars].copy()
+        for c in community_cols:
+            final_df[c] = c
+            final_df[f"{c} Seats"] = pivot_df.get(c, 0)
+        final_df['Total Seats'] = final_df[[f"{c} Seats" for c in community_cols]].sum(axis=1)
 
         excel_buffer = io.BytesIO()
         final_df.to_excel(excel_buffer, index=False, engine='openpyxl')
         excel_buffer.seek(0)
 
         st.download_button(
-            label="📥 Download Branch Summary (Formatted)",
+            label="📅 Download Branch Summary (Formatted)",
             data=excel_buffer,
             file_name=f"{selected_branch_1}_Community_Seats.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -497,7 +492,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
-    st.markdown("## 🏫 Select College and Branch")
+    st.markdown("## 🏧 Select College and Branch")
     col_cat2_1, col_cat2_2, col_cat2_3 = st.columns(3)
 
     with col_cat2_1:
@@ -518,15 +513,13 @@ elif selected == "TNEA Vacancy Seat Matrix":
     unique_colleges = sorted(df2_melted['College Combined'].dropna().unique())
 
     with col_cat2_2:
-        selected_college_combined = st.selectbox("🏫 Select College (Code - Name)", ['All'] + unique_colleges)
+        selected_college_combined = st.selectbox("🏧 Select College (Code - Name)", ['All'] + unique_colleges)
 
     with col_cat2_3:
         branch_codes_2 = sorted(df2_melted['Branch Code'].dropna().unique())
         selected_branch_code = st.selectbox("🔍 Filter by Branch Code (Optional)", ['All'] + branch_codes_2)
 
-    selected_code, selected_name = "All", "All"
     college_df = df2_melted.copy()
-
     if selected_college_combined != "All":
         selected_code, selected_name = selected_college_combined.split(" - ", 1)
         college_df = college_df[
@@ -538,7 +531,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
         college_df = college_df[college_df['Branch Code'] == selected_branch_code]
 
     if not college_df.empty:
-        st.subheader("🏫 College-wise Community Seat Distribution")
+        st.subheader("🏧 College-wise Community Seat Distribution")
         st.dataframe(college_df, use_container_width=True)
 
         summary2 = college_df.groupby('Community')['Seats'].sum().reset_index()
@@ -565,30 +558,25 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.plotly_chart(fig2, use_container_width=True)
 
         pivot_df2 = college_df.pivot_table(
-            index=['College Name', 'College Code', 'Branch Code', 'Branch Name'],
+            index=required_id_vars,
             columns='Community',
             values='Seats',
             aggfunc='sum',
             fill_value=0
         ).reset_index()
 
-        formatted_cols2 = []
-        for col in community_cols:
-            pivot_df2[col] = col
-            pivot_df2[f"{col} Seats"] = pivot_df2.get(col, 0)
-            formatted_cols2.append(col)
-            formatted_cols2.append(f"{col} Seats")
-
-        pivot_df2['Total Seats'] = pivot_df2[[f"{col} Seats" for col in community_cols]].sum(axis=1)
-
-        final_df2 = pivot_df2[['College Name', 'College Code', 'Branch Code', 'Branch Name'] + formatted_cols2 + ['Total Seats']]
+        final_df2 = pivot_df2[required_id_vars].copy()
+        for c in community_cols:
+            final_df2[c] = c
+            final_df2[f"{c} Seats"] = pivot_df2.get(c, 0)
+        final_df2['Total Seats'] = final_df2[[f"{c} Seats" for c in community_cols]].sum(axis=1)
 
         excel_buffer2 = io.BytesIO()
         final_df2.to_excel(excel_buffer2, index=False, engine='openpyxl')
         excel_buffer2.seek(0)
 
         st.download_button(
-            label="📥 Download College Summary (Formatted)",
+            label="📅 Download College Summary (Formatted)",
             data=excel_buffer2,
             file_name=f"{selected_code.strip()}_{selected_name.strip().replace(' ', '_')}_Seats.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
