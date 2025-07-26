@@ -420,22 +420,21 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
     df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
-    df1['Total Seats'] = df1[community_cols].sum(axis=1)
 
     with col_cat1_2:
         branch_codes = sorted(df1['Branch Code'].dropna().unique())
         selected_branch_1 = st.selectbox("🔍 Select Branch Code", branch_codes)
 
     with col_cat1_3:
-        selected_community_1 = st.selectbox("🧑‍🧑 Filter by Community (Optional)", ['All'] + community_cols)
+        selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Select Community", community_cols)
 
-    branch_df = df1[df1['Branch Code'] == selected_branch_1]
-    if selected_community_1 != "All":
-        branch_df = branch_df[[*required_id_vars, selected_community_1, 'Total Seats']]
+    branch_df = df1[df1['Branch Code'] == selected_branch_1].copy()
+    branch_df = branch_df[[*required_id_vars, selected_community_1]]
+    branch_df = branch_df.rename(columns={selected_community_1: 'Selected Community Seats'})
+    branch_df.insert(4, 'Selected Community', selected_community_1)
 
     if not branch_df.empty:
-        branch_name = branch_df['Branch Name'].iloc[0]
-        st.header(f"📘 Summary for Branch: {selected_branch_1} - {branch_name}")
+        st.header(f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}")
         st.dataframe(branch_df, use_container_width=True)
 
         excel_buffer = io.BytesIO()
@@ -443,9 +442,9 @@ elif selected == "TNEA Vacancy Seat Matrix":
         excel_buffer.seek(0)
 
         st.download_button(
-            label="📅 Download Branch Summary (Formatted)",
+            label="📥 Download Branch-wise Community Seats",
             data=excel_buffer,
-            file_name=f"{selected_branch_1}_Community_Seats.xlsx",
+            file_name=f"Branch_{selected_branch_1}_{selected_community_1}_Seats.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
@@ -469,7 +468,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     df2 = df2[[col for col in df2.columns if col in required_id_vars + community_cols]]
     df2[community_cols] = df2[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
-    df2['Total Seats'] = df2[community_cols].sum(axis=1)
     df2['College Combined'] = df2['College Code'].astype(str) + ' - ' + df2['College Name']
 
     unique_colleges = sorted(df2['College Combined'].dropna().unique())
@@ -480,6 +478,8 @@ elif selected == "TNEA Vacancy Seat Matrix":
     with col_cat2_3:
         branch_codes_2 = sorted(df2['Branch Code'].dropna().unique())
         selected_branch_code = st.selectbox("🔍 Filter by Branch Code (Optional)", ['All'] + branch_codes_2)
+
+    selected_community_2 = st.selectbox("🧑‍🤝‍🧑 Select Community", community_cols, key="cat2_community")
 
     college_df = df2.copy()
     if selected_college_combined != "All":
@@ -492,6 +492,10 @@ elif selected == "TNEA Vacancy Seat Matrix":
     if selected_branch_code != "All":
         college_df = college_df[college_df['Branch Code'] == selected_branch_code]
 
+    college_df = college_df[[*required_id_vars, selected_community_2]]
+    college_df = college_df.rename(columns={selected_community_2: 'Selected Community Seats'})
+    college_df.insert(4, 'Selected Community', selected_community_2)
+
     if not college_df.empty:
         st.subheader("🏧 College-wise Community Seat Distribution")
         st.dataframe(college_df, use_container_width=True)
@@ -500,13 +504,13 @@ elif selected == "TNEA Vacancy Seat Matrix":
         college_df.to_excel(excel_buffer2, index=False, engine='openpyxl')
         excel_buffer2.seek(0)
 
-        safe_code = college_df['College Code'].astype(str).iloc[0] if 'College Code' in college_df.columns and not college_df.empty else "College"
-        safe_name = college_df['College Name'].astype(str).iloc[0].replace(' ', '_') if 'College Name' in college_df.columns and not college_df.empty else "Summary"
+        fallback_code = college_df['College Code'].astype(str).iloc[0] if not college_df['College Code'].empty else "College"
+        fallback_name = college_df['College Name'].astype(str).iloc[0].replace(' ', '_') if not college_df['College Name'].empty else "Summary"
 
         st.download_button(
-            label="📅 Download College Summary (Formatted)",
+            label="📥 Download College-wise Community Seats",
             data=excel_buffer2,
-            file_name=f"{safe_code}_{safe_name}_Seats.xlsx",
+            file_name=f"College_{fallback_code}_{selected_community_2}_Seats.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
