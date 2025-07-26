@@ -365,15 +365,17 @@ elif selected == "Create TNEA Choice List":
 elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
+    import requests
+    import io
 
-excel_url = "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx"
-response = requests.get(excel_url)
-excel_file = io.BytesIO(response.content)
-
-
+    # ✅ Load Excel file from Google Drive
     @st.cache_data(ttl=600)
-    def load_excel_sheets_safe(file_bytes):
-        wb = load_workbook(file_bytes, data_only=True)
+    def load_excel_sheets_safe():
+        excel_url = "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx"
+        response = requests.get(excel_url)
+        excel_file = io.BytesIO(response.content)
+
+        wb = load_workbook(excel_file, data_only=True)
         sheet_names = wb.sheetnames
         data_dict = {}
         for sheet in sheet_names:
@@ -387,7 +389,7 @@ excel_file = io.BytesIO(response.content)
             data_dict[sheet] = df
         return sheet_names, data_dict
 
-    sheet_names, data_dict = load_excel_sheets_safe(excel_file)
+    sheet_names, data_dict = load_excel_sheets_safe()
 
     community_cols = ['OC', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST']
     required_id_vars = ['College Name', 'College Code', 'Branch Code', 'Branch Name']
