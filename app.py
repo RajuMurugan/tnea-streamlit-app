@@ -437,6 +437,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.header(f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}")
         st.dataframe(branch_df, use_container_width=True)
 
+        # ✅ Bar Chart
+        summary = branch_df.groupby('College Name')['Selected Community Seats'].sum().reset_index()
+        fig1 = px.bar(summary, x='College Name', y='Selected Community Seats', title='Community-wise Seat Distribution by College')
+        st.plotly_chart(fig1, use_container_width=True)
+
         excel_buffer = io.BytesIO()
         branch_df.to_excel(excel_buffer, index=False, engine='openpyxl')
         excel_buffer.seek(0)
@@ -499,6 +504,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
     if not college_df.empty:
         st.subheader("🏧 College-wise Community Seat Distribution")
         st.dataframe(college_df, use_container_width=True)
+
+        # ✅ Bar Chart
+        summary2 = college_df.groupby('Branch Code')['Selected Community Seats'].sum().reset_index()
+        fig2 = px.bar(summary2, x='Branch Code', y='Selected Community Seats', title='Seat Distribution by Branch Code')
+        st.plotly_chart(fig2, use_container_width=True)
 
         excel_buffer2 = io.BytesIO()
         college_df.to_excel(excel_buffer2, index=False, engine='openpyxl')
