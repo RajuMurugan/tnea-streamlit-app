@@ -366,9 +366,10 @@ elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
 
-    excel_url = "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx"
-    response = requests.get(excel_url)
-    excel_file = io.BytesIO(response.content)
+  excel_url = "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx"
+response = requests.get(excel_url)
+excel_file = io.BytesIO(response.content)
+
 
     @st.cache_data(ttl=600)
     def load_excel_sheets_safe(file_bytes):
