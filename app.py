@@ -462,15 +462,32 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.subheader("🧾 College-wise Seat Data")
         st.dataframe(branch_df, use_container_width=True)
 
-        # ✅ Save Wide Format Excel
+        # ✅ Format download with community labels, seats, and total seats in one row
+        pivot_df = branch_df.pivot_table(
+            index=['College Name', 'College Code', 'Branch Code', 'Branch Name'],
+            columns='Community',
+            values='Seats',
+            aggfunc='sum',
+            fill_value=0
+        ).reset_index()
+
+        formatted_cols = []
+        for col in community_cols:
+            pivot_df[col] = col  # community label
+            pivot_df[f"{col} Seats"] = pivot_df.get(col, 0)
+            formatted_cols.append(col)
+            formatted_cols.append(f"{col} Seats")
+
+        pivot_df['Total Seats'] = pivot_df[[f"{col} Seats" for col in community_cols]].sum(axis=1)
+
+        final_df = pivot_df[['College Name', 'College Code', 'Branch Code', 'Branch Name'] + formatted_cols + ['Total Seats']]
+
         excel_buffer = io.BytesIO()
-        wide_df = df1[df1['Branch Code'] == selected_branch_1].copy()
-        wide_df = wide_df[required_id_vars + community_cols]
-        wide_df.to_excel(excel_buffer, index=False, engine='openpyxl')
+        final_df.to_excel(excel_buffer, index=False, engine='openpyxl')
         excel_buffer.seek(0)
 
         st.download_button(
-            label="📥 Download Branch Summary",
+            label="📥 Download Branch Summary (Formatted)",
             data=excel_buffer,
             file_name=f"{selected_branch_1}_Community_Seats.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
@@ -547,23 +564,31 @@ elif selected == "TNEA Vacancy Seat Matrix":
         )
         st.plotly_chart(fig2, use_container_width=True)
 
-        # ✅ Save Wide Format Excel
-        excel_buffer2 = io.BytesIO()
-        wide_df2 = df2.copy()
-        if selected_college_combined != "All":
-            wide_df2 = wide_df2[
-                (wide_df2['College Code'].astype(str) == selected_code.strip()) &
-                (wide_df2['College Name'].str.strip() == selected_name.strip())
-            ]
-        if selected_branch_code != "All":
-            wide_df2 = wide_df2[wide_df2['Branch Code'] == selected_branch_code]
+        pivot_df2 = college_df.pivot_table(
+            index=['College Name', 'College Code', 'Branch Code', 'Branch Name'],
+            columns='Community',
+            values='Seats',
+            aggfunc='sum',
+            fill_value=0
+        ).reset_index()
 
-        wide_df2 = wide_df2[required_id_vars + community_cols]
-        wide_df2.to_excel(excel_buffer2, index=False, engine='openpyxl')
+        formatted_cols2 = []
+        for col in community_cols:
+            pivot_df2[col] = col
+            pivot_df2[f"{col} Seats"] = pivot_df2.get(col, 0)
+            formatted_cols2.append(col)
+            formatted_cols2.append(f"{col} Seats")
+
+        pivot_df2['Total Seats'] = pivot_df2[[f"{col} Seats" for col in community_cols]].sum(axis=1)
+
+        final_df2 = pivot_df2[['College Name', 'College Code', 'Branch Code', 'Branch Name'] + formatted_cols2 + ['Total Seats']]
+
+        excel_buffer2 = io.BytesIO()
+        final_df2.to_excel(excel_buffer2, index=False, engine='openpyxl')
         excel_buffer2.seek(0)
 
         st.download_button(
-            label="📥 Download College Summary",
+            label="📥 Download College Summary (Formatted)",
             data=excel_buffer2,
             file_name=f"{selected_code.strip()}_{selected_name.strip().replace(' ', '_')}_Seats.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
