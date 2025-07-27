@@ -146,7 +146,7 @@ if not st.session_state.logged_in:
                 Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
                 <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span><br><br>
                 🕒 Limited Time Deal – Grab it before it's gone!
-                Whatsapp : 8248696926 
+                <Whatsapp : 8248696926>
             </p>
         </div>
         """,
