@@ -146,12 +146,24 @@ if not st.session_state.logged_in:
                 Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
                 <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span><br><br>
                 🕒 Limited Time Deal – Grab it before it's gone!
-                <Whatsapp : 8248696926>
+            </p>
+            <p style='margin-top: 20px;'>
+                <a href='https://wa.me/918248696926' target='_blank' style='
+                    font-size: 24px;
+                    color: #25D366;
+                    font-weight: bold;
+                    text-decoration: none;
+                    display: inline-block;
+                    margin-top: 10px;
+                '>
+                    📞 Chat on WhatsApp: 8248696926
+                </a>
             </p>
         </div>
         """,
         unsafe_allow_html=True
     )
+
 
     st.title("🔐 Login to Access TNEA App")
     mobile = st.text_input("📱 Mobile Number")
