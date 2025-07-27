@@ -129,6 +129,29 @@ if st.session_state.logged_in:
 
 # --- Login Form ---
 if not st.session_state.logged_in:
+    # 🔥 Offer Banner (before login title)
+    st.markdown(
+        """
+        <div style='
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-left: 8px solid #007bff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        '>
+            <h2 style='color: #d91c1c; font-weight: bold;'>🔥 Today Only Offer!</h2>
+            <p style='font-size: 20px; font-weight: 600; color: #333;'>
+                Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
+                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span><br><br>
+                🕒 Limited Time Deal – Grab it before it's gone!
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.title("🔐 Login to Access TNEA App")
     mobile = st.text_input("📱 Mobile Number")
     password = st.text_input("🔑 Password", type="password")
@@ -164,14 +187,8 @@ with col2:
         default_index=0,
         orientation="horizontal",
         styles={
-            "container": {
-                "padding": "0!important",
-                "background-color": "#ffffff"
-            },
-            "icon": {
-                "color": "#3399ff",
-                "font-size": "18px"
-            },
+            "container": {"padding": "0!important", "background-color": "#ffffff"},
+            "icon": {"color": "#3399ff", "font-size": "18px"},
             "nav-link": {
                 "font-size": "13px",
                 "font-weight": "bold",
@@ -191,11 +208,32 @@ with col2:
         }
     )
 
-
-
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    # --- 🎁 Referral Bonus First Block ---
+    # 🔥 Offer Banner on Home Page
+    st.markdown(
+        """
+        <div style='
+            background-color: #e6f2ff;
+            padding: 20px;
+            border-left: 8px solid #007bff;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 12px rgba(0,0,0,0.05);
+            text-align: center;
+        '>
+            <h2 style='color: #d91c1c; font-weight: bold;'>🔥 Today Only Offer!</h2>
+            <p style='font-size: 20px; font-weight: 600; color: #333;'>
+                Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
+                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span><br><br>
+                🕒 Limited Time Deal – Grab it before it's gone!
+            </p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # 🎁 Referral Bonus Block
     st.markdown(
         """
         <div style='
@@ -210,7 +248,7 @@ if selected == "Home":
         '>
             <h2 style='color: #b31b1b; font-weight: bold;'>🎁 Big Referral Bonus Alert!</h2>
             <p style='font-size: 18px; color: #333; font-weight: 500;'>
-                💡 Sell this app to your friends, students,etc..<br><br>
+                💡 Sell this app to your friends, students, etc..<br><br>
                 💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>
                 🔁 No limits. More sales = More rewards!<br><br>
                 📢 Start referring today and grow your earnings!
@@ -220,13 +258,13 @@ if selected == "Home":
         unsafe_allow_html=True
     )
 
-    # --- Main Heading ---
+    # Main Heading
     st.markdown(
         "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>",
         unsafe_allow_html=True
     )
 
-    # --- Feature Description ---
+    # Feature Description
     st.markdown(
         """
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
@@ -240,6 +278,7 @@ if selected == "Home":
         """,
         unsafe_allow_html=True
     )
+
 
 
 
