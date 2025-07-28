@@ -489,8 +489,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     # Community filter
     if selected_community_1 == 'All':
-        branch_df['Total Seats (All Communities)'] = branch_df[community_cols].sum(axis=1)
-        branch_df = branch_df[[*required_id_vars, 'Total Seats (All Communities)']]
+        branch_df = branch_df[[*required_id_vars, *community_cols]]
     else:
         branch_df = branch_df[[*required_id_vars, selected_community_1]]
         branch_df = branch_df.rename(columns={selected_community_1: 'Selected Community Seats'})
