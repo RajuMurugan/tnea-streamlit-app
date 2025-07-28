@@ -447,20 +447,20 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     # ----------------------------- CATEGORY 1 -----------------------------
     st.markdown("## 📂 Select Branch and Community")
-    col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(3)
+    col1, col2, col3 = st.columns(3)
 
-    with col_cat1_1:
-        selected_sheet_1 = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat1_sheet")
-        df1 = data_dict[selected_sheet_1]
+    with col1:
+        selected_sheet = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat1_sheet")
+        df = data_dict[selected_sheet]
 
-    if df1.empty:
+    if df.empty:
         st.error("❌ No data found in the selected sheet.")
         st.stop()
 
-    df1.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df1.columns]
+    df.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df.columns]
 
     rename_map = {}
-    for col in df1.columns:
+    for col in df.columns:
         if "COLLEGE CODE" in col:
             rename_map[col] = 'College Code'
         elif "COLLEGE NAME" in col:
@@ -470,50 +470,56 @@ elif selected == "TNEA Vacancy Seat Matrix":
         elif "BRANCH NAME" in col:
             rename_map[col] = 'Branch Name'
 
-    df1.rename(columns=rename_map, inplace=True)
-    df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
-    df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
+    df.rename(columns=rename_map, inplace=True)
+    df = df[[col for col in df.columns if col in required_id_vars + community_cols]]
+    df[community_cols] = df[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
-    with col_cat1_2:
-        branch_codes = sorted(df1['Branch Code'].dropna().unique())
-        selected_branch_1 = st.selectbox("🔍 Select Branch Code", ['All'] + branch_codes)
+    with col2:
+        branch_codes = sorted(df['Branch Code'].dropna().unique())
+        selected_branch = st.selectbox("🔍 Select Branch Code", ['All'] + branch_codes)
 
-    with col_cat1_3:
-        selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Select Community", ['All'] + community_cols)
+    with col3:
+        selected_community = st.selectbox("🧑‍🤝‍🧑 Select Community", ['All'] + community_cols)
 
-    # Branch filter
-    if selected_branch_1 == 'All':
-        branch_df = df1.copy()
+    if selected_branch == 'All':
+        branch_df = df.copy()
     else:
-        branch_df = df1[df1['Branch Code'] == selected_branch_1].copy()
+        branch_df = df[df['Branch Code'] == selected_branch].copy()
 
-    # Community filter
-    if selected_community_1 == 'All':
+    if selected_community == 'All':
         branch_df['Total Seats (All Communities)'] = branch_df[community_cols].sum(axis=1)
         branch_df = branch_df[[*required_id_vars, 'Total Seats (All Communities)']]
     else:
-        branch_df = branch_df[[*required_id_vars, selected_community_1]]
-        branch_df = branch_df.rename(columns={selected_community_1: 'Selected Community Seats'})
-        branch_df.insert(4, 'Selected Community', selected_community_1)
+        branch_df = branch_df[[*required_id_vars, selected_community]]
+        branch_df = branch_df.rename(columns={selected_community: 'Selected Community Seats'})
+        branch_df.insert(4, 'Selected Community', selected_community)
 
     if not branch_df.empty:
-        title_text = f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}"
-        st.header(title_text)
+        title = f"📘 Branch: {selected_branch} | Community: {selected_community}"
+        st.header(title)
         st.dataframe(branch_df, use_container_width=True)
 
-        # Plot only if a specific branch is selected
-        if selected_branch_1 != 'All':
-            bar1 = df1[df1['Branch Code'] == selected_branch_1]
-            community_summary = bar1[community_cols].sum().reset_index()
-            community_summary.columns = ['Community', 'Seats']
-            fig1 = px.bar(
-                community_summary,
+        if selected_branch != 'All':
+            bar_data = df[df['Branch Code'] == selected_branch]
+            fig_all = px.bar(
+                bar_data.melt(id_vars=required_id_vars, value_vars=community_cols, var_name='Community', value_name='Seats'),
                 x='Community', y='Seats', color='Community',
-                title='Community-wise Seat Distribution for Selected Branch',
+                title=f"All Communities - Seat Distribution for Branch {selected_branch}",
                 text='Seats', height=450
             )
-            fig1.update_traces(textposition='outside')
-            st.plotly_chart(fig1, use_container_width=True)
+            fig_all.update_traces(textposition='outside')
+            st.plotly_chart(fig_all, use_container_width=True)
+
+            if selected_community != 'All':
+                fig_sel = px.bar(
+                    bar_data,
+                    x='College Name', y=selected_community,
+                    color='College Name', text=selected_community,
+                    title=f"{selected_community} - Seat Distribution in Branch {selected_branch}",
+                    height=450
+                )
+                fig_sel.update_traces(textposition='outside')
+                st.plotly_chart(fig_sel, use_container_width=True)
 
         # Download
         excel_buffer = io.BytesIO()
@@ -521,9 +527,9 @@ elif selected == "TNEA Vacancy Seat Matrix":
         excel_buffer.seek(0)
 
         file_name = (
-            f"Branch_{selected_branch_1}_All_Seats.xlsx"
-            if selected_community_1 == 'All'
-            else f"Branch_{selected_branch_1}_{selected_community_1}_Seats.xlsx"
+            f"Branch_{selected_branch}_All_Seats.xlsx"
+            if selected_community == 'All'
+            else f"Branch_{selected_branch}_{selected_community}_Seats.xlsx"
         )
 
         st.download_button(
@@ -535,13 +541,13 @@ elif selected == "TNEA Vacancy Seat Matrix":
     else:
         st.warning("⚠️ No data found for the selected branch/community.")
 
-
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
-    st.markdown("## 🏧 Select College and Branch")
-    col_cat2_1, col_cat2_2, col_cat2_3 = st.columns(3)
+    st.markdown("## 🏫 Select College and Branch")
 
-    with col_cat2_1:
+    col_a, col_b, col_c = st.columns(3)
+
+    with col_a:
         selected_sheet_2 = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat2_sheet")
         df2 = data_dict[selected_sheet_2]
 
@@ -551,98 +557,73 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     df2.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df2.columns]
     df2.rename(columns=rename_map, inplace=True)
-
     df2 = df2[[col for col in df2.columns if col in required_id_vars + community_cols]]
     df2[community_cols] = df2[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
     df2['College Combined'] = df2['College Code'].astype(str) + ' - ' + df2['College Name']
 
-    unique_colleges = sorted(df2['College Combined'].dropna().unique())
+    college_list = sorted(df2['College Combined'].dropna().unique())
 
-    with col_cat2_2:
-        selected_college_combined = st.selectbox("🏧 Select College (Code - Name)", ['All'] + unique_colleges)
+    with col_b:
+        selected_college = st.selectbox("🏫 Select College", ['All'] + college_list)
 
-    with col_cat2_3:
-        branch_codes_2 = sorted(df2['Branch Code'].dropna().unique())
-        selected_branch_code = st.selectbox("🔍 Filter by Branch Code (Optional)", ['All'] + branch_codes_2)
+    with col_c:
+        branch_codes2 = sorted(df2['Branch Code'].dropna().unique())
+        selected_branch_2 = st.selectbox("🔍 Select Branch Code", ['All'] + branch_codes2)
 
     selected_community_2 = st.selectbox("🧑‍🤝‍🧑 Select Community", ['All'] + community_cols, key="cat2_community")
 
     college_df = df2.copy()
 
-    if selected_college_combined != "All":
-        selected_code, selected_name = selected_college_combined.split(" - ", 1)
+    if selected_college != 'All':
+        code, name = selected_college.split(' - ', 1)
         college_df = college_df[
-            (college_df['College Code'].astype(str) == selected_code.strip()) &
-            (college_df['College Name'].str.strip() == selected_name.strip())
+            (college_df['College Code'].astype(str) == code.strip()) &
+            (college_df['College Name'].str.strip() == name.strip())
         ]
 
-    if selected_branch_code != "All":
-        college_df = college_df[college_df['Branch Code'] == selected_branch_code]
+    if selected_branch_2 != 'All':
+        college_df = college_df[college_df['Branch Code'] == selected_branch_2]
 
     if selected_community_2 == 'All':
         college_df['Total Seats (All Communities)'] = college_df[community_cols].sum(axis=1)
-        college_df = college_df[[*required_id_vars, 'Total Seats (All Communities)']]
+        y_col = 'Total Seats (All Communities)'
     else:
         college_df = college_df[[*required_id_vars, selected_community_2]]
         college_df = college_df.rename(columns={selected_community_2: 'Selected Community Seats'})
         college_df.insert(4, 'Selected Community', selected_community_2)
+        y_col = 'Selected Community Seats'
 
     if not college_df.empty:
-        st.subheader("🏧 College-wise Community Seat Distribution")
+        st.subheader("🏫 College-wise Community Seat Distribution")
         st.dataframe(college_df, use_container_width=True)
 
-        if selected_community_2 == 'All':
-            fig2_data = college_df.copy()
-            fig2_data['Branch Code'] = fig2_data['Branch Code'].astype(str)
-            fig2 = px.bar(
-                fig2_data,
-                x='Branch Code', y='Total Seats (All Communities)',
-                color='Branch Code', text='Total Seats (All Communities)',
-                title='Total Community Seat Distribution Across Branches', height=450
-            )
-        else:
-            fig2 = px.bar(
-                college_df,
-                x='Branch Code', y='Selected Community Seats',
-                color='Branch Code', text='Selected Community Seats',
-                title='Selected Community Seat Distribution Across Branches', height=450
-            )
+        chart_title = f"{selected_community_2 if selected_community_2 != 'All' else 'All Communities'} Seat Distribution"
+        fig = px.bar(
+            college_df,
+            x='Branch Name',
+            y=y_col,
+            color='Branch Code',
+            text=y_col,
+            title=chart_title,
+            height=450
+        )
+        fig.update_traces(textposition='outside')
+        st.plotly_chart(fig, use_container_width=True)
 
-        fig2.update_traces(textposition='outside')
-        st.plotly_chart(fig2, use_container_width=True)
-
-        if selected_community_2 != 'All' and selected_college_combined != "All":
-            summary3 = df2[
-                (df2['College Code'].astype(str) == selected_code.strip()) &
-                (df2['College Name'].str.strip() == selected_name.strip())
-            ]
-            fig3 = px.bar(
-                summary3,
-                x='Branch Code', y=selected_community_2,
-                color='Branch Code', text=selected_community_2,
-                title=f'{selected_community_2} Seat Distribution for All Branches', height=450
-            )
-            fig3.update_traces(textposition='outside')
-            st.plotly_chart(fig3, use_container_width=True)
-
+        # Download
         excel_buffer2 = io.BytesIO()
         college_df.to_excel(excel_buffer2, index=False, engine='openpyxl')
         excel_buffer2.seek(0)
 
-        fallback_code = college_df['College Code'].astype(str).iloc[0] if not college_df['College Code'].empty else "College"
-        fallback_name = college_df['College Name'].astype(str).iloc[0].replace(' ', '_') if not college_df['College Name'].empty else "Summary"
-
-        download_file_name2 = (
-            f"College_{fallback_code}_All_Seats.xlsx"
-            if selected_community_2 == 'All'
-            else f"College_{fallback_code}_{selected_community_2}_Seats.xlsx"
-        )
+        fallback_code = college_df['College Code'].astype(str).iloc[0]
+        fallback_comm = selected_community_2 if selected_community_2 != 'All' else 'All'
+        file_name2 = f"College_{fallback_code}_{fallback_comm}_Seats.xlsx"
 
         st.download_button(
             label="📥 Download College-wise Community Seats",
             data=excel_buffer2,
-            file_name=download_file_name2,
+            file_name=file_name2,
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
     else:
-        st.warning("⚠️ No data found for the selected college or branch.")
+        st.warning("⚠️ No data found for the selected filters.")
