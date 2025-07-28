@@ -481,13 +481,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
     with col_cat1_3:
         selected_community_1 = st.selectbox("🧑‍🤝‍🧑 Select Community", ['All'] + community_cols)
 
-    # Branch filter
     if selected_branch_1 == 'All':
         branch_df = df1.copy()
     else:
         branch_df = df1[df1['Branch Code'] == selected_branch_1].copy()
 
-    # Community filter
     if selected_community_1 == 'All':
         branch_df['Total Seats (All Communities)'] = branch_df[community_cols].sum(axis=1)
         branch_df = branch_df[[*required_id_vars, 'Total Seats (All Communities)']]
@@ -557,25 +555,22 @@ elif selected == "TNEA Vacancy Seat Matrix":
     if selected_branch_code != "All":
         college_df = college_df[college_df['Branch Code'] == selected_branch_code]
 
-    if selected_community_2 == 'All':
-        fig2_data = df2.copy()
-        if selected_college_combined != "All":
-            fig2_data = fig2_data[
-                (fig2_data['College Code'].astype(str) == selected_code.strip()) &
-                (fig2_data['College Name'].str.strip() == selected_name.strip())
-            ]
-        if selected_branch_code != "All":
-            fig2_data = fig2_data[fig2_data['Branch Code'] == selected_branch_code]
+    # Chart 1: All Community Seats per Branch
+    fig2_data_all = college_df.copy()
+    fig2_data_all['Total Seats (All Communities)'] = fig2_data_all[community_cols].sum(axis=1)
+    fig_all = px.bar(
+        fig2_data_all,
+        x='Branch Code', y='Total Seats (All Communities)', color='Branch Code',
+        text='Total Seats (All Communities)',
+        title=f"{selected_college_combined} - Total Seats per Branch (All Communities)",
+        labels={'Branch Code': 'Branch', 'Total Seats (All Communities)': 'Number of Seats'}, height=450
+    )
+    fig_all.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
+    fig_all.update_traces(textposition='outside')
+    st.plotly_chart(fig_all, use_container_width=True)
 
-        fig2_data['Total Seats (All Communities)'] = fig2_data[community_cols].sum(axis=1)
-        fig2 = px.bar(
-            fig2_data,
-            x='Branch Code', y='Total Seats (All Communities)', color='Branch Code',
-            text='Total Seats (All Communities)',
-            title=f"{selected_college_combined} - Total Seats per Branch (All Communities)",
-            labels={'Branch Code': 'Branch', 'Total Seats (All Communities)': 'Number of Seats'}, height=450
-        )
-    else:
+    # Chart 2: Selected Community Seats per Branch
+    if selected_community_2 != 'All':
         college_df = college_df[[*required_id_vars, selected_community_2]]
         college_df = college_df.rename(columns={selected_community_2: 'Selected Community Seats'})
         college_df.insert(4, 'Selected Community', selected_community_2)
@@ -586,10 +581,9 @@ elif selected == "TNEA Vacancy Seat Matrix":
             title=f"{selected_college_combined} - {selected_community_2} Seats per Branch",
             labels={'Branch Code': 'Branch', 'Selected Community Seats': 'Number of Seats'}, height=450
         )
-
-    fig2.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
-    fig2.update_traces(textposition='outside')
-    st.plotly_chart(fig2, use_container_width=True)
+        fig2.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
+        fig2.update_traces(textposition='outside')
+        st.plotly_chart(fig2, use_container_width=True)
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
