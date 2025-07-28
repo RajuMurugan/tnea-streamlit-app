@@ -501,40 +501,19 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.header(title_text)
         st.dataframe(branch_df, use_container_width=True)
 
-        # Plot only if a specific branch is selected
         if selected_branch_1 != 'All':
             bar1 = df1[df1['Branch Code'] == selected_branch_1]
             community_summary = bar1[community_cols].sum().reset_index()
             community_summary.columns = ['Community', 'Seats']
+            chart_title = f"{selected_sheet_1} - {selected_branch_1} - Total Seats Across Communities"
             fig1 = px.bar(
-                community_summary,
-                x='Community', y='Seats', color='Community',
-                title='Community-wise Seat Distribution for Selected Branch',
-                text='Seats', height=450
+                community_summary, x='Community', y='Seats', color='Community', text='Seats',
+                title=chart_title,
+                labels={'Community': 'Community Category', 'Seats': 'Number of Seats'}, height=450
             )
+            fig1.update_layout(xaxis_title="Community", yaxis_title="Number of Seats")
             fig1.update_traces(textposition='outside')
             st.plotly_chart(fig1, use_container_width=True)
-
-        # Download
-        excel_buffer = io.BytesIO()
-        branch_df.to_excel(excel_buffer, index=False, engine='openpyxl')
-        excel_buffer.seek(0)
-
-        file_name = (
-            f"Branch_{selected_branch_1}_All_Seats.xlsx"
-            if selected_community_1 == 'All'
-            else f"Branch_{selected_branch_1}_{selected_community_1}_Seats.xlsx"
-        )
-
-        st.download_button(
-            label="📥 Download Branch-wise Community Seats",
-            data=excel_buffer,
-            file_name=file_name,
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
-    else:
-        st.warning("⚠️ No data found for the selected branch/community.")
-
 
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
@@ -551,7 +530,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     df2.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df2.columns]
     df2.rename(columns=rename_map, inplace=True)
-
     df2 = df2[[col for col in df2.columns if col in required_id_vars + community_cols]]
     df2[community_cols] = df2[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
     df2['College Combined'] = df2['College Code'].astype(str) + ' - ' + df2['College Name']
@@ -591,58 +569,26 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.subheader("🏧 College-wise Community Seat Distribution")
         st.dataframe(college_df, use_container_width=True)
 
+        college_title = f"{selected_college_combined}"
         if selected_community_2 == 'All':
             fig2_data = college_df.copy()
             fig2_data['Branch Code'] = fig2_data['Branch Code'].astype(str)
             fig2 = px.bar(
-                fig2_data,
-                x='Branch Code', y='Total Seats (All Communities)',
-                color='Branch Code', text='Total Seats (All Communities)',
-                title='Total Community Seat Distribution Across Branches', height=450
+                fig2_data, x='Branch Code', y='Total Seats (All Communities)', color='Branch Code',
+                text='Total Seats (All Communities)',
+                title=f"{college_title} - Total Seats per Branch (All Communities)",
+                labels={'Branch Code': 'Branch', 'Total Seats (All Communities)': 'Number of Seats'}, height=450
             )
         else:
             fig2 = px.bar(
-                college_df,
-                x='Branch Code', y='Selected Community Seats',
-                color='Branch Code', text='Selected Community Seats',
-                title='Selected Community Seat Distribution Across Branches', height=450
+                college_df, x='Branch Code', y='Selected Community Seats', color='Branch Code',
+                text='Selected Community Seats',
+                title=f"{college_title} - {selected_community_2} Seats per Branch",
+                labels={'Branch Code': 'Branch', 'Selected Community Seats': 'Number of Seats'}, height=450
             )
 
+        fig2.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
         fig2.update_traces(textposition='outside')
         st.plotly_chart(fig2, use_container_width=True)
-
-        if selected_community_2 != 'All' and selected_college_combined != "All":
-            summary3 = df2[
-                (df2['College Code'].astype(str) == selected_code.strip()) &
-                (df2['College Name'].str.strip() == selected_name.strip())
-            ]
-            fig3 = px.bar(
-                summary3,
-                x='Branch Code', y=selected_community_2,
-                color='Branch Code', text=selected_community_2,
-                title=f'{selected_community_2} Seat Distribution for All Branches', height=450
-            )
-            fig3.update_traces(textposition='outside')
-            st.plotly_chart(fig3, use_container_width=True)
-
-        excel_buffer2 = io.BytesIO()
-        college_df.to_excel(excel_buffer2, index=False, engine='openpyxl')
-        excel_buffer2.seek(0)
-
-        fallback_code = college_df['College Code'].astype(str).iloc[0] if not college_df['College Code'].empty else "College"
-        fallback_name = college_df['College Name'].astype(str).iloc[0].replace(' ', '_') if not college_df['College Name'].empty else "Summary"
-
-        download_file_name2 = (
-            f"College_{fallback_code}_All_Seats.xlsx"
-            if selected_community_2 == 'All'
-            else f"College_{fallback_code}_{selected_community_2}_Seats.xlsx"
-        )
-
-        st.download_button(
-            label="📥 Download College-wise Community Seats",
-            data=excel_buffer2,
-            file_name=download_file_name2,
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
     else:
         st.warning("⚠️ No data found for the selected college or branch.")
