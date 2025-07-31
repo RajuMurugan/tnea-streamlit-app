@@ -151,6 +151,10 @@ if not st.session_state.logged_in:
     )
 
 # 🧠 Arithmetic Game Section (Auto-Next Question)
+import streamlit as st
+import random
+import time
+
 st.subheader("🧠 Arithmetic Practice")
 
 difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
@@ -160,12 +164,12 @@ if "score" not in st.session_state:
     st.session_state.score = 0
 if "question" not in st.session_state:
     st.session_state.question = ""
-if "answer" not in st.session_state:
-    st.session_state.answer = ""
 if "correct_answer" not in st.session_state:
     st.session_state.correct_answer = 0
 if "game_start_time" not in st.session_state:
     st.session_state.game_start_time = time.time()
+if "awaiting_answer" not in st.session_state:
+    st.session_state.awaiting_answer = True
 
 # Generate a new question
 def generate_question():
@@ -179,28 +183,25 @@ def generate_question():
     answer = eval(str(num1) + op + str(num2))
     return question, round(answer, 2)
 
-# Auto-load first question
-if st.session_state.question == "":
+# Load a question if needed
+if st.session_state.question == "" or not st.session_state.awaiting_answer:
     st.session_state.question, st.session_state.correct_answer = generate_question()
-    st.session_state.answer = ""
+    st.session_state.awaiting_answer = True
 
 # Display question and input
 st.markdown(f"### {st.session_state.question}")
-answer = st.text_input("Your Answer", value=st.session_state.answer, key="user_answer")
+user_input = st.text_input("Your Answer", key="user_answer")
 
-# Check if input is a number and process automatically
-if answer.strip() != "":
+if user_input.strip():
     try:
-        user_ans = float(answer.strip())
+        user_ans = float(user_input.strip())
         if round(user_ans, 2) == st.session_state.correct_answer:
             st.success("Correct! ✅")
             st.session_state.score += 1
         else:
             st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
 
-        # Auto-generate next question
-        st.session_state.question, st.session_state.correct_answer = generate_question()
-        st.session_state.answer = ""
+        st.session_state.awaiting_answer = False
         st.rerun()
     except ValueError:
         st.warning("Please enter a valid number.")
@@ -215,6 +216,8 @@ if mode == "Challenge Mode":
         st.session_state.score = 0
         st.session_state.game_start_time = time.time()
         st.session_state.question = ""
+        st.session_state.awaiting_answer = True
+
 
     # Login form
     st.title("🔐 Login to Access TNEA App")
