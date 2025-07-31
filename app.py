@@ -150,7 +150,7 @@ if not st.session_state.logged_in:
         unsafe_allow_html=True
     )
 
-    # 🧠 Arithmetic Game Section (Auto-Next Question)
+# 🧠 Arithmetic Game Section (Auto-Next Question)
 st.subheader("🧠 Arithmetic Practice")
 
 difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
@@ -161,14 +161,13 @@ if "score" not in st.session_state:
 if "question" not in st.session_state:
     st.session_state.question = ""
 if "answer" not in st.session_state:
-    st.session_state.answer = None
+    st.session_state.answer = ""
 if "correct_answer" not in st.session_state:
     st.session_state.correct_answer = 0
 if "game_start_time" not in st.session_state:
     st.session_state.game_start_time = time.time()
 
 # Generate a new question
-
 def generate_question():
     max_num = {"Easy": 10, "Medium": 50, "Hard": 100}[difficulty]
     num1 = random.randint(1, max_num)
@@ -180,25 +179,31 @@ def generate_question():
     answer = eval(str(num1) + op + str(num2))
     return question, round(answer, 2)
 
-# Load first question if empty
+# Auto-load first question
 if st.session_state.question == "":
     st.session_state.question, st.session_state.correct_answer = generate_question()
-    st.session_state.answer = None
+    st.session_state.answer = ""
 
-# Display current question
+# Display question and input
 st.markdown(f"### {st.session_state.question}")
-st.session_state.answer = st.number_input("Your Answer", step=1.0, key="user_answer")
+answer = st.text_input("Your Answer", value=st.session_state.answer, key="user_answer")
 
-if st.button("✅ Submit Answer"):
-    if round(st.session_state.answer, 2) == st.session_state.correct_answer:
-        st.success("Correct! ✅")
-        st.session_state.score += 1
-    else:
-        st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
+# Check if input is a number and process automatically
+if answer.strip() != "":
+    try:
+        user_ans = float(answer.strip())
+        if round(user_ans, 2) == st.session_state.correct_answer:
+            st.success("Correct! ✅")
+            st.session_state.score += 1
+        else:
+            st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
 
-    # Generate new question immediately
-    st.session_state.question, st.session_state.correct_answer = generate_question()
-    st.session_state.answer = None
+        # Auto-generate next question
+        st.session_state.question, st.session_state.correct_answer = generate_question()
+        st.session_state.answer = ""
+        st.rerun()
+    except ValueError:
+        st.warning("Please enter a valid number.")
 
 st.info(f"🎯 Score: {st.session_state.score}")
 
