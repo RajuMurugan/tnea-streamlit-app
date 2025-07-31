@@ -10,11 +10,12 @@ from datetime import timedelta
 import os
 import plotly.express as px
 from openpyxl import load_workbook
+import random
 
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
-# --- Always show labels with icons (even on mobile) ---
+# --- Style Settings ---
 st.markdown("""
     <style>
     @media (max-width: 768px) {
@@ -22,12 +23,6 @@ st.markdown("""
             display: inline !important;
         }
     }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- Style for DataFrame text ---
-st.markdown("""
-    <style>
     .stDataFrame div { color: black !important; }
     </style>
 """, unsafe_allow_html=True)
@@ -39,7 +34,7 @@ device_session_path = base_path + "device_session.yaml"
 
 SESSION_TIMEOUT = 180  # 3 minutes
 
-# --- Load config.yaml ---
+# --- Load Config ---
 try:
     with open(config_path) as file:
         config = yaml.safe_load(file)
@@ -100,7 +95,7 @@ if st.session_state.logged_in:
         logout_user()
         st.warning("⚠️ Session expired. Please log in again below.")
 
-        # Inline Login Form
+        # Login form again
         st.markdown("### 🔐 Login Form")
         mobile = st.text_input("📱 Mobile Number", key="relogin_mobile")
         password = st.text_input("🔑 Password", type="password", key="relogin_pass")
@@ -108,7 +103,7 @@ if st.session_state.logged_in:
             if mobile in user_data and user_data[mobile]["password"] == password:
                 existing = session_data["active_users"].get(mobile)
                 if existing and existing["device_id"] != st.session_state.device_id and (time.time() - existing["timestamp"]) < SESSION_TIMEOUT:
-                    st.error("⚠️ Already logged in on another device. Logout there first.")
+                    st.error("⚠️ Already logged in on another device.")
                 else:
                     update_session(mobile, st.session_state.device_id)
                     st.session_state.logged_in = True
@@ -129,7 +124,7 @@ if st.session_state.logged_in:
 
 # --- Login Form ---
 if not st.session_state.logged_in:
-    # 🔥 Offer Banner (before login title)
+    # 🔥 Offer Banner
     st.markdown(
         """
         <div style='
@@ -138,24 +133,15 @@ if not st.session_state.logged_in:
             border-left: 8px solid #007bff;
             border-radius: 10px;
             margin-bottom: 20px;
-            box-shadow: 2px 2px 12px rgba(0,0,0,0.05);
             text-align: center;
         '>
-            <h2 style='color: #d91c1c; font-weight: bold;'>🔥 Today Only Offer!</h2>
+            <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
             <p style='font-size: 20px; font-weight: 600; color: #333;'>
                 Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
-                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span><br><br>
-                🕒 Limited Time Deal – Grab it before it's gone!
+                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
             </p>
-            <p style='margin-top: 20px;'>
-                <a href='https://wa.me/918248696926' target='_blank' style='
-                    font-size: 24px;
-                    color: #25D366;
-                    font-weight: bold;
-                    text-decoration: none;
-                    display: inline-block;
-                    margin-top: 10px;
-                '>
+            <p>
+                <a href='https://wa.me/918248696926' target='_blank' style='font-size: 24px; color: #25D366; font-weight: bold;'>
                     📞 Chat on WhatsApp: 8248696926
                 </a>
             </p>
@@ -164,7 +150,61 @@ if not st.session_state.logged_in:
         unsafe_allow_html=True
     )
 
+    # 🧠 Arithmetic Game Section
+    st.subheader("🧠 Arithmetic Practice")
 
+    difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
+    mode = st.selectbox("Select Mode", ["Practice Mode", "Challenge Mode"])
+
+    if "score" not in st.session_state:
+        st.session_state.score = 0
+    if "question" not in st.session_state:
+        st.session_state.question = ""
+    if "answer" not in st.session_state:
+        st.session_state.answer = None
+    if "correct_answer" not in st.session_state:
+        st.session_state.correct_answer = 0
+    if "game_start_time" not in st.session_state:
+        st.session_state.game_start_time = time.time()
+
+    def generate_question():
+        max_num = {"Easy": 10, "Medium": 50, "Hard": 100}[difficulty]
+        num1 = random.randint(1, max_num)
+        num2 = random.randint(1, max_num)
+        op = random.choice(["+", "-", "*", "/"])
+        if op == "/":
+            num1 = num1 * num2
+        question = f"What is {num1} {op} {num2}?"
+        answer = eval(str(num1) + op + str(num2))
+        return question, round(answer, 2)
+
+    if st.button("🎲 New Question"):
+        st.session_state.question, st.session_state.correct_answer = generate_question()
+        st.session_state.answer = None
+
+    if st.session_state.question:
+        st.markdown(f"### {st.session_state.question}")
+        st.session_state.answer = st.number_input("Your Answer", step=1.0)
+        if st.button("✅ Submit Answer"):
+            if round(st.session_state.answer, 2) == st.session_state.correct_answer:
+                st.success("Correct! ✅")
+                st.session_state.score += 1
+            else:
+                st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
+            st.session_state.question = ""
+
+    st.info(f"🎯 Score: {st.session_state.score}")
+
+    if mode == "Challenge Mode":
+        time_left = 30 - int(time.time() - st.session_state.game_start_time)
+        st.warning(f"⏱️ Time Left: {time_left} seconds")
+        if time_left <= 0:
+            st.error("⏰ Time's up!")
+            st.session_state.score = 0
+            st.session_state.game_start_time = time.time()
+            st.session_state.question = ""
+
+    # Login form
     st.title("🔐 Login to Access TNEA App")
     mobile = st.text_input("📱 Mobile Number")
     password = st.text_input("🔑 Password", type="password")
@@ -172,7 +212,7 @@ if not st.session_state.logged_in:
         if mobile in user_data and user_data[mobile]["password"] == password:
             existing = session_data["active_users"].get(mobile)
             if existing and existing["device_id"] != st.session_state.device_id and (time.time() - existing["timestamp"]) < SESSION_TIMEOUT:
-                st.error("⚠️ Already logged in on another device. Logout there first.")
+                st.error("⚠️ Already logged in on another device.")
                 st.stop()
             update_session(mobile, st.session_state.device_id)
             st.session_state.logged_in = True
@@ -183,14 +223,13 @@ if not st.session_state.logged_in:
             st.error("❌ Invalid mobile number or password")
     st.stop()
 
-# --- Navigation Title ---
+# --- Navigation Bar ---
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
         🔽 Select a Feature Below 🔽
     </h2>
 """, unsafe_allow_html=True)
 
-# --- Option Menu (Mobile + Laptop Friendly) ---
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     selected = option_menu(
@@ -223,32 +262,24 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    # 🔥 Offer Banner on Home Page
-    st.markdown(
-        """
+    st.markdown("""
         <div style='
             background-color: #e6f2ff;
             padding: 20px;
             border-left: 8px solid #007bff;
             border-radius: 10px;
             margin-bottom: 20px;
-            box-shadow: 2px 2px 12px rgba(0,0,0,0.05);
             text-align: center;
         '>
-            <h2 style='color: #d91c1c; font-weight: bold;'>🔥 Today Only Offer!</h2>
+            <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
             <p style='font-size: 20px; font-weight: 600; color: #333;'>
                 Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
-                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span><br><br>
-                🕒 Limited Time Deal – Grab it before it's gone!
+                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
             </p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+        """, unsafe_allow_html=True)
 
-    # 🎁 Referral Bonus Block
-    st.markdown(
-        """
+    st.markdown("""
         <div style='
             background-color: #fff3cd;
             border-left: 10px solid #ffc107;
@@ -257,9 +288,8 @@ if selected == "Home":
             margin: 20px auto;
             width: 95%;
             text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         '>
-            <h2 style='color: #b31b1b; font-weight: bold;'>🎁 Big Referral Bonus Alert!</h2>
+            <h2 style='color: #b31b1b;'>🎁 Big Referral Bonus Alert!</h2>
             <p style='font-size: 18px; color: #333; font-weight: 500;'>
                 💡 Sell this app to your friends, students, etc..<br><br>
                 💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>
@@ -267,19 +297,10 @@ if selected == "Home":
                 📢 Start referring today and grow your earnings!
             </p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+        """, unsafe_allow_html=True)
 
-    # Main Heading
-    st.markdown(
-        "<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>",
-        unsafe_allow_html=True
-    )
-
-    # Feature Description
-    st.markdown(
-        """
+    st.markdown("""
+        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
             <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
             <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
@@ -288,10 +309,7 @@ if selected == "Home":
             👨‍💻 Developed by Dr. Raju Murugan<br><br>
             &copy; 2025 TNEA Info App. All rights reserved.
         </div>
-        """,
-        unsafe_allow_html=True
-    )
-
+        """, unsafe_allow_html=True)
 
 
 
