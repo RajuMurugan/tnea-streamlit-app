@@ -150,74 +150,59 @@ if not st.session_state.logged_in:
         unsafe_allow_html=True
     )
 
-# 🧠 Arithmetic Game Section (Auto-Next Question)
-import streamlit as st
-import random
-import time
+    # 🧠 Arithmetic Game Section
+    st.subheader("🧠 Arithmetic Practice")
 
-st.subheader("🧠 Arithmetic Practice")
+    difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
+    mode = st.selectbox("Select Mode", ["Practice Mode", "Challenge Mode"])
 
-difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
-mode = st.selectbox("Select Mode", ["Practice Mode", "Challenge Mode"])
-
-if "score" not in st.session_state:
-    st.session_state.score = 0
-if "question" not in st.session_state:
-    st.session_state.question = ""
-if "correct_answer" not in st.session_state:
-    st.session_state.correct_answer = 0
-if "game_start_time" not in st.session_state:
-    st.session_state.game_start_time = time.time()
-if "awaiting_answer" not in st.session_state:
-    st.session_state.awaiting_answer = True
-
-# Generate a new question
-def generate_question():
-    max_num = {"Easy": 10, "Medium": 50, "Hard": 100}[difficulty]
-    num1 = random.randint(1, max_num)
-    num2 = random.randint(1, max_num)
-    op = random.choice(["+", "-", "*", "/"])
-    if op == "/":
-        num1 = num1 * num2
-    question = f"What is {num1} {op} {num2}?"
-    answer = eval(str(num1) + op + str(num2))
-    return question, round(answer, 2)
-
-# Load a question if needed
-if st.session_state.question == "" or not st.session_state.awaiting_answer:
-    st.session_state.question, st.session_state.correct_answer = generate_question()
-    st.session_state.awaiting_answer = True
-
-# Display question and input
-st.markdown(f"### {st.session_state.question}")
-user_input = st.text_input("Your Answer", key="user_answer")
-
-if user_input.strip():
-    try:
-        user_ans = float(user_input.strip())
-        if round(user_ans, 2) == st.session_state.correct_answer:
-            st.success("Correct! ✅")
-            st.session_state.score += 1
-        else:
-            st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
-
-        st.session_state.awaiting_answer = False
-        st.rerun()
-    except ValueError:
-        st.warning("Please enter a valid number.")
-
-st.info(f"🎯 Score: {st.session_state.score}")
-
-if mode == "Challenge Mode":
-    time_left = 30 - int(time.time() - st.session_state.game_start_time)
-    st.warning(f"⏱️ Time Left: {time_left} seconds")
-    if time_left <= 0:
-        st.error("⏰ Time's up!")
+    if "score" not in st.session_state:
         st.session_state.score = 0
-        st.session_state.game_start_time = time.time()
+    if "question" not in st.session_state:
         st.session_state.question = ""
-        st.session_state.awaiting_answer = True
+    if "answer" not in st.session_state:
+        st.session_state.answer = None
+    if "correct_answer" not in st.session_state:
+        st.session_state.correct_answer = 0
+    if "game_start_time" not in st.session_state:
+        st.session_state.game_start_time = time.time()
 
+    def generate_question():
+        max_num = {"Easy": 10, "Medium": 50, "Hard": 100}[difficulty]
+        num1 = random.randint(1, max_num)
+        num2 = random.randint(1, max_num)
+        op = random.choice(["+", "-", "*", "/"])
+        if op == "/":
+            num1 = num1 * num2
+        question = f"What is {num1} {op} {num2}?"
+        answer = eval(str(num1) + op + str(num2))
+        return question, round(answer, 2)
+
+    if st.button("🎲 New Question"):
+        st.session_state.question, st.session_state.correct_answer = generate_question()
+        st.session_state.answer = None
+
+    if st.session_state.question:
+        st.markdown(f"### {st.session_state.question}")
+        st.session_state.answer = st.number_input("Your Answer", step=1.0)
+        if st.button("✅ Submit Answer"):
+            if round(st.session_state.answer, 2) == st.session_state.correct_answer:
+                st.success("Correct! ✅")
+                st.session_state.score += 1
+            else:
+                st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
+            st.session_state.question = ""
+
+    st.info(f"🎯 Score: {st.session_state.score}")
+
+    if mode == "Challenge Mode":
+        time_left = 30 - int(time.time() - st.session_state.game_start_time)
+        st.warning(f"⏱️ Time Left: {time_left} seconds")
+        if time_left <= 0:
+            st.error("⏰ Time's up!")
+            st.session_state.score = 0
+            st.session_state.game_start_time = time.time()
+            st.session_state.question = ""
 
     # Login form
     st.title("🔐 Login to Access TNEA App")
@@ -325,8 +310,6 @@ if selected == "Home":
             &copy; 2025 TNEA Info App. All rights reserved.
         </div>
         """, unsafe_allow_html=True)
-
-
 
 # Add logic for other pages like "Create TNEA Choice List", etc. here if needed.
 
