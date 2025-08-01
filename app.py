@@ -147,6 +147,8 @@ else:
         <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
             📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br><br>
             📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a>
+            📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br><br>
+            📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a>
         </div>
     """, unsafe_allow_html=True)
 
