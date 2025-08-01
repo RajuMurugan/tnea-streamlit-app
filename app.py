@@ -140,15 +140,15 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-   # --- Quick Access to Previous Year Question Papers ---
-st.markdown("### 📚 Previous Year Question Papers")
+    # --- Quick Access to Previous Year Question Papers ---
+    st.markdown("### 📚 Previous Year Question Papers")
 
-st.markdown("""
-    <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-        📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br><br>
-        📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a>
-    </div>
-""", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+            📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br><br>
+            📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a>
+        </div>
+    """, unsafe_allow_html=True)
 
     # --- Login Form ---
     st.title("🔐 Login to Access TNEA App")
@@ -168,6 +168,7 @@ st.markdown("""
         else:
             st.error("❌ Invalid mobile number or password")
     st.stop()
+
 
 # --- Navigation Bar ---
 st.markdown("""
