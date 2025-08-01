@@ -140,59 +140,15 @@ else:
         </div>
     """, unsafe_allow_html=True)
 
-    # --- Arithmetic Game ---
-    st.subheader("🧠 Arithmetic Practice")
+   # --- Quick Access to Previous Year Question Papers ---
+st.markdown("### 📚 Previous Year Question Papers")
 
-    difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
-    mode = st.selectbox("Select Mode", ["Practice Mode", "Challenge Mode"])
-
-    if "score" not in st.session_state:
-        st.session_state.score = 0
-    if "question" not in st.session_state:
-        st.session_state.question = ""
-    if "answer" not in st.session_state:
-        st.session_state.answer = None
-    if "correct_answer" not in st.session_state:
-        st.session_state.correct_answer = 0
-    if "game_start_time" not in st.session_state:
-        st.session_state.game_start_time = time.time()
-
-    def generate_question():
-        max_num = {"Easy": 10, "Medium": 50, "Hard": 100}[difficulty]
-        num1 = random.randint(1, max_num)
-        num2 = random.randint(1, max_num)
-        op = random.choice(["+", "-", "*", "/"])
-        if op == "/":
-            num1 = num1 * num2
-        question = f"What is {num1} {op} {num2}?"
-        answer = eval(str(num1) + op + str(num2))
-        return question, round(answer, 2)
-
-    if st.button("🎲 New Question"):
-        st.session_state.question, st.session_state.correct_answer = generate_question()
-        st.session_state.answer = None
-
-    if st.session_state.question:
-        st.markdown(f"### {st.session_state.question}")
-        st.session_state.answer = st.number_input("Your Answer", step=1.0)
-        if st.button("✅ Submit Answer"):
-            if round(st.session_state.answer, 2) == st.session_state.correct_answer:
-                st.success("Correct! ✅")
-                st.session_state.score += 1
-            else:
-                st.error(f"Wrong ❌ (Correct: {st.session_state.correct_answer})")
-            st.session_state.question = ""
-
-    st.info(f"🎯 Score: {st.session_state.score}")
-
-    if mode == "Challenge Mode":
-        time_left = 30 - int(time.time() - st.session_state.game_start_time)
-        st.warning(f"⏱️ Time Left: {time_left} seconds")
-        if time_left <= 0:
-            st.error("⏰ Time's up!")
-            st.session_state.score = 0
-            st.session_state.game_start_time = time.time()
-            st.session_state.question = ""
+st.markdown("""
+    <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+        📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br><br>
+        📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a>
+    </div>
+""", unsafe_allow_html=True)
 
     # --- Login Form ---
     st.title("🔐 Login to Access TNEA App")
