@@ -135,7 +135,7 @@ else:
 
     st.markdown("""
 <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-            📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br><br> 
+            📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br>
         </div>
 
 
