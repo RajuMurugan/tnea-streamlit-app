@@ -11,6 +11,7 @@ import os
 import plotly.express as px
 from openpyxl import load_workbook
 import random
+import json
 
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
@@ -31,6 +32,7 @@ st.markdown("""
 base_path = "./"
 config_path = base_path + "config.yaml"
 device_session_path = base_path + "device_session.yaml"
+chat_path = base_path + "chat_messages.json"
 
 SESSION_TIMEOUT = 180  # 3 minutes
 
@@ -49,6 +51,11 @@ try:
         session_data = yaml.safe_load(session_file)
 except Exception:
     session_data = {"active_users": {}}
+
+# --- Load or Init chat messages ---
+if not os.path.exists(chat_path):
+    with open(chat_path, "w") as f:
+        json.dump([], f)
 
 def save_session():
     with open(device_session_path, "w") as f:
@@ -85,7 +92,7 @@ if "mobile" not in st.session_state:
 if "device_id" not in st.session_state:
     st.session_state.device_id = str(uuid.uuid4())
 
-# --- Session Check ---
+# --- Login or Session Check ---
 if st.session_state.logged_in:
     user = session_data["active_users"].get(st.session_state.mobile, {})
     last_time = user.get("timestamp", 0)
@@ -121,36 +128,19 @@ if st.session_state.logged_in:
             if st.button("🚪 Logout"):
                 logout_user()
                 st.rerun()
-
-# --- Login Form ---
-if not st.session_state.logged_in:
-    # 🔥 Offer Banner
-    st.markdown(
-        """
-        <div style='
-            background-color: #e6f2ff;
-            padding: 20px;
-            border-left: 8px solid #007bff;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        '>
+else:
+    # --- Login Page ---
+    st.markdown("""
+        <div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'>
             <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
             <p style='font-size: 20px; font-weight: 600; color: #333;'>
                 Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
                 <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
             </p>
-            <p>
-                <a href='https://wa.me/918248696926' target='_blank' style='font-size: 24px; color: #25D366; font-weight: bold;'>
-                    📞 Chat on WhatsApp: 8248696926
-                </a>
-            </p>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
 
-    # 🧠 Arithmetic Game Section
+    # --- Arithmetic Game ---
     st.subheader("🧠 Arithmetic Practice")
 
     difficulty = st.selectbox("Select Difficulty", ["Easy", "Medium", "Hard"])
@@ -204,7 +194,7 @@ if not st.session_state.logged_in:
             st.session_state.game_start_time = time.time()
             st.session_state.question = ""
 
-    # Login form
+    # --- Login Form ---
     st.title("🔐 Login to Access TNEA App")
     mobile = st.text_input("📱 Mobile Number")
     password = st.text_input("🔑 Password", type="password")
@@ -263,32 +253,17 @@ with col2:
 # --- PAGE 1: HOME ---
 if selected == "Home":
     st.markdown("""
-        <div style='
-            background-color: #e6f2ff;
-            padding: 20px;
-            border-left: 8px solid #007bff;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        '>
+        <div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'>
             <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
             <p style='font-size: 20px; font-weight: 600; color: #333;'>
                 Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
                 <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
             </p>
         </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     st.markdown("""
-        <div style='
-            background-color: #fff3cd;
-            border-left: 10px solid #ffc107;
-            border-radius: 10px;
-            padding: 20px 30px;
-            margin: 20px auto;
-            width: 95%;
-            text-align: center;
-        '>
+        <div style='background-color: #fff3cd; border-left: 10px solid #ffc107; border-radius: 10px; padding: 20px 30px; margin: 20px auto; width: 95%; text-align: center;'>
             <h2 style='color: #b31b1b;'>🎁 Big Referral Bonus Alert!</h2>
             <p style='font-size: 18px; color: #333; font-weight: 500;'>
                 💡 Sell this app to your friends, students, etc..<br><br>
@@ -297,7 +272,7 @@ if selected == "Home":
                 📢 Start referring today and grow your earnings!
             </p>
         </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
@@ -309,9 +284,25 @@ if selected == "Home":
             👨‍💻 Developed by Dr. Raju Murugan<br><br>
             &copy; 2025 TNEA Info App. All rights reserved.
         </div>
-        """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-# Add logic for other pages like "Create TNEA Choice List", etc. here if needed.
+    # --- Chat Feature ---
+    st.markdown("---")
+    st.subheader("💬 Community Chat Room")
+
+    with open(chat_path, "r") as f:
+        chat_data = json.load(f)
+
+    for entry in chat_data[-100:]:
+        st.markdown(f"**{entry['user']}**: {entry['message']}")
+
+    new_message = st.text_input("Type your message...")
+    if st.button("Send") and new_message.strip():
+        chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
+        with open(chat_path, "w") as f:
+            json.dump(chat_data, f, indent=2)
+        st.rerun()
+
 
 
 # --- PAGE 2: TNEA CHOICE LIST ---
