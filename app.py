@@ -131,15 +131,16 @@ if st.session_state.logged_in:
 else:
 
 # --- Quick Access to Cut off Mark Calculation ---
-st.markdown("### 📚 Cut off Mark Calculation")
+  # --- Quick Access to Cut off Mark Calculation ---
+    st.markdown("### 📚 Cut off Mark Calculation")
 
-st.markdown("""
-<div style='display: flex; justify-content: center;'>
-    <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px; text-align: center; max-width: 600px;'>
-        📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks / TNEA Cut off marks</a>
-    </div>
-</div>
-""", unsafe_allow_html=True)
+    st.markdown("""
+<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+            📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br>
+        </div>
+
+
+    """, unsafe_allow_html=True)
 
     
     # --- Login Page ---
