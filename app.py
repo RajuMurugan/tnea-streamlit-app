@@ -12,7 +12,6 @@ import plotly.express as px
 from openpyxl import load_workbook
 import random
 import json
-import math
 
 # --- Page Config ---
 st.set_page_config(page_title="TNEA Full App", layout="wide")
@@ -103,6 +102,7 @@ if st.session_state.logged_in:
         logout_user()
         st.warning("⚠️ Session expired. Please log in again below.")
 
+        # Login form again
         st.markdown("### 🔐 Login Form")
         mobile = st.text_input("📱 Mobile Number", key="relogin_mobile")
         password = st.text_input("🔑 Password", type="password", key="relogin_pass")
@@ -129,14 +129,45 @@ if st.session_state.logged_in:
                 logout_user()
                 st.rerun()
 else:
+
+# --- Quick Access to Cut off Mark Calculation ---
+  # --- Quick Access to Cut off Mark Calculation ---
     st.markdown("### 📚 Cut off Mark Calculation")
-    st.markdown("""<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br></div>""", unsafe_allow_html=True)
 
-    st.markdown("""<div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'><h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2><p style='font-size: 20px; font-weight: 600; color: #333;'>Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br><del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span></p></div>""", unsafe_allow_html=True)
+    st.markdown("""
+<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+            📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br>
+        </div>
 
+
+    """, unsafe_allow_html=True)
+
+    
+    # --- Login Page ---
+    st.markdown("""
+        <div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'>
+            <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
+            <p style='font-size: 20px; font-weight: 600; color: #333;'>
+                Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
+                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # --- Quick Access to Previous Year Question Papers ---
     st.markdown("### 📚 Previous Year Question Papers")
-    st.markdown("""<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br></div>""", unsafe_allow_html=True)
 
+    st.markdown("""
+<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+            📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
+            📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
+            📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
+        </div>
+
+
+    """, unsafe_allow_html=True)
+
+    # --- Login Form ---
     st.title("🔐 Login to Access TNEA App")
     mobile = st.text_input("📱 Mobile Number")
     password = st.text_input("🔑 Password", type="password")
@@ -155,9 +186,12 @@ else:
             st.error("❌ Invalid mobile number or password")
     st.stop()
 
+
 # --- Navigation Bar ---
 st.markdown("""
-    <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>🔽 Select a Feature Below 🔽</h2>
+    <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
+        🔽 Select a Feature Below 🔽
+    </h2>
 """, unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
@@ -192,12 +226,41 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    st.markdown("""<div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'><h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2><p style='font-size: 20px; font-weight: 600; color: #333;'>Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br><del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span></p></div>""", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'>
+            <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
+            <p style='font-size: 20px; font-weight: 600; color: #333;'>
+                Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
+                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("""<div style='background-color: #fff3cd; border-left: 10px solid #ffc107; border-radius: 10px; padding: 20px 30px; margin: 20px auto; width: 95%; text-align: center;'><h2 style='color: #b31b1b;'>🎁 Big Referral Bonus Alert!</h2><p style='font-size: 18px; color: #333; font-weight: 500;'>💡 Sell this app to your friends, students, etc..<br><br>💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>🔁 No limits. More sales = More rewards!<br><br>📢 Start referring today and grow your earnings!</p></div>""", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='background-color: #fff3cd; border-left: 10px solid #ffc107; border-radius: 10px; padding: 20px 30px; margin: 20px auto; width: 95%; text-align: center;'>
+            <h2 style='color: #b31b1b;'>🎁 Big Referral Bonus Alert!</h2>
+            <p style='font-size: 18px; color: #333; font-weight: 500;'>
+                💡 Sell this app to your friends, students, etc..<br><br>
+                💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>
+                🔁 No limits. More sales = More rewards!<br><br>
+                📢 Start referring today and grow your earnings!
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
 
-    st.markdown("""<h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1><div style='text-align: center; font-size: 18px; margin-top: 20px;'><b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br><b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>📞 Contact: +91-8248696926<br>📧 Email: rajumurugannp@gmail.com<br>👨‍💻 Developed by Dr. Raju Murugan<br><br>&copy; 2025 TNEA Info App. All rights reserved.</div>""", unsafe_allow_html=True)
+    st.markdown("""
+        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
+        <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
+            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
+            <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
+            📞 Contact: +91-8248696926<br>
+            📧 Email: rajumurugannp@gmail.com<br>
+            👨‍💻 Developed by Dr. Raju Murugan<br><br>
+            &copy; 2025 TNEA Info App. All rights reserved.
+        </div>
+    """, unsafe_allow_html=True)
 
+    # --- Chat Feature ---
     st.markdown("---")
     st.subheader("💬 Community Chat Room")
 
@@ -213,50 +276,6 @@ if selected == "Home":
         with open(chat_path, "w") as f:
             json.dump(chat_data, f, indent=2)
         st.rerun()
-
-    eye_exercise_ui()
-
-def eye_exercise_ui():
-    st.markdown("---")
-    st.subheader("👁️ Eye Exercise (30 seconds each)")
-
-    exercise_type = st.selectbox("🧘 Select Exercise Type", ["Left to Right", "Top to Bottom", "Circle"])
-    start_btn = st.button("▶️ Start Exercise")
-
-    if start_btn:
-        placeholder = st.empty()
-        canvas_width = 400
-        canvas_height = 200
-        radius = 80
-        duration = 30  # seconds
-
-        start_time = time.time()
-
-        while time.time() - start_time < duration:
-            elapsed = time.time() - start_time
-            t = elapsed / duration
-
-            if exercise_type == "Left to Right":
-                x = 50 + int((canvas_width - 100) * abs(math.sin(2 * math.pi * t)))
-                y = canvas_height // 2
-            elif exercise_type == "Top to Bottom":
-                x = canvas_width // 2
-                y = 50 + int((canvas_height - 100) * abs(math.sin(2 * math.pi * t)))
-            elif exercise_type == "Circle":
-                angle = 2 * math.pi * t
-                x = int(canvas_width // 2 + radius * math.cos(angle))
-                y = int(canvas_height // 2 + radius * math.sin(angle))
-
-            html_code = f"""
-            <div style="position: relative; width: {canvas_width}px; height: {canvas_height}px; background-color: #f0f0f0; border-radius: 8px;">
-                <div style="position: absolute; left: {x}px; top: {y}px; width: 20px; height: 20px; background-color: red; border-radius: 50%;"></div>
-            </div>
-            """
-            placeholder.markdown(html_code, unsafe_allow_html=True)
-            time.sleep(0.05)
-
-        placeholder.markdown("✅ <b>Exercise Completed!</b>", unsafe_allow_html=True)
-
 
 
 
@@ -549,4 +568,3 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
-
