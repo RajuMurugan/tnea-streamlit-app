@@ -403,7 +403,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     @st.cache_data(ttl=600)
     def load_excel_sheets_safe():
-        excel_url = "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx"
+        excel_url = "https://docs.google.com/spreadsheets/d/1VPfuYg6cNtm_x4gnGkEndssR8CqfCDJT/export?format=xlsx"
         response = requests.get(excel_url)
         excel_file = io.BytesIO(response.content)
 
@@ -568,3 +568,4 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
