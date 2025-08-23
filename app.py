@@ -454,8 +454,8 @@ elif selected == "TNEA Vacancy Seat Matrix":
         st.error("❌ No data found in the selected sheet.")
         st.stop()
 
+    # ✅ Clean dataframe
     df1.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df1.columns]
-
     rename_map = {}
     for col in df1.columns:
         if "COLLEGE CODE" in col:
@@ -471,6 +471,21 @@ elif selected == "TNEA Vacancy Seat Matrix":
     df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
     df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
+    # ✅ Total Seats (Round-wise)
+    total_round_seats = df1[community_cols].sum().sum()
+
+    # ✅ Total per Branch
+    branch_totals = df1.groupby("Branch Code")[community_cols].sum()
+    branch_totals["Total Vacant"] = branch_totals.sum(axis=1)
+
+    # Show metrics at top
+    st.metric(label=f"🎯 Total Seats in {selected_round_1}", value=f"{total_round_seats:,}")
+
+    # Optional: show branch summary as table
+    with st.expander("📊 Branch-wise Vacancy Summary"):
+        st.dataframe(branch_totals.reset_index(), use_container_width=True)
+
+    # ----------------- Filters -----------------
     with col_cat1_2:
         branch_codes = sorted(df1['Branch Code'].dropna().unique())
         selected_branch_1 = st.selectbox("🔍 Select Branch Code", ['All'] + branch_codes)
@@ -587,3 +602,4 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
