@@ -515,7 +515,16 @@ elif selected == "TNEA Vacancy Seat Matrix":
             bar1 = df1[df1['Branch Code'] == selected_branch_1]
             community_summary = bar1[community_cols].sum().reset_index()
             community_summary.columns = ['Community', 'Seats']
-            chart_title = f"{selected_round_1} - {selected_sheet_1} - {selected_branch_1} - Total Seats Across Communities"
+
+            # ✅ Calculate total seats for this branch
+            total_branch_seats = community_summary['Seats'].sum()
+
+            # ✅ Add total seats info in chart title
+            chart_title = (
+                f"{selected_round_1} - {selected_sheet_1} - {selected_branch_1} "
+                f"- Total Seats Across Communities (Total = {total_branch_seats:,})"
+            )
+
             fig1 = px.bar(
                 community_summary, x='Community', y='Seats', color='Community', text='Seats',
                 title=chart_title,
@@ -602,4 +611,5 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
