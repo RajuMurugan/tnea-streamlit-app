@@ -401,38 +401,54 @@ elif selected == "TNEA Vacancy Seat Matrix":
     import requests
     import io
 
+    # ✅ All Google Sheet URLs
+    excel_urls = {
+        "Round 1": "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx",
+        "Round 2": "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx",
+        "Round 3": "https://docs.google.com/spreadsheets/d/1VPfuYg6cNtm_x4gnGkEndssR8CqfCDJT/export?format=xlsx",
+        "After Round 3": "https://docs.google.com/spreadsheets/d/1NEf4pHVjO1m0Lz1g3Lua3emXT39opYbV/export?format=xlsx",
+    }
+
     @st.cache_data(ttl=600)
-    def load_excel_sheets_safe():
-        excel_url = "https://docs.google.com/spreadsheets/d/1VPfuYg6cNtm_x4gnGkEndssR8CqfCDJT/export?format=xlsx"
-        response = requests.get(excel_url)
-        excel_file = io.BytesIO(response.content)
+    def load_all_rounds():
+        all_data = {}
+        for round_name, excel_url in excel_urls.items():
+            try:
+                response = requests.get(excel_url)
+                excel_file = io.BytesIO(response.content)
+                wb = load_workbook(excel_file, data_only=True)
 
-        wb = load_workbook(excel_file, data_only=True)
-        sheet_names = wb.sheetnames
-        data_dict = {}
-        for sheet in sheet_names:
-            ws = wb[sheet]
-            data = list(ws.values)
-            if not data:
-                continue
-            header = data[0]
-            rows = data[1:]
-            df = pd.DataFrame(rows, columns=header)
-            data_dict[sheet] = df
-        return sheet_names, data_dict
+                data_dict = {}
+                for sheet in wb.sheetnames:
+                    ws = wb[sheet]
+                    data = list(ws.values)
+                    if not data:
+                        continue
+                    header = data[0]
+                    rows = data[1:]
+                    df = pd.DataFrame(rows, columns=header)
+                    data_dict[sheet] = df
 
-    sheet_names, data_dict = load_excel_sheets_safe()
+                all_data[round_name] = data_dict
+            except Exception as e:
+                st.error(f"⚠️ Error loading {round_name}: {e}")
+        return all_data
+
+    all_rounds_data = load_all_rounds()
 
     community_cols = ['OC', 'BC', 'BCM', 'MBC', 'SC', 'SCA', 'ST']
     required_id_vars = ['College Name', 'College Code', 'Branch Code', 'Branch Name']
 
     # ----------------------------- CATEGORY 1 -----------------------------
-    st.markdown("## 📂 Select Branch and Community")
-    col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(3)
+    st.markdown("## 📂 Select Round, Branch and Community")
+    col_cat1_0, col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(4)
+
+    with col_cat1_0:
+        selected_round_1 = st.selectbox("📂 Select Counselling Round", list(all_rounds_data.keys()), key="cat1_round")
 
     with col_cat1_1:
-        selected_sheet_1 = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat1_sheet")
-        df1 = data_dict[selected_sheet_1]
+        selected_sheet_1 = st.selectbox("📂 Select Vacancy - Category", list(all_rounds_data[selected_round_1].keys()), key="cat1_sheet")
+        df1 = all_rounds_data[selected_round_1][selected_sheet_1]
 
     if df1.empty:
         st.error("❌ No data found in the selected sheet.")
@@ -476,7 +492,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
         branch_df.insert(4, 'Selected Community', selected_community_1)
 
     if not branch_df.empty:
-        title_text = f"📘 Branch: {selected_branch_1} | Community: {selected_community_1}"
+        title_text = f"📘 Round: {selected_round_1} | Branch: {selected_branch_1} | Community: {selected_community_1}"
         st.header(title_text)
         st.dataframe(branch_df, use_container_width=True)
 
@@ -484,7 +500,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
             bar1 = df1[df1['Branch Code'] == selected_branch_1]
             community_summary = bar1[community_cols].sum().reset_index()
             community_summary.columns = ['Community', 'Seats']
-            chart_title = f"{selected_sheet_1} - {selected_branch_1} - Total Seats Across Communities"
+            chart_title = f"{selected_round_1} - {selected_sheet_1} - {selected_branch_1} - Total Seats Across Communities"
             fig1 = px.bar(
                 community_summary, x='Community', y='Seats', color='Community', text='Seats',
                 title=chart_title,
@@ -496,12 +512,15 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     # ----------------------------- CATEGORY 2 -----------------------------
     st.markdown("---")
-    st.markdown("## 🏧 Select College and Branch")
-    col_cat2_1, col_cat2_2, col_cat2_3 = st.columns(3)
+    st.markdown("## 🏧 Select Round, College and Branch")
+    col_cat2_0, col_cat2_1, col_cat2_2, col_cat2_3 = st.columns(4)
+
+    with col_cat2_0:
+        selected_round_2 = st.selectbox("📂 Select Counselling Round", list(all_rounds_data.keys()), key="cat2_round")
 
     with col_cat2_1:
-        selected_sheet_2 = st.selectbox("📂 Select Vacancy - Category", sheet_names, key="cat2_sheet")
-        df2 = data_dict[selected_sheet_2]
+        selected_sheet_2 = st.selectbox("📂 Select Vacancy - Category", list(all_rounds_data[selected_round_2].keys()), key="cat2_sheet")
+        df2 = all_rounds_data[selected_round_2][selected_sheet_2]
 
     if df2.empty:
         st.error("❌ No data found in the selected sheet.")
@@ -543,7 +562,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
         fig2_data_all,
         x='Branch Code', y='Total Seats (All Communities)', color='Branch Code',
         text='Total Seats (All Communities)',
-        title=f"{selected_college_combined} - Total Seats per Branch (All Communities)",
+        title=f"{selected_round_2} - {selected_college_combined} - Total Seats per Branch (All Communities)",
         labels={'Branch Code': 'Branch', 'Total Seats (All Communities)': 'Number of Seats'}, height=450
     )
     fig_all.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
@@ -559,7 +578,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
             college_df,
             x='Branch Code', y='Selected Community Seats', color='Branch Code',
             text='Selected Community Seats',
-            title=f"{selected_college_combined} - {selected_community_2} Seats per Branch",
+            title=f"{selected_round_2} - {selected_college_combined} - {selected_community_2} Seats per Branch",
             labels={'Branch Code': 'Branch', 'Selected Community Seats': 'Number of Seats'}, height=450
         )
         fig2.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
@@ -568,4 +587,3 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
-
