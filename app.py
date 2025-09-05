@@ -402,15 +402,14 @@ elif selected == "TNEA Vacancy Seat Matrix":
     import io
 
     # ✅ All Google Sheet URLs
-excel_urls = {
-    "Round 1": "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx",
-    "Round 2": "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx",
-    "Round 3": "https://docs.google.com/spreadsheets/d/1VPfuYg6cNtm_x4gnGkEndssR8CqfCDJT/export?format=xlsx",
-    "Supplymentry_Counselling": "https://docs.google.com/spreadsheets/d/1NEf4pHVjO1m0Lz1g3Lua3emXT39opYbV/export?format=xlsx",
-    "After_Supplymentry_Counselling": "https://docs.google.com/spreadsheets/d/1qnsPSyCd-myYnsOcF8vv_H-gPwn6psL8/export?format=xlsx",
-    "After_SCA_to_SC": "https://docs.google.com/spreadsheets/d/1yqCtM98OC0GJSaAt-gbcVy8eTcWKc5pD/export?format=xlsx",
-}
-
+    excel_urls = {
+        "Round 1": "https://docs.google.com/spreadsheets/d/17otzGFO0AhKzx5ChSUhW18HnqA8Ed2sY/export?format=xlsx",
+        "Round 2": "https://docs.google.com/spreadsheets/d/1H1pLjbsvaOl1UMBAJbtfWz1B-KZQ24iB/export?format=xlsx",
+        "Round 3": "https://docs.google.com/spreadsheets/d/1VPfuYg6cNtm_x4gnGkEndssR8CqfCDJT/export?format=xlsx",
+        "Supplymentry_Counselling": "https://docs.google.com/spreadsheets/d/1NEf4pHVjO1m0Lz1g3Lua3emXT39opYbV/export?format=xlsx",
+        "After_Supplymentry_Counselling": "https://docs.google.com/spreadsheets/d/1qnsPSyCd-myYnsOcF8vv_H-gPwn6psL8/export?format=xlsx",
+        "After_SCA_to_SC": "https://docs.google.com/spreadsheets/d/1yqCtM98OC0GJSaAt-gbcVy8eTcWKc5pD/export?format=xlsx",
+    }
 
     @st.cache_data(ttl=600)
     def load_all_rounds():
@@ -614,10 +613,3 @@ excel_urls = {
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
-
-
-
-
-
-
-
