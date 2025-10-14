@@ -129,29 +129,13 @@ if st.session_state.logged_in:
                 logout_user()
                 st.rerun()
 else:
-
-# --- Quick Access to Cut off Mark Calculation ---
-  # --- Quick Access to Cut off Mark Calculation ---
+    # --- Quick Access to Cut off Mark Calculation ---
     st.markdown("### 📚 Cut off Mark Calculation")
 
     st.markdown("""
 <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-            📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br>
-        </div>
-
-
-    """, unsafe_allow_html=True)
-
-    
-    # --- Login Page ---
-    st.markdown("""
-        <div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'>
-            <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
-            <p style='font-size: 20px; font-weight: 600; color: #333;'>
-                Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
-                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
-            </p>
-        </div>
+📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br>
+</div>
     """, unsafe_allow_html=True)
 
     # --- Quick Access to Previous Year Question Papers ---
@@ -159,12 +143,10 @@ else:
 
     st.markdown("""
 <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-            📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
-            📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
-            📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
-        </div>
-
-
+📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
+📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
+📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
+</div>
     """, unsafe_allow_html=True)
 
     # --- Login Form ---
@@ -185,7 +167,6 @@ else:
         else:
             st.error("❌ Invalid mobile number or password")
     st.stop()
-
 
 # --- Navigation Bar ---
 st.markdown("""
@@ -226,28 +207,6 @@ with col2:
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
-    st.markdown("""
-        <div style='background-color: #e6f2ff; padding: 20px; border-left: 8px solid #007bff; border-radius: 10px; margin-bottom: 20px; text-align: center;'>
-            <h2 style='color: #d91c1c;'>🔥 Today Only Offer!</h2>
-            <p style='font-size: 20px; font-weight: 600; color: #333;'>
-                Get full access to the TNEA Web App for just <span style="color: green;">₹199</span> <br>
-                <del>₹399</del> – <span style="color: orange;">Save ₹200 Now!</span>
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-        <div style='background-color: #fff3cd; border-left: 10px solid #ffc107; border-radius: 10px; padding: 20px 30px; margin: 20px auto; width: 95%; text-align: center;'>
-            <h2 style='color: #b31b1b;'>🎁 Big Referral Bonus Alert!</h2>
-            <p style='font-size: 18px; color: #333; font-weight: 500;'>
-                💡 Sell this app to your friends, students, etc..<br><br>
-                💰 <strong style="color:green;">Earn a referral bonus for each sale!</strong><br><br>
-                🔁 No limits. More sales = More rewards!<br><br>
-                📢 Start referring today and grow your earnings!
-            </p>
-        </div>
-    """, unsafe_allow_html=True)
-
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
@@ -613,3 +572,4 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
