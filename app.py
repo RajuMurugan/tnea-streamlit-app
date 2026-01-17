@@ -140,19 +140,19 @@ else:
         with col1:
             maths = st.number_input(
                 "✏️ Maths",
-                min_value=0.0, max_value=100.0, value=80.0, step=1.0
+                min_value=0.0, max_value=100.0, value= , step=1.0
             )
 
         with col2:
             physics = st.number_input(
                 "⚡ Physics",
-                min_value=0.0, max_value=100.0, value=70.0, step=1.0
+                min_value=0.0, max_value=100.0, value= , step=1.0
             )
 
         with col3:
             chemistry = st.number_input(
                 "🧪 Chemistry ",
-                min_value=0.0, max_value=100.0, value=75.0, step=1.0
+                min_value=0.0, max_value=100.0, value= , step=1.0
             )
 
         calc_btn = st.form_submit_button("✅ Calculate Cutoff")
@@ -609,6 +609,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
