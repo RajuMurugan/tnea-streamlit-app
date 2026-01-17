@@ -6,7 +6,7 @@ import requests
 import io
 import uuid
 import time
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 import plotly.express as px
 from openpyxl import load_workbook
@@ -14,10 +14,14 @@ import random
 import json
 from zoneinfo import ZoneInfo
 
-# --- Page Config (MUST BE FIRST Streamlit command) ---
+# -------------------------------------------------
+# ✅ Page Config (MUST BE FIRST Streamlit command)
+# -------------------------------------------------
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
+# -------------------------------------------------
 # ✅ PREMIUM FLAG (from URL)
+# -------------------------------------------------
 premium_flag = "0"
 
 try:
@@ -29,7 +33,9 @@ except:
 
 is_premium = str(premium_flag) == "1"
 
-# ✅ Show Mode + Premium Button (same row)
+# -------------------------------------------------
+# ✅ MODE DISPLAY + BUTTON (same row)
+# -------------------------------------------------
 col_mode, col_btn = st.columns([3, 1])
 
 with col_mode:
@@ -39,14 +45,15 @@ with col_mode:
         st.info("🆓 NORMAL MODE (Free User)")
 
 with col_btn:
+    st.markdown("<br>", unsafe_allow_html=True)
     if not is_premium:
-        st.markdown("<br>", unsafe_allow_html=True)  # align button
         st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
     else:
-        st.markdown("<br>", unsafe_allow_html=True)
         st.link_button("⬅️ Normal", "https://tnea-choice-list.streamlit.app/")
 
-# --- Style Settings ---
+# -------------------------------------------------
+# ✅ Style Settings
+# -------------------------------------------------
 st.markdown("""
     <style>
     @media (max-width: 768px) {
@@ -58,7 +65,9 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- File Paths ---
+# -------------------------------------------------
+# ✅ File Paths
+# -------------------------------------------------
 base_path = "./"
 config_path = base_path + "config.yaml"
 device_session_path = base_path + "device_session.yaml"
@@ -66,23 +75,30 @@ chat_path = base_path + "chat_messages.json"
 
 SESSION_TIMEOUT = 180  # 3 minutes
 
-# --- Load Config ---
+# -------------------------------------------------
+# ✅ Load Config.yaml (only needed for Login part)
+# -------------------------------------------------
 try:
     with open(config_path) as file:
         config = yaml.safe_load(file)
     user_data = config["credentials"]["users"]
 except Exception as e:
-    st.error(f"❌ Failed to load config.yaml: {e}")
-    st.stop()
+    user_data = {}  # if config missing still run free part
+    st.warning("⚠️ config.yaml not loaded (Login will not work)")
+    # st.stop()
 
-# --- Load or Init session.yaml ---
+# -------------------------------------------------
+# ✅ Load device_session.yaml
+# -------------------------------------------------
 try:
     with open(device_session_path) as session_file:
         session_data = yaml.safe_load(session_file)
 except Exception:
     session_data = {"active_users": {}}
 
-# --- Load or Init chat messages ---
+# -------------------------------------------------
+# ✅ Load chat_messages.json
+# -------------------------------------------------
 if not os.path.exists(chat_path):
     with open(chat_path, "w") as f:
         json.dump([], f)
@@ -107,78 +123,107 @@ def update_session(mobile, device_id):
     save_session()
 
 def logout_user():
-    if st.session_state.mobile in session_data["active_users"]:
+    if "mobile" in st.session_state and st.session_state.mobile in session_data["active_users"]:
         session_data["active_users"].pop(st.session_state.mobile)
         save_session()
     st.session_state.logged_in = False
     st.session_state.mobile = ""
     st.session_state.device_id = str(uuid.uuid4())
 
-# --- Init Session State ---
+# -------------------------------------------------
+# ✅ Session init
+# -------------------------------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "mobile" not in st.session_state:
-    st.session_state.mobile = ""
+    st.session_state.mobile = "Guest"
 if "device_id" not in st.session_state:
     st.session_state.device_id = str(uuid.uuid4())
 
-# --- Login or Session Check ---
-if st.session_state.logged_in:
-    user = session_data["active_users"].get(st.session_state.mobile, {})
-    last_time = user.get("timestamp", 0)
-    remaining_time = max(0, SESSION_TIMEOUT - int(time.time() - last_time))
+# =================================================
+# ✅ MENU (Premium shows all pages)
+# =================================================
+st.markdown("""
+    <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
+        🔽 Select a Feature Below 🔽
+    </h2>
+""", unsafe_allow_html=True)
 
-    if is_session_expired(st.session_state.mobile, st.session_state.device_id):
-        logout_user()
-        st.warning("⚠️ Session expired. Please log in again below.")
+col1, col2, col3 = st.columns([1, 2, 1])
 
-        st.markdown("### 🔐 Login Form")
-        mobile = st.text_input("📱 Mobile Number", key="relogin_mobile")
-        password = st.text_input("🔑 Password", type="password", key="relogin_pass")
-        if st.button("Login Again"):
-            if mobile in user_data and user_data[mobile]["password"] == password:
-                existing = session_data["active_users"].get(mobile)
-                if existing and existing["device_id"] != st.session_state.device_id and (time.time() - existing["timestamp"]) < SESSION_TIMEOUT:
-                    st.error("⚠️ Already logged in on another device.")
-                else:
-                    update_session(mobile, st.session_state.device_id)
-                    st.session_state.logged_in = True
-                    st.session_state.mobile = mobile
-                    st.success(f"✅ Welcome back, {mobile}!")
-                    st.rerun()
-            else:
-                st.error("❌ Invalid mobile number or password")
-        st.stop()
-
+with col2:
+    if is_premium:
+        menu_options = ["Home", "Cutoff Calculator", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
+        menu_icons = ["house", "calculator", "list-check", "table"]
     else:
-        update_session(st.session_state.mobile, st.session_state.device_id)
-        with st.expander("🔐 Session Info", expanded=False):
-            st.info(f"⏳ Session expires in: {str(timedelta(seconds=remaining_time))}")
-            st.success(f"👤 Logged in as: {st.session_state.mobile}")
-            if st.button("🚪 Logout"):
-                logout_user()
-                st.rerun()
+        menu_options = ["Home", "Cutoff Calculator"]
+        menu_icons = ["house", "calculator"]
 
-else:
+    selected = option_menu(
+        menu_title=None,
+        options=menu_options,
+        icons=menu_icons,
+        default_index=0,
+        orientation="horizontal"
+    )
+
+# =================================================
+# ✅ PAGE: HOME
+# =================================================
+if selected == "Home":
+    st.markdown("""
+        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
+        <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
+            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
+            <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
+            📞 Contact: +91-8248696926<br>
+            📧 Email: rajumurugannp@gmail.com<br>
+            👨‍💻 Developed by Dr. Raju Murugan<br><br>
+            &copy; 2025 TNEA Info App. All rights reserved.
+        </div>
+    """, unsafe_allow_html=True)
+
+    if not is_premium:
+        st.markdown("---")
+        st.markdown("## 🔒 Premium Features")
+        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
+        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+        st.info("👉 Click 💳 Go Premium button at top to unlock (Demo/Test)")
+
+    st.markdown("---")
+    st.subheader("💬 Community Chat Room")
+
+    with open(chat_path, "r") as f:
+        chat_data = json.load(f)
+
+    for entry in chat_data[-100:]:
+        st.markdown(f"**{entry.get('user','Guest')}**: {entry.get('message','')}")
+
+    new_message = st.text_input("Type your message...")
+    if st.button("Send") and new_message.strip():
+        chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
+        with open(chat_path, "w") as f:
+            json.dump(chat_data, f, indent=2)
+        st.rerun()
+
+# =================================================
+# ✅ PAGE: CUTOFF CALCULATOR (FREE + PREMIUM)
+# =================================================
+elif selected == "Cutoff Calculator":
     import io
-    from datetime import datetime
     from PIL import Image, ImageDraw, ImageFont
     from reportlab.pdfgen import canvas
     from reportlab.lib.pagesizes import A4
 
     st.markdown("## 📚 TNEA 2026 Cut off Mark Calculator")
 
-    # ✅ Current IST time
     ist_time_str = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%d-%m-%Y %I:%M %p")
 
-    # ✅ Reset Function (works)
     def reset_marks():
         st.session_state.pop("student_name", None)
         st.session_state.pop("maths_mark", None)
         st.session_state.pop("physics_mark", None)
         st.session_state.pop("chemistry_mark", None)
-        st.session_state.pop("result_ready", None)
-        st.session_state.pop("cutoff_val", None)
 
     st.markdown("### ✍️ Enter Student Details")
 
@@ -198,7 +243,6 @@ else:
     with b2:
         st.button("🔄 Reset", on_click=reset_marks)
 
-    # ---- Helper: PDF Generator ----
     def generate_pdf(student_name, maths_val, physics_val, chemistry_val, cutoff_val):
         buffer = io.BytesIO()
         c = canvas.Canvas(buffer, pagesize=A4)
@@ -209,11 +253,7 @@ else:
 
         c.setFont("Helvetica", 12)
         c.drawString(50, height - 110, f"Name: {student_name}")
-        c.drawString(
-            50,
-            height - 130,
-            f"Date & Time (IST): {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y %I:%M %p')}"
-        )
+        c.drawString(50, height - 130, f"Date & Time (IST): {ist_time_str}")
 
         c.line(50, height - 150, 550, height - 150)
 
@@ -228,15 +268,11 @@ else:
         c.setFont("Helvetica-Bold", 16)
         c.drawString(50, height - 320, f"Final Cutoff: {cutoff_val:.2f} / 200")
 
-        c.setFont("Helvetica-Oblique", 10)
-        c.drawString(50, 60, "Generated by TNEA Streamlit App")
-
         c.showPage()
         c.save()
         buffer.seek(0)
         return buffer
 
-    # ---- Helper: Image Generator (PNG) ----
     def generate_image(student_name, maths_val, physics_val, chemistry_val, cutoff_val):
         img = Image.new("RGB", (900, 520), "white")
         draw = ImageDraw.Draw(img)
@@ -250,12 +286,7 @@ else:
 
         draw.text((30, 20), "TNEA Cutoff Mark Result (2026)", font=font_title, fill="black")
         draw.text((30, 90), f"Name: {student_name}", font=font_text, fill="black")
-        draw.text(
-            (30, 120),
-            f"Date & Time (IST): {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y %I:%M %p')}",
-            font=font_text,
-            fill="black"
-        )
+        draw.text((30, 120), f"Date & Time (IST): {ist_time_str}", font=font_text, fill="black")
 
         draw.line((30, 160, 870, 160), fill="black", width=2)
 
@@ -264,16 +295,13 @@ else:
         draw.text((30, 270), f"Chemistry: {chemistry_val:.2f} / 100  →  {chemistry_val/2:.2f} / 50", font=font_text, fill="black")
 
         draw.line((30, 320, 870, 320), fill="black", width=2)
-
         draw.text((30, 350), f"Final Cutoff: {cutoff_val:.2f} / 200", font=font_title, fill="black")
-        draw.text((30, 470), "Generated by TNEA Streamlit App", font=font_text, fill="gray")
 
         buffer = io.BytesIO()
         img.save(buffer, format="PNG")
         buffer.seek(0)
         return buffer
 
-    # ✅ Calculation
     if calc_btn:
         try:
             if name.strip() == "":
@@ -292,57 +320,54 @@ else:
                     st.caption(f"🕒 Generated Time (IST): {ist_time_str}")
 
                     st.markdown("### 📥 Download Result")
-
                     pdf_file = generate_pdf(name, maths_val, physics_val, chemistry_val, cutoff_val)
                     img_file = generate_image(name, maths_val, physics_val, chemistry_val, cutoff_val)
 
                     d1, d2 = st.columns(2)
                     with d1:
-                        st.download_button(
-                            "⬇️ Download PDF",
-                            data=pdf_file,
-                            file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.pdf",
-                            mime="application/pdf"
-                        )
-
+                        st.download_button("⬇️ Download PDF", data=pdf_file,
+                                           file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.pdf",
+                                           mime="application/pdf")
                     with d2:
-                        st.download_button(
-                            "⬇️ Download Image (PNG)",
-                            data=img_file,
-                            file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.png",
-                            mime="image/png"
-                        )
-
+                        st.download_button("⬇️ Download Image (PNG)", data=img_file,
+                                           file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.png",
+                                           mime="image/png")
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
 
-    st.stop()
+# =================================================
+# ✅ PAGE: CHOICE LIST (PREMIUM ONLY)
+# =================================================
+elif selected == "Create TNEA Choice List":
+    if not is_premium:
+        st.warning("🔒 Premium only feature. Click 💳 Go Premium button on top.")
+        st.stop()
 
-# --- Navigation Bar ---
-st.markdown("""
-    <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
-        🔽 Select a Feature Below 🔽
-    </h2>
-""", unsafe_allow_html=True)
+    @st.cache_data(ttl=600)
+    def load_excel_file_from_url(url):
+        response = requests.get(url)
+        df_loaded = pd.read_excel(io.BytesIO(response.content))
+        return df_loaded
 
-col1, col2, col3 = st.columns([1, 2, 1])
+    excel_url = "https://docs.google.com/spreadsheets/d/1rASGgYC9RZA0vgmtuFYRG0QO3DOGH_jW/export?format=xlsx"
 
-with col2:
-    # ✅ Menu options based on Normal / Premium mode
-    if is_premium:
-        menu_options = ["Home", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
-        menu_icons = ["house", "list-check", "table"]
-    else:
-        menu_options = ["Home"]
-        menu_icons = ["house"]
+    with st.spinner("📥 Loading TNEA cutoff data..."):
+        df = load_excel_file_from_url(excel_url)
 
-    selected = option_menu(
-        menu_title=None,
-        options=menu_options,
-        icons=menu_icons,
-        default_index=0,
-        orientation="horizontal"
-    )
+    st.title("📊 TNEA 2025 Cutoff & Rank Finder")
+    st.dataframe(df, use_container_width=True)
+
+# =================================================
+# ✅ PAGE: SEAT MATRIX (PREMIUM ONLY)
+# =================================================
+elif selected == "TNEA Vacancy Seat Matrix":
+    if not is_premium:
+        st.warning("🔒 Premium only feature. Click 💳 Go Premium button on top.")
+        st.stop()
+
+    st.title("📊 TNEA Vacancy Seat Matrix")
+    st.info("✅ Premium Feature Working ✅ (Your seat matrix code can continue here...)")
+
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
@@ -710,6 +735,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
