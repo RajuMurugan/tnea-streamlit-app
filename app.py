@@ -130,26 +130,52 @@ if st.session_state.logged_in:
                 logout_user()
                 st.rerun()
 
-else:# --- Cut off Mark Calculation (Inside App) ---
-st.markdown("### 📚 TNEA Cut off Mark Calculation (Inside App)")
+else:
+    # --- Cut off Mark Calculation (Inside App) ---
+    st.markdown("### 📚 TNEA Cut off Mark Calculation (Inside App)")
 
-with st.form("cutoff_form"):
-    col1, col2, col3 = st.columns(3)
+    with st.form("cutoff_form"):
+        col1, col2, col3 = st.columns(3)
 
-    with col1:
-        maths = st.number_input("✏️ Maths", min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+        with col1:
+            maths = st.text_input("✏️ Maths", placeholder="Enter Maths mark")
 
-    with col2:
-        physics = st.number_input("⚡ Physics", min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+        with col2:
+            physics = st.text_input("⚡ Physics", placeholder="Enter Physics mark")
 
-    with col3:
-        chemistry = st.number_input("🧪 Chemistry", min_value=0.0, max_value=100.0, value=0.0, step=1.0)
+        with col3:
+            chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark")
 
-    calc_btn = st.form_submit_button("✅ Calculate Cutoff")
+        calc_btn = st.form_submit_button("✅ Calculate Cutoff")
 
-if calc_btn:
-    cutoff = maths + (physics / 2) + (chemistry / 2)
-    st.success(f"🎯 Your TNEA Cutoff Mark is: **{cutoff:.2f} / 200**")
+    if calc_btn:
+        try:
+            maths = float(maths)
+            physics = float(physics)
+            chemistry = float(chemistry)
+
+            if not (0 <= maths <= 100 and 0 <= physics <= 100 and 0 <= chemistry <= 100):
+                st.error("❌ Please enter marks between 0 and 100 only.")
+            else:
+                cutoff = maths + (physics / 2) + (chemistry / 2)
+
+                st.success(f"🎯 Your TNEA Cutoff Mark is: **{cutoff:.2f} / 200**")
+
+                st.info(
+                    f"""
+                    ✅ Calculation Breakdown:
+                    - Maths = {maths:.2f} / 100
+                    - Physics = {physics:.2f} / 100 → {physics/2:.2f} / 50
+                    - Chemistry = {chemistry:.2f} / 100 → {chemistry/2:.2f} / 50
+                    """
+                )
+
+        except:
+            st.error("❌ Please enter valid numbers in all 3 fields.")
+
+    # ✅ Your remaining code (question paper + login) should also be inside else with same indentation
+    st.markdown("### 📚 Previous Year Question Papers")
+    # ... continue your code here ...
 
 
     # --- Quick Access to Previous Year Question Papers ---
@@ -590,6 +616,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
