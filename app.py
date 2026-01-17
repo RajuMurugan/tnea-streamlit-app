@@ -299,14 +299,7 @@ else:
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
 
-    # ✅ Your remaining code (question paper + login) can continue here
-    st.markdown("### 📚 Previous Year Question Papers")
-    # ... continue your code here ...
-
-    # ✅ Your remaining code (question paper + login) should also be inside else with same indentation
-    st.markdown("### 📚 Previous Year Question Papers")
-    # ... continue your code here ...
-
+  
 
     # --- Quick Access to Previous Year Question Papers ---
     st.markdown("### 📚 Previous Year Question Papers")
@@ -746,6 +739,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
