@@ -44,7 +44,7 @@ with col_btn:
     st.markdown("<br>", unsafe_allow_html=True)
     if not is_premium:
         st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
-
+        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
 # -------------------------------------------------
 # ✅ Style Settings
 # -------------------------------------------------
@@ -893,6 +893,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
