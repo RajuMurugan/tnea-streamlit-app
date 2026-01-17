@@ -10,7 +10,6 @@ from datetime import timedelta, datetime
 import os
 import plotly.express as px
 from openpyxl import load_workbook
-import random
 import json
 from zoneinfo import ZoneInfo
 
@@ -23,13 +22,10 @@ st.set_page_config(page_title="TNEA Full App", layout="wide")
 # ✅ PREMIUM FLAG (from URL)
 # -------------------------------------------------
 premium_flag = "0"
-
 try:
-    # New Streamlit
-    premium_flag = st.query_params.get("premium", "0")
+    premium_flag = st.query_params.get("premium", "0")  # new streamlit
 except:
-    # Old Streamlit fallback
-    premium_flag = st.experimental_get_query_params().get("premium", ["0"])[0]
+    premium_flag = st.experimental_get_query_params().get("premium", ["0"])[0]  # old streamlit
 
 is_premium = str(premium_flag) == "1"
 
@@ -49,16 +45,13 @@ with col_btn:
     if not is_premium:
         st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
 
-
 # -------------------------------------------------
 # ✅ Style Settings
 # -------------------------------------------------
 st.markdown("""
     <style>
     @media (max-width: 768px) {
-        .nav-link span {
-            display: inline !important;
-        }
+        .nav-link span { display: inline !important; }
     }
     .stDataFrame div { color: black !important; }
     </style>
@@ -75,16 +68,15 @@ chat_path = base_path + "chat_messages.json"
 SESSION_TIMEOUT = 180  # 3 minutes
 
 # -------------------------------------------------
-# ✅ Load Config.yaml (only needed for Login part)
+# ✅ Load Config.yaml (Login optional)
 # -------------------------------------------------
 try:
     with open(config_path) as file:
         config = yaml.safe_load(file)
     user_data = config["credentials"]["users"]
-except Exception as e:
-    user_data = {}  # if config missing still run free part
+except Exception:
+    user_data = {}
     st.warning("⚠️ config.yaml not loaded (Login will not work)")
-    # st.stop()
 
 # -------------------------------------------------
 # ✅ Load device_session.yaml
@@ -102,33 +94,6 @@ if not os.path.exists(chat_path):
     with open(chat_path, "w") as f:
         json.dump([], f)
 
-def save_session():
-    with open(device_session_path, "w") as f:
-        yaml.dump(session_data, f)
-
-def is_session_expired(mobile, device_id):
-    user = session_data["active_users"].get(mobile, None)
-    if not user:
-        return True
-    saved_device_id = user.get("device_id", "")
-    timestamp = user.get("timestamp", 0)
-    return saved_device_id != device_id or (time.time() - timestamp) > SESSION_TIMEOUT
-
-def update_session(mobile, device_id):
-    session_data["active_users"][mobile] = {
-        "device_id": device_id,
-        "timestamp": time.time()
-    }
-    save_session()
-
-def logout_user():
-    if "mobile" in st.session_state and st.session_state.mobile in session_data["active_users"]:
-        session_data["active_users"].pop(st.session_state.mobile)
-        save_session()
-    st.session_state.logged_in = False
-    st.session_state.mobile = ""
-    st.session_state.device_id = str(uuid.uuid4())
-
 # -------------------------------------------------
 # ✅ Session init
 # -------------------------------------------------
@@ -140,7 +105,7 @@ if "device_id" not in st.session_state:
     st.session_state.device_id = str(uuid.uuid4())
 
 # =================================================
-# ✅ MENU (Premium shows all pages)
+# ✅ MENU
 # =================================================
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
@@ -166,10 +131,12 @@ with col2:
         orientation="horizontal"
     )
 
-# --- PAGE 1: HOME ---
+# =================================================
+# ✅ PAGE 1: HOME
+# =================================================
 if selected == "Home":
 
-    # ✅ Welcome Text
+    # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
@@ -178,11 +145,11 @@ if selected == "Home":
             📞 Contact: +91-8248696926<br>
             📧 Email: rajumurugannp@gmail.com<br>
             👨‍💻 Developed by Dr. Raju Murugan<br><br>
-            &copy; 2025 TNEA Info App. All rights reserved.
+            &copy; 2026 TNEA Info App. All rights reserved.
         </div>
     """, unsafe_allow_html=True)
 
-    # ✅ Premium Offer (ONLY for Free users)
+    # ✅ Premium Offer (ONLY Free)
     if not is_premium:
         st.markdown("---")
         st.markdown("## 🔒 Premium Features")
@@ -202,14 +169,7 @@ if selected == "Home":
     </div>
     """, unsafe_allow_html=True)
 
-
-    if not is_premium:
-        st.markdown("---")
-        st.markdown("## 🔒 Premium Features")
-        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
-        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
-        st.info("👉 Click 💳 Go Premium button at top to unlock (Demo/Test)")
-
+    # ✅ Chat Feature
     st.markdown("---")
     st.subheader("💬 Community Chat Room")
 
@@ -221,18 +181,16 @@ if selected == "Home":
 
     new_message = st.text_input("Type your message...", key="chat_message_input")
 
-if st.button("Send", key="chat_send_btn") and new_message.strip():
-    chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
-    with open(chat_path, "w") as f:
-        json.dump(chat_data, f, indent=2)
-    st.rerun()
-
+    if st.button("Send", key="chat_send_btn") and new_message.strip():
+        chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
+        with open(chat_path, "w") as f:
+            json.dump(chat_data, f, indent=2)
+        st.rerun()
 
 # =================================================
-# ✅ PAGE: CUTOFF CALCULATOR (FREE + PREMIUM)
+# ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
 elif selected == "Cutoff Calculator":
-    import io
     from PIL import Image, ImageDraw, ImageFont
     from reportlab.pdfgen import canvas
     from reportlab.lib.pagesizes import A4
@@ -261,9 +219,9 @@ elif selected == "Cutoff Calculator":
 
     b1, b2 = st.columns([1, 1])
     with b1:
-        calc_btn = st.button("✅ Calculate Cutoff")
+        calc_btn = st.button("✅ Calculate Cutoff", key="calc_cutoff_btn")
     with b2:
-        st.button("🔄 Reset", on_click=reset_marks)
+        st.button("🔄 Reset", on_click=reset_marks, key="reset_cutoff_btn")
 
     def generate_pdf(student_name, maths_val, physics_val, chemistry_val, cutoff_val):
         buffer = io.BytesIO()
@@ -342,161 +300,44 @@ elif selected == "Cutoff Calculator":
                     st.caption(f"🕒 Generated Time (IST): {ist_time_str}")
 
                     st.markdown("### 📥 Download Result")
+
                     pdf_file = generate_pdf(name, maths_val, physics_val, chemistry_val, cutoff_val)
                     img_file = generate_image(name, maths_val, physics_val, chemistry_val, cutoff_val)
 
                     d1, d2 = st.columns(2)
                     with d1:
-                        st.download_button("⬇️ Download PDF", data=pdf_file,
-                                           file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.pdf",
-                                           mime="application/pdf")
+                        st.download_button(
+                            "⬇️ Download PDF",
+                            data=pdf_file,
+                            file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.pdf",
+                            mime="application/pdf"
+                        )
                     with d2:
-                        st.download_button("⬇️ Download Image (PNG)", data=img_file,
-                                           file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.png",
-                                           mime="image/png")
+                        st.download_button(
+                            "⬇️ Download Image (PNG)",
+                            data=img_file,
+                            file_name=f"TNEA_Cutoff_2026_{name.replace(' ', '_')}.png",
+                            mime="image/png"
+                        )
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
 
 # =================================================
-# ✅ PAGE: CHOICE LIST (PREMIUM ONLY)
+# ✅ PAGE 3: CHOICE LIST (PREMIUM)
 # =================================================
 elif selected == "Create TNEA Choice List":
-    if not is_premium:
-        st.warning("🔒 Premium only feature. Click 💳 Go Premium button on top.")
-        st.stop()
-
-    @st.cache_data(ttl=600)
-    def load_excel_file_from_url(url):
-        response = requests.get(url)
-        df_loaded = pd.read_excel(io.BytesIO(response.content))
-        return df_loaded
-
-    excel_url = "https://docs.google.com/spreadsheets/d/1rASGgYC9RZA0vgmtuFYRG0QO3DOGH_jW/export?format=xlsx"
-
-    with st.spinner("📥 Loading TNEA cutoff data..."):
-        df = load_excel_file_from_url(excel_url)
-
     st.title("📊 TNEA 2025 Cutoff & Rank Finder")
-    st.dataframe(df, use_container_width=True)
+    st.success("✅ Premium Feature Enabled ✅")
+    st.info("👉 Paste your full Choice List code here ✅")
 
 # =================================================
-# ✅ PAGE: SEAT MATRIX (PREMIUM ONLY)
+# ✅ PAGE 4: SEAT MATRIX (PREMIUM)
 # =================================================
 elif selected == "TNEA Vacancy Seat Matrix":
-    if not is_premium:
-        st.warning("🔒 Premium only feature. Click 💳 Go Premium button on top.")
-        st.stop()
-
     st.title("📊 TNEA Vacancy Seat Matrix")
-    st.info("✅ Premium Feature Working ✅ (Your seat matrix code can continue here...)")
+    st.success("✅ Premium Feature Enabled ✅")
+    st.info("👉 Paste your full Seat Matrix code here ✅")
 
-
-# --- PAGE 1: HOME ---
-if selected == "Home":
-    st.markdown("""
-        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
-        <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
-            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
-            <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
-            📞 Contact: +91-8248696926<br>
-            📧 Email: rajumurugannp@gmail.com<br>
-            👨‍💻 Developed by Dr. Raju Murugan<br><br>
-            &copy; 2025 TNEA Info App. All rights reserved.
-        </div>
-    """, unsafe_allow_html=True)
-
-
-    # --- Chat Feature ---
-    st.markdown("---")
-    st.subheader("💬 Community Chat Room")
-
-    with open(chat_path, "r") as f:
-        chat_data = json.load(f)
-
-    for entry in chat_data[-100:]:
-        st.markdown(f"**{entry['user']}**: {entry['message']}")
-
-    new_message = st.text_input("Type your message...")
-    if st.button("Send") and new_message.strip():
-        chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
-        with open(chat_path, "w") as f:
-            json.dump(chat_data, f, indent=2)
-        st.rerun()
-
-# --- PAGE 2: TNEA CHOICE LIST ---
-elif selected == "Create TNEA Choice List":
-
-    import time
-
-    # ✅ Performance-optimized loader with caching (10 minutes)
-    @st.cache_data(ttl=600)
-    def load_excel_file_from_url(url):
-        response = requests.get(url)
-        df_loaded = pd.read_excel(io.BytesIO(response.content))
-        return df_loaded
-
-    excel_url = "https://docs.google.com/spreadsheets/d/1rASGgYC9RZA0vgmtuFYRG0QO3DOGH_jW/export?format=xlsx"
-    
-    with st.spinner("📥 Loading TNEA cutoff data..."):
-        df = load_excel_file_from_url(excel_url)
-
-    for col in df.columns:
-        if col.endswith("_C") or col.endswith("_GR"):
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-
-    st.image("https://drive.google.com/thumbnail?id=1FPfkRH3BC1BeQRtQVpZDH3P3ilTSMYNA", width=100)
-    st.title("📊 TNEA 2025 Cutoff & Rank Finder")
-    st.markdown(f"🆔 **Accessed by: {st.session_state.mobile}**")
-
-    df['College_Option'] = df['CL'].astype(str) + " - " + df['College']
-    college_options = sorted(df['College_Option'].unique().tolist())
-    selected_college = st.selectbox("🏛️ Select College", options=["All"] + college_options)
-
-    st.subheader("🎯 Filter by Community, Department, Zone")
-    if selected_college == "All":
-        community = st.selectbox("Select Community", options=["All", "OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"], key="main_community")
-        department = st.selectbox("Select Department (Br)", options=["All"] + sorted(df['Br'].dropna().unique().tolist()))
-        zone = st.selectbox("Select Zone", options=["All"] + sorted(df['zone'].dropna().unique().tolist()))
-
-    st.subheader("📌 Compare Up to 5 Colleges")
-    compare_colleges = st.multiselect("Select colleges to compare", options=college_options, max_selections=5)
-
-    if compare_colleges:
-        st.markdown("### 🎯 Filter Inside Compared Colleges")
-        comp_dept = st.selectbox("Department", options=["All"] + sorted(df['Br'].dropna().unique().tolist()), key="compare_department")
-        comp_comm = st.selectbox("Community", options=["All", "OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"], key="compare_community")
-
-        compare_cls = [c.split(" - ")[0].strip() for c in compare_colleges]
-        compare_df = df[df['CL'].astype(str).isin(compare_cls)]
-
-        if comp_dept != "All":
-            compare_df = compare_df[compare_df['Br'] == comp_dept]
-
-        color_palette = ['#f7c6c7', '#c6e2ff', '#d5f5e3', '#fff5ba', '#e0ccff']
-        college_color_map = {cl: color_palette[i] for i, cl in enumerate(compare_cls)}
-
-        def highlight_college(row):
-            cl = str(row['CL'])
-            bg_color = college_color_map.get(cl, '#ffffff')
-            return [f'background-color: {bg_color}; color: black;' for _ in row]
-
-        compare_cols = ['CL', 'College', 'Br', 'zone']
-        if comp_comm != "All":
-            compare_cols += [f"{comp_comm}_C", f"{comp_comm}_GR"]
-        else:
-            compare_cols += [col for col in df.columns if col.endswith("_C") or col.endswith("_GR")]
-
-        format_dict = {col: '{:.2f}' if '_C' in col else '{:.0f}' for col in compare_cols if '_C' in col or '_GR' in col}
-
-        st.markdown("### 🟨 College Comparison Table")
-        st.dataframe(
-            compare_df[compare_cols]
-            .style
-            .apply(highlight_college, axis=1)
-            .format(format_dict)
-            .hide(axis='index'),
-            height=450
-        )
 
     # --- MAIN FILTERED DATA ---
     show_data = False
@@ -757,6 +598,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
