@@ -450,11 +450,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     st.title("📊 TNEA Vacancy Seat Matrix")
     st.success("✅ Premium Feature Enabled ✅")
-    st.info("👉 Paste your full Seat Matrix code here ✅")
-
-
-
-# --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
+   # --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
 elif selected == "TNEA Vacancy Seat Matrix":
     import plotly.express as px
     from openpyxl import load_workbook
@@ -673,6 +669,11 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
+
+
+
+
 
 
 
