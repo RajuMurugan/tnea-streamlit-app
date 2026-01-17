@@ -26,7 +26,13 @@ except:
 
 is_premium = str(premium_flag) == "1"
 
-st.write("Premium Status:", is_premium)
+# ✅ Show Mode
+if is_premium:
+    st.success("✅ PREMIUM MODE ENABLED")
+else:
+    st.info("🆓 NORMAL MODE (Free User)")
+is_premium = str(premium_flag) == "1"
+
 
 
 # --- Page Config ---
@@ -351,33 +357,42 @@ st.markdown("""
 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
-    selected = option_menu(
-        menu_title=None,
-        options=["Home", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"],
-        icons=["house", "list-check", "table"],
-        default_index=0,
-        orientation="horizontal",
-        styles={
-            "container": {"padding": "0!important", "background-color": "#ffffff"},
-            "icon": {"color": "#3399ff", "font-size": "18px"},
-            "nav-link": {
-                "font-size": "13px",
-                "font-weight": "bold",
-                "text-align": "center",
-                "margin": "2px",
-                "color": "#3399ff",
-                "--hover-color": "#d0e7ff",
-                "background-color": "#f4faff",
-                "border-radius": "8px"
-            },
-            "nav-link-selected": {
-                "background-color": "#0d6efd",
-                "color": "white",
-                "font-weight": "bold",
-                "border-radius": "8px"
-            }
+# ✅ Menu options based on Normal / Premium mode
+if is_premium:
+    menu_options = ["Home", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
+    menu_icons = ["house", "list-check", "table"]
+else:
+    menu_options = ["Home"]
+    menu_icons = ["house"]
+
+selected = option_menu(
+    menu_title=None,
+    options=menu_options,
+    icons=menu_icons,
+    default_index=0,
+    orientation="horizontal",
+    styles={
+        "container": {"padding": "0!important", "background-color": "#ffffff"},
+        "icon": {"color": "#3399ff", "font-size": "18px"},
+        "nav-link": {
+            "font-size": "13px",
+            "font-weight": "bold",
+            "text-align": "center",
+            "margin": "2px",
+            "color": "#3399ff",
+            "--hover-color": "#d0e7ff",
+            "background-color": "#f4faff",
+            "border-radius": "8px"
+        },
+        "nav-link-selected": {
+            "background-color": "#0d6efd",
+            "color": "white",
+            "font-weight": "bold",
+            "border-radius": "8px"
         }
-    )
+    }
+)
+
 
 
 # --- PAGE 1: HOME ---
@@ -411,6 +426,15 @@ if selected == "Home":
             json.dump(chat_data, f, indent=2)
         st.rerun()
 
+    # ✅ Premium Offer (Only for Free Users)
+    if not is_premium:
+        st.markdown("---")
+        st.markdown("## 🔒 Premium Features")
+        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
+        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+
+        if st.button("💳 Buy Premium"):
+            st.info("👉 Please buy Premium in Android App to unlock instantly ✅")
 
 
 # --- PAGE 2: TNEA CHOICE LIST ---
@@ -747,6 +771,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
