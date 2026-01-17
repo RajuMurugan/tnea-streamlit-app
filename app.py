@@ -142,27 +142,40 @@ else:
     from reportlab.lib.pagesizes import A4
 
     st.markdown("## 📚 TNEA 2026 Cut off Mark Calculator")
-    # st.caption("Maths (100) + Physics (50) + Chemistry (50) = Total Cutoff (200)")
 
     # ✅ Current IST time
-    ist_now = datetime.now(ZoneInfo("Asia/Kolkata"))
-    ist_time_str = ist_now.strftime("%d-%m-%Y %I:%M %p")
+    ist_time_str = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%d-%m-%Y %I:%M %p")
 
-    # ✅ Form Key (important for Reset)
-    if "form_key" not in st.session_state:
-        st.session_state["form_key"] = 0
-
-    # ✅ Reset Function (Perfect Reset + Placeholder returns)
+    # ✅ Reset Function (100% works)
     def reset_marks():
         st.session_state.pop("student_name", None)
         st.session_state.pop("maths_mark", None)
         st.session_state.pop("physics_mark", None)
         st.session_state.pop("chemistry_mark", None)
-
-        # ✅ Force Streamlit to create a fresh form
-        st.session_state["form_key"] += 1
+        st.session_state.pop("result_ready", None)
+        st.session_state.pop("cutoff_val", None)
 
     st.markdown("### ✍️ Enter Student Details")
+
+    # ✅ Inputs (outside form for perfect reset)
+    name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        maths = st.text_input("✏️ Maths", placeholder="Enter Maths mark", key="maths_mark")
+    with col2:
+        physics = st.text_input("⚡ Physics", placeholder="Enter Physics mark", key="physics_mark")
+    with col3:
+        chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark", key="chemistry_mark")
+
+    # ✅ Buttons in same row (Reset next to Calculate)
+    b1, b2 = st.columns([1, 1])
+
+    with b1:
+        calc_btn = st.button("✅ Calculate Cutoff")
+
+    with b2:
+        st.button("🔄 Reset", on_click=reset_marks)
 
     # ---- Helper: PDF Generator ----
     def generate_pdf(student_name, maths_val, physics_val, chemistry_val, cutoff_val):
@@ -239,31 +252,7 @@ else:
         buffer.seek(0)
         return buffer
 
-    # ---- Inputs + Buttons ----
-    with st.form(key=f"cutoff_form_{st.session_state['form_key']}"):
-        name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
-
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            maths = st.text_input("✏️ Maths", placeholder="Enter Maths mark", key="maths_mark")
-        with col2:
-            physics = st.text_input("⚡ Physics", placeholder="Enter Physics mark", key="physics_mark")
-        with col3:
-            chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark", key="chemistry_mark")
-
-        # ✅ Buttons next to each other
-        btn1, btn2 = st.columns([1, 1])
-        with btn1:
-            calc_btn = st.form_submit_button("✅ Calculate Cutoff")
-        with btn2:
-            reset_btn = st.form_submit_button("🔄 Reset")
-
-    # ✅ Reset action (Works 100%)
-    if reset_btn:
-        reset_marks()
-        st.rerun()
-
-    # ---- Calculation ----
+    # ✅ Calculation
     if calc_btn:
         try:
             if name.strip() == "":
@@ -305,6 +294,7 @@ else:
 
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
+
 
     # --- Quick Access to Previous Year Question Papers ---
     st.markdown("### 📚 Previous Year Question Papers")
@@ -744,6 +734,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
