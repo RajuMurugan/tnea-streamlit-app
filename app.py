@@ -151,6 +151,36 @@ if selected == "Home":
     # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA SmartGuide 2026 </h1>
+
+        <h2 style="text-align:center; color:#0d6efd;">📌 About TNEA – Tamil Nadu Engineering Admissions</h2>
+
+        <div style="font-size:17px; line-height:1.8; text-align:justify; padding:10px;">
+
+        <b>TNEA (Tamil Nadu Engineering Admissions)</b> is the official counselling process for admission into 
+        <b>B.E / B.Tech</b> courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
+
+        <br><br>
+
+        ✅ Admission is mainly based on <b>Class 12 Marks</b> (Maths, Physics, Chemistry) and the <b>Cutoff Score (out of 200)</b>.  
+        Students must register, upload documents, and participate in online counselling to choose colleges and branches.
+
+        <br><br>
+
+        📌 Through TNEA Counselling, students can:
+        <ul>
+        <li>Check previous year cutoff trends</li>
+        <li>Compare colleges and departments</li>
+        <li>Create a better <b>choice list</b> for counselling</li>
+        <li>Analyze <b>vacancy seat matrix</b> round-wise</li>
+        </ul>
+
+        <br>
+
+        🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
+        choice list support, and counselling insights in one place.
+
+        </div>
+
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
             <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
             <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
@@ -843,6 +873,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
