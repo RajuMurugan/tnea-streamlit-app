@@ -410,6 +410,34 @@ if selected == "Home":
         </div>
     """, unsafe_allow_html=True)
 
+    # ✅ Premium Offer (Show at TOP for Free Users)
+    if not is_premium:
+        st.markdown("---")
+        st.markdown("## 🔒 Premium Features")
+        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
+        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+
+        if st.button("💳 Buy Premium"):
+            st.info("👉 Please buy Premium in Android App to unlock instantly ✅")
+
+        # ✅ Optional: Testing button to switch premium
+        st.markdown(
+            "<a href='https://tnea-choice-list.streamlit.app/?premium=1' target='_self'>"
+            "<button style='padding:10px 20px; background:#0d6efd; color:white; border:none; "
+            "border-radius:8px; font-size:16px;'>🚀 Go Premium (Test)</button></a>",
+            unsafe_allow_html=True
+        )
+
+    else:
+        st.markdown("---")
+        st.success("✅ PREMIUM MODE ENABLED")
+        st.markdown(
+            "<a href='https://tnea-choice-list.streamlit.app/' target='_self'>"
+            "<button style='padding:10px 20px; background:#198754; color:white; border:none; "
+            "border-radius:8px; font-size:16px;'>⬅️ Back to Normal Mode</button></a>",
+            unsafe_allow_html=True
+        )
+
     # --- Chat Feature ---
     st.markdown("---")
     st.subheader("💬 Community Chat Room")
@@ -426,17 +454,6 @@ if selected == "Home":
         with open(chat_path, "w") as f:
             json.dump(chat_data, f, indent=2)
         st.rerun()
-
-    # ✅ Premium Offer (Only for Free Users)
-    if not is_premium:
-        st.markdown("---")
-        st.markdown("## 🔒 Premium Features")
-        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
-        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
-
-        if st.button("💳 Buy Premium"):
-            st.info("👉 Please buy Premium in Android App to unlock instantly ✅")
-
 
 # --- PAGE 2: TNEA CHOICE LIST ---
 elif selected == "Create TNEA Choice List":
@@ -772,6 +789,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
