@@ -139,19 +139,19 @@ else:
 
         with col1:
             maths = st.number_input(
-                "✏️ Maths (0 - 100)",
+                "✏️ Maths",
                 min_value=0.0, max_value=100.0, value=80.0, step=1.0
             )
 
         with col2:
             physics = st.number_input(
-                "⚡ Physics (0 - 100)",
+                "⚡ Physics",
                 min_value=0.0, max_value=100.0, value=70.0, step=1.0
             )
 
         with col3:
             chemistry = st.number_input(
-                "🧪 Chemistry (0 - 100)",
+                "🧪 Chemistry ",
                 min_value=0.0, max_value=100.0, value=75.0, step=1.0
             )
 
@@ -609,6 +609,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
