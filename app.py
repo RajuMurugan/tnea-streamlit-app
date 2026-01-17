@@ -171,7 +171,7 @@ if selected == "Home":
 
     # ✅ Previous Year Question Papers (FREE for all)
     st.markdown("---")
-    st.markdown("### 📚 Previous Year Question Papers")
+    st.markdown("### 📚 Quick Links")
 
     st.markdown("""
     <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
@@ -181,7 +181,7 @@ if selected == "Home":
         style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
     📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank'
         style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
-    📘 <a href='https://static.tneaonline.org/docs/7_List_of_TFCs.pdf?t=1768660504718' target='_blank'
+    📗 <a href='https://static.tneaonline.org/docs/7_List_of_TFCs.pdf?t=1768660504718' target='_blank'
         style='text-decoration: none; color: #007bff; font-weight: bold;'>LIST OF TNEA FACILITATION CENTERS</a><br>
     </div>
     """, unsafe_allow_html=True)
@@ -841,5 +841,6 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
