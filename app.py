@@ -12,8 +12,8 @@ import plotly.express as px
 from openpyxl import load_workbook
 import random
 import json
-from zoneinfo
-import ZoneInfo
+from zoneinfo import ZoneInfo
+
 
 
 # --- Page Config ---
@@ -726,6 +726,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
