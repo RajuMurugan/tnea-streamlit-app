@@ -14,6 +14,9 @@ import random
 import json
 from zoneinfo import ZoneInfo
 
+# --- Page Config (MUST BE FIRST Streamlit command) ---
+st.set_page_config(page_title="TNEA Full App", layout="wide")
+
 # ✅ PREMIUM FLAG (from URL)
 premium_flag = "0"
 
@@ -26,17 +29,22 @@ except:
 
 is_premium = str(premium_flag) == "1"
 
-# ✅ Show Mode
-if is_premium:
-    st.success("✅ PREMIUM MODE ENABLED")
-else:
-    st.info("🆓 NORMAL MODE (Free User)")
-is_premium = str(premium_flag) == "1"
+# ✅ Show Mode + Premium Button (same row)
+col_mode, col_btn = st.columns([3, 1])
 
+with col_mode:
+    if is_premium:
+        st.success("✅ PREMIUM MODE ENABLED")
+    else:
+        st.info("🆓 NORMAL MODE (Free User)")
 
-
-# --- Page Config ---
-st.set_page_config(page_title="TNEA Full App", layout="wide")
+with col_btn:
+    if not is_premium:
+        st.markdown("<br>", unsafe_allow_html=True)  # align button
+        st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
+    else:
+        st.markdown("<br>", unsafe_allow_html=True)
+        st.link_button("⬅️ Normal", "https://tnea-choice-list.streamlit.app/")
 
 # --- Style Settings ---
 st.markdown("""
@@ -124,7 +132,6 @@ if st.session_state.logged_in:
         logout_user()
         st.warning("⚠️ Session expired. Please log in again below.")
 
-        # Login form again
         st.markdown("### 🔐 Login Form")
         mobile = st.text_input("📱 Mobile Number", key="relogin_mobile")
         password = st.text_input("🔑 Password", type="password", key="relogin_pass")
@@ -155,7 +162,6 @@ if st.session_state.logged_in:
 else:
     import io
     from datetime import datetime
-    from zoneinfo import ZoneInfo
     from PIL import Image, ImageDraw, ImageFont
     from reportlab.pdfgen import canvas
     from reportlab.lib.pagesizes import A4
@@ -165,7 +171,7 @@ else:
     # ✅ Current IST time
     ist_time_str = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%d-%m-%Y %I:%M %p")
 
-    # ✅ Reset Function (100% works)
+    # ✅ Reset Function (works)
     def reset_marks():
         st.session_state.pop("student_name", None)
         st.session_state.pop("maths_mark", None)
@@ -176,7 +182,6 @@ else:
 
     st.markdown("### ✍️ Enter Student Details")
 
-    # ✅ Inputs (outside form for perfect reset)
     name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
 
     col1, col2, col3 = st.columns(3)
@@ -187,12 +192,9 @@ else:
     with col3:
         chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark", key="chemistry_mark")
 
-    # ✅ Buttons in same row (Reset next to Calculate)
     b1, b2 = st.columns([1, 1])
-
     with b1:
         calc_btn = st.button("✅ Calculate Cutoff")
-
     with b2:
         st.button("🔄 Reset", on_click=reset_marks)
 
@@ -314,38 +316,6 @@ else:
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
 
-
-    # --- Quick Access to Previous Year Question Papers ---
-    st.markdown("### 📚 Previous Year Question Papers")
-
-    st.markdown("""
-<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
-📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
-📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
-</div>
-    """, unsafe_allow_html=True)
-
-    # --- Login Form ---
-    st.title("🔐 Login to Access TNEA App")
-    mobile = st.text_input("📱 Mobile Number")
-    password = st.text_input("🔑 Password", type="password")
-
-    if st.button("Login"):
-        if mobile in user_data and user_data[mobile]["password"] == password:
-            existing = session_data["active_users"].get(mobile)
-            if existing and existing["device_id"] != st.session_state.device_id and (time.time() - existing["timestamp"]) < SESSION_TIMEOUT:
-                st.error("⚠️ Already logged in on another device.")
-                st.stop()
-
-            update_session(mobile, st.session_state.device_id)
-            st.session_state.logged_in = True
-            st.session_state.mobile = mobile
-            st.success(f"✅ Welcome, {mobile}!")
-            st.rerun()
-        else:
-            st.error("❌ Invalid mobile number or password")
-
     st.stop()
 
 # --- Navigation Bar ---
@@ -371,30 +341,8 @@ with col2:
         options=menu_options,
         icons=menu_icons,
         default_index=0,
-        orientation="horizontal",
-        styles={
-            "container": {"padding": "0!important", "background-color": "#ffffff"},
-            "icon": {"color": "#3399ff", "font-size": "18px"},
-            "nav-link": {
-                "font-size": "13px",
-                "font-weight": "bold",
-                "text-align": "center",
-                "margin": "2px",
-                "color": "#3399ff",
-                "--hover-color": "#d0e7ff",
-                "background-color": "#f4faff",
-                "border-radius": "8px"
-            },
-            "nav-link-selected": {
-                "background-color": "#0d6efd",
-                "color": "white",
-                "font-weight": "bold",
-                "border-radius": "8px"
-            }
-        }
+        orientation="horizontal"
     )
-
-
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
@@ -410,33 +358,6 @@ if selected == "Home":
         </div>
     """, unsafe_allow_html=True)
 
-    # ✅ Premium Offer (Show at TOP for Free Users)
-    if not is_premium:
-        st.markdown("---")
-        st.markdown("## 🔒 Premium Features")
-        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
-        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
-
-        if st.button("💳 Buy Premium"):
-            st.info("👉 Please buy Premium in Android App to unlock instantly ✅")
-
-        # ✅ Optional: Testing button to switch premium
-        st.markdown(
-            "<a href='https://tnea-choice-list.streamlit.app/?premium=1' target='_self'>"
-            "<button style='padding:10px 20px; background:#0d6efd; color:white; border:none; "
-            "border-radius:8px; font-size:16px;'>🚀 Go Premium (Test)</button></a>",
-            unsafe_allow_html=True
-        )
-
-    else:
-        st.markdown("---")
-        st.success("✅ PREMIUM MODE ENABLED")
-        st.markdown(
-            "<a href='https://tnea-choice-list.streamlit.app/' target='_self'>"
-            "<button style='padding:10px 20px; background:#198754; color:white; border:none; "
-            "border-radius:8px; font-size:16px;'>⬅️ Back to Normal Mode</button></a>",
-            unsafe_allow_html=True
-        )
 
     # --- Chat Feature ---
     st.markdown("---")
@@ -789,6 +710,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
