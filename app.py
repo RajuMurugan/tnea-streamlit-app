@@ -428,30 +428,169 @@ elif selected == "College List":
             st.link_button("🌐 Open Official Website", row["Website"])
             st.markdown("---")
 
+
 # =================================================
-# ✅ PAGE 4: CHOICE LIST (PREMIUM)
+# ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
 elif selected == "Create TNEA Choice List":
+
+    # ✅ Premium restriction
     if not is_premium:
-        st.warning("🔒 Premium only feature. Click 💳 Go Premium button (top right).")
+        st.warning("🔒 Premium only feature. Click 💳 Go Premium button on top.")
         st.stop()
 
+    import time
+
+    # ✅ Performance-optimized loader with caching (10 minutes)
+    @st.cache_data(ttl=600)
+    def load_excel_file_from_url(url):
+        response = requests.get(url)
+        df_loaded = pd.read_excel(io.BytesIO(response.content))
+        return df_loaded
+
+    excel_url = "https://docs.google.com/spreadsheets/d/1rASGgYC9RZA0vgmtuFYRG0QO3DOGH_jW/export?format=xlsx"
+
+    with st.spinner("📥 Loading TNEA cutoff data..."):
+        df = load_excel_file_from_url(excel_url)
+
+    for col in df.columns:
+        if col.endswith("_C") or col.endswith("_GR"):
+            df[col] = pd.to_numeric(df[col], errors="coerce")
+
+    st.image("https://drive.google.com/thumbnail?id=1FPfkRH3BC1BeQRtQVpZDH3P3ilTSMYNA", width=100)
     st.title("📊 TNEA 2025 Cutoff & Rank Finder")
-    st.success("✅ Premium Feature Enabled ✅")
-    st.info("👉 Paste your full Choice List code here ✅")
+    st.markdown(f"🆔 **Accessed by: {st.session_state.mobile}**")
+
+    df['College_Option'] = df['CL'].astype(str) + " - " + df['College']
+    college_options = sorted(df['College_Option'].unique().tolist())
+    selected_college = st.selectbox("🏛️ Select College", options=["All"] + college_options)
+
+    st.subheader("🎯 Filter by Community, Department, Zone")
+    if selected_college == "All":
+        community = st.selectbox(
+            "Select Community",
+            options=["All", "OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"],
+            key="main_community"
+        )
+        department = st.selectbox(
+            "Select Department (Br)",
+            options=["All"] + sorted(df['Br'].dropna().unique().tolist())
+        )
+        zone = st.selectbox(
+            "Select Zone",
+            options=["All"] + sorted(df['zone'].dropna().unique().tolist())
+        )
+
+    st.subheader("📌 Compare Up to 5 Colleges")
+    compare_colleges = st.multiselect(
+        "Select colleges to compare",
+        options=college_options,
+        max_selections=5
+    )
+
+    if compare_colleges:
+        st.markdown("### 🎯 Filter Inside Compared Colleges")
+        comp_dept = st.selectbox(
+            "Department",
+            options=["All"] + sorted(df['Br'].dropna().unique().tolist()),
+            key="compare_department"
+        )
+        comp_comm = st.selectbox(
+            "Community",
+            options=["All", "OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"],
+            key="compare_community"
+        )
+
+        compare_cls = [c.split(" - ")[0].strip() for c in compare_colleges]
+        compare_df = df[df['CL'].astype(str).isin(compare_cls)]
+
+        if comp_dept != "All":
+            compare_df = compare_df[compare_df['Br'] == comp_dept]
+
+        color_palette = ['#f7c6c7', '#c6e2ff', '#d5f5e3', '#fff5ba', '#e0ccff']
+        college_color_map = {cl: color_palette[i] for i, cl in enumerate(compare_cls)}
+
+        def highlight_college(row):
+            cl = str(row['CL'])
+            bg_color = college_color_map.get(cl, '#ffffff')
+            return [f'background-color: {bg_color}; color: black;' for _ in row]
+
+        compare_cols = ['CL', 'College', 'Br', 'zone']
+        if comp_comm != "All":
+            compare_cols += [f"{comp_comm}_C", f"{comp_comm}_GR"]
+        else:
+            compare_cols += [col for col in df.columns if col.endswith("_C") or col.endswith("_GR")]
+
+        format_dict = {
+            col: '{:.2f}' if '_C' in col else '{:.0f}'
+            for col in compare_cols
+            if '_C' in col or '_GR' in col
+        }
+
+        st.markdown("### 🟨 College Comparison Table")
+        st.dataframe(
+            compare_df[compare_cols]
+            .style
+            .apply(highlight_college, axis=1)
+            .format(format_dict)
+            .hide(axis='index'),
+            height=450
+        )
+
+    # --- MAIN FILTERED DATA ---
+    show_data = False
+    filtered_df = df.copy()
+
+    if selected_college != "All":
+        show_data = True
+        selected_cl = selected_college.split(" - ")[0].strip()
+        filtered_df = filtered_df[filtered_df['CL'].astype(str) == selected_cl]
+    else:
+        if 'zone' in locals() and zone != "All":
+            filtered_df = filtered_df[filtered_df['zone'] == zone]
+            show_data = True
+        if 'department' in locals() and department != "All":
+            filtered_df = filtered_df[filtered_df['Br'] == department]
+            show_data = True
+
+    if selected_college == "All" and 'community' in locals() and community != "All":
+        cols_to_show = ['CL', 'College', 'Br', f'{community}_C', f'{community}_GR', 'zone']
+    else:
+        cols_to_show = ['CL', 'College', 'Br', 'zone'] + [
+            col for col in df.columns if col.endswith("_C") or col.endswith("_GR")
+        ]
+
+    format_dict = {
+        col: '{:.2f}' if '_C' in col else '{:.0f}'
+        for col in cols_to_show
+        if '_C' in col or '_GR' in col
+    }
+
+    st.markdown("### 🔎 Filtered Results")
+    if show_data:
+        st.dataframe(
+            filtered_df[cols_to_show]
+            .style
+            .format(format_dict)
+            .hide(axis='index'),
+            height=600
+        )
+    else:
+        st.info("Please apply filters to see the results.")
 
 # =================================================
-# ✅ PAGE 5: SEAT MATRIX (PREMIUM)
+# ✅ PAGE 6: TNEA VACANCY SEAT MATRIX (PREMIUM ONLY)
 # =================================================
 elif selected == "TNEA Vacancy Seat Matrix":
+
+    # ✅ Premium restriction
     if not is_premium:
         st.warning("🔒 Premium only feature. Click 💳 Go Premium button (top right).")
         st.stop()
 
     st.title("📊 TNEA Vacancy Seat Matrix")
     st.success("✅ Premium Feature Enabled ✅")
-   # --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
-elif selected == "TNEA Vacancy Seat Matrix":
+
     import plotly.express as px
     from openpyxl import load_workbook
     import requests
@@ -484,12 +623,14 @@ elif selected == "TNEA Vacancy Seat Matrix":
                         continue
                     header = data[0]
                     rows = data[1:]
-                    df = pd.DataFrame(rows, columns=header)
-                    data_dict[sheet] = df
+                    df_temp = pd.DataFrame(rows, columns=header)
+                    data_dict[sheet] = df_temp
 
                 all_data[round_name] = data_dict
+
             except Exception as e:
                 st.error(f"⚠️ Error loading {round_name}: {e}")
+
         return all_data
 
     all_rounds_data = load_all_rounds()
@@ -502,10 +643,18 @@ elif selected == "TNEA Vacancy Seat Matrix":
     col_cat1_0, col_cat1_1, col_cat1_2, col_cat1_3 = st.columns(4)
 
     with col_cat1_0:
-        selected_round_1 = st.selectbox("📂 Select Counselling Round", list(all_rounds_data.keys()), key="cat1_round")
+        selected_round_1 = st.selectbox(
+            "📂 Select Counselling Round",
+            list(all_rounds_data.keys()),
+            key="cat1_round"
+        )
 
     with col_cat1_1:
-        selected_sheet_1 = st.selectbox("📂 Select Vacancy - Category", list(all_rounds_data[selected_round_1].keys()), key="cat1_sheet")
+        selected_sheet_1 = st.selectbox(
+            "📂 Select Vacancy - Category",
+            list(all_rounds_data[selected_round_1].keys()),
+            key="cat1_sheet"
+        )
         df1 = all_rounds_data[selected_round_1][selected_sheet_1]
 
     if df1.empty:
@@ -514,6 +663,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     # ✅ Clean dataframe
     df1.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df1.columns]
+
     rename_map = {}
     for col in df1.columns:
         if "COLLEGE CODE" in col:
@@ -526,6 +676,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
             rename_map[col] = 'Branch Name'
 
     df1.rename(columns=rename_map, inplace=True)
+
     df1 = df1[[col for col in df1.columns if col in required_id_vars + community_cols]]
     df1[community_cols] = df1[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
 
@@ -536,10 +687,8 @@ elif selected == "TNEA Vacancy Seat Matrix":
     branch_totals = df1.groupby("Branch Code")[community_cols].sum()
     branch_totals["Total Vacant"] = branch_totals.sum(axis=1)
 
-    # Show metrics at top
     st.metric(label=f"🎯 Total Seats in {selected_round_1}", value=f"{total_round_seats:,}")
 
-    # Optional: show branch summary as table
     with st.expander("📊 Branch-wise Vacancy Summary"):
         st.dataframe(branch_totals.reset_index(), use_container_width=True)
 
@@ -574,19 +723,22 @@ elif selected == "TNEA Vacancy Seat Matrix":
             community_summary = bar1[community_cols].sum().reset_index()
             community_summary.columns = ['Community', 'Seats']
 
-            # ✅ Calculate total seats for this branch
             total_branch_seats = community_summary['Seats'].sum()
 
-            # ✅ Add total seats info in chart title
             chart_title = (
                 f"{selected_round_1} - {selected_sheet_1} - {selected_branch_1} "
                 f"- Total Seats Across Communities (Total = {total_branch_seats:,})"
             )
 
             fig1 = px.bar(
-                community_summary, x='Community', y='Seats', color='Community', text='Seats',
+                community_summary,
+                x='Community',
+                y='Seats',
+                color='Community',
+                text='Seats',
                 title=chart_title,
-                labels={'Community': 'Community Category', 'Seats': 'Number of Seats'}, height=450
+                labels={'Community': 'Community Category', 'Seats': 'Number of Seats'},
+                height=450
             )
             fig1.update_layout(xaxis_title="Community", yaxis_title="Number of Seats")
             fig1.update_traces(textposition='outside')
@@ -598,10 +750,18 @@ elif selected == "TNEA Vacancy Seat Matrix":
     col_cat2_0, col_cat2_1, col_cat2_2, col_cat2_3 = st.columns(4)
 
     with col_cat2_0:
-        selected_round_2 = st.selectbox("📂 Select Counselling Round", list(all_rounds_data.keys()), key="cat2_round")
+        selected_round_2 = st.selectbox(
+            "📂 Select Counselling Round",
+            list(all_rounds_data.keys()),
+            key="cat2_round"
+        )
 
     with col_cat2_1:
-        selected_sheet_2 = st.selectbox("📂 Select Vacancy - Category", list(all_rounds_data[selected_round_2].keys()), key="cat2_sheet")
+        selected_sheet_2 = st.selectbox(
+            "📂 Select Vacancy - Category",
+            list(all_rounds_data[selected_round_2].keys()),
+            key="cat2_sheet"
+        )
         df2 = all_rounds_data[selected_round_2][selected_sheet_2]
 
     if df2.empty:
@@ -610,8 +770,10 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     df2.columns = [str(col).strip().upper().replace("  ", " ").replace("\n", " ") for col in df2.columns]
     df2.rename(columns=rename_map, inplace=True)
+
     df2 = df2[[col for col in df2.columns if col in required_id_vars + community_cols]]
     df2[community_cols] = df2[community_cols].apply(pd.to_numeric, errors='coerce').fillna(0).astype(int)
+
     df2['College Combined'] = df2['College Code'].astype(str) + ' - ' + df2['College Name']
 
     unique_colleges = sorted(df2['College Combined'].dropna().unique())
@@ -640,12 +802,16 @@ elif selected == "TNEA Vacancy Seat Matrix":
     # Chart 1: All Community Seats per Branch
     fig2_data_all = college_df.copy()
     fig2_data_all['Total Seats (All Communities)'] = fig2_data_all[community_cols].sum(axis=1)
+
     fig_all = px.bar(
         fig2_data_all,
-        x='Branch Code', y='Total Seats (All Communities)', color='Branch Code',
+        x='Branch Code',
+        y='Total Seats (All Communities)',
+        color='Branch Code',
         text='Total Seats (All Communities)',
         title=f"{selected_round_2} - {selected_college_combined} - Total Seats per Branch (All Communities)",
-        labels={'Branch Code': 'Branch', 'Total Seats (All Communities)': 'Number of Seats'}, height=450
+        labels={'Branch Code': 'Branch', 'Total Seats (All Communities)': 'Number of Seats'},
+        height=450
     )
     fig_all.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
     fig_all.update_traces(textposition='outside')
@@ -653,15 +819,19 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     # Chart 2: Selected Community Seats per Branch
     if selected_community_2 != 'All':
-        college_df = college_df[[*required_id_vars, selected_community_2]]
-        college_df = college_df.rename(columns={selected_community_2: 'Selected Community Seats'})
-        college_df.insert(4, 'Selected Community', selected_community_2)
+        college_df2 = college_df[[*required_id_vars, selected_community_2]].copy()
+        college_df2 = college_df2.rename(columns={selected_community_2: 'Selected Community Seats'})
+        college_df2.insert(4, 'Selected Community', selected_community_2)
+
         fig2 = px.bar(
-            college_df,
-            x='Branch Code', y='Selected Community Seats', color='Branch Code',
+            college_df2,
+            x='Branch Code',
+            y='Selected Community Seats',
+            color='Branch Code',
             text='Selected Community Seats',
             title=f"{selected_round_2} - {selected_college_combined} - {selected_community_2} Seats per Branch",
-            labels={'Branch Code': 'Branch', 'Selected Community Seats': 'Number of Seats'}, height=450
+            labels={'Branch Code': 'Branch', 'Selected Community Seats': 'Number of Seats'},
+            height=450
         )
         fig2.update_layout(xaxis_title="Branch", yaxis_title="Number of Seats")
         fig2.update_traces(textposition='outside')
@@ -669,48 +839,3 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
