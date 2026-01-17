@@ -144,16 +144,23 @@ else:
     st.markdown("## 📚 TNEA 2026 Cut off Mark Calculator")
     # st.caption("Maths (100) + Physics (50) + Chemistry (50) = Total Cutoff (200)")
 
-    # ✅ Current IST time (for use everywhere)
+    # ✅ Current IST time
     ist_now = datetime.now(ZoneInfo("Asia/Kolkata"))
     ist_time_str = ist_now.strftime("%d-%m-%Y %I:%M %p")
 
-    # ✅ Reset Function (Perfect for placeholders)
+    # ✅ Form Key (important for Reset)
+    if "form_key" not in st.session_state:
+        st.session_state["form_key"] = 0
+
+    # ✅ Reset Function (Perfect Reset + Placeholder returns)
     def reset_marks():
         st.session_state.pop("student_name", None)
         st.session_state.pop("maths_mark", None)
         st.session_state.pop("physics_mark", None)
         st.session_state.pop("chemistry_mark", None)
+
+        # ✅ Force Streamlit to create a fresh form
+        st.session_state["form_key"] += 1
 
     st.markdown("### ✍️ Enter Student Details")
 
@@ -233,7 +240,7 @@ else:
         return buffer
 
     # ---- Inputs + Buttons ----
-    with st.form("cutoff_form"):
+    with st.form(key=f"cutoff_form_{st.session_state['form_key']}"):
         name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
 
         col1, col2, col3 = st.columns(3)
@@ -251,7 +258,7 @@ else:
         with btn2:
             reset_btn = st.form_submit_button("🔄 Reset")
 
-    # ✅ Reset action (clears input + shows placeholders)
+    # ✅ Reset action (Works 100%)
     if reset_btn:
         reset_marks()
         st.rerun()
@@ -298,8 +305,6 @@ else:
 
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
-
-  
 
     # --- Quick Access to Previous Year Question Papers ---
     st.markdown("### 📚 Previous Year Question Papers")
@@ -739,6 +744,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
