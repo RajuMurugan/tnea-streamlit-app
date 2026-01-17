@@ -117,11 +117,12 @@ col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
     if is_premium:
-        menu_options = ["Home", "Cutoff Calculator", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
-        menu_icons = ["house", "calculator", "list-check", "table"]
+        menu_options = ["Home", "Cutoff Calculator", "College List", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
+        menu_icons = ["house", "calculator", "building", "list-check", "table"]
     else:
-        menu_options = ["Home", "Cutoff Calculator"]
-        menu_icons = ["house", "calculator"]
+        menu_options = ["Home", "Cutoff Calculator", "College List"]
+        menu_icons = ["house", "calculator", "building"]
+
 
     selected = option_menu(
         menu_title=None,
@@ -321,6 +322,62 @@ elif selected == "Cutoff Calculator":
                         )
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
+
+
+
+elif selected == "College List":
+
+    st.markdown("## 🏫 Tamil Nadu College List (Free)")
+    st.caption("Search colleges and open official websites ✅")
+
+    college_data = [
+        {"College": "Madras Institute of Technology (MIT)", "City": "Chennai", "Website": "https://mitindia.edu/"},
+        {"College": "College of Engineering Guindy (CEG)", "City": "Chennai", "Website": "https://ceg.annauniv.edu/"},
+        {"College": "Alagappa College of Technology (ACT)", "City": "Chennai", "Website": "https://www.annauniv.edu/"},
+        {"College": "Anna University Regional Campus Coimbatore", "City": "Coimbatore", "Website": "https://www.aurcc.ac.in/"},
+        {"College": "Anna University Regional Campus Tirunelveli", "City": "Tirunelveli", "Website": "https://www.auttvl.ac.in/"},
+        {"College": "PSG College of Technology", "City": "Coimbatore", "Website": "https://www.psgtech.edu/"},
+        {"College": "Coimbatore Institute of Technology (CIT)", "City": "Coimbatore", "Website": "https://www.cit.edu.in/"},
+        {"College": "Government College of Technology (GCT)", "City": "Coimbatore", "Website": "https://www.gct.ac.in/"},
+        {"College": "Thiagarajar College of Engineering (TCE)", "City": "Madurai", "Website": "https://www.tce.edu/"},
+        {"College": "SSN College of Engineering", "City": "Chennai", "Website": "https://www.ssn.edu.in/"},
+        {"College": "SRM Institute of Science and Technology", "City": "Chennai", "Website": "https://www.srmist.edu.in/"},
+        {"College": "VIT Vellore", "City": "Vellore", "Website": "https://vit.ac.in/"},
+        {"College": "SASTRA Deemed University", "City": "Thanjavur", "Website": "https://www.sastra.edu/"},
+        {"College": "Kumaraguru College of Technology", "City": "Coimbatore", "Website": "https://www.kct.ac.in/"},
+        {"College": "Kongu Engineering College", "City": "Erode", "Website": "https://kongu.ac.in/"},
+        {"College": "Rajalakshmi Engineering College", "City": "Chennai", "Website": "https://www.rajalakshmi.org/"},
+    ]
+
+    df_colleges = pd.DataFrame(college_data)
+
+    colS1, colS2 = st.columns([2, 1])
+
+    with colS1:
+        search_text = st.text_input("🔍 Search College", placeholder="Type college name...")
+
+    with colS2:
+        city_list = ["All"] + sorted(df_colleges["City"].unique().tolist())
+        selected_city = st.selectbox("📍 Filter by City", city_list)
+
+    filtered_df = df_colleges.copy()
+
+    if selected_city != "All":
+        filtered_df = filtered_df[filtered_df["City"] == selected_city]
+
+    if search_text.strip():
+        filtered_df = filtered_df[filtered_df["College"].str.contains(search_text, case=False, na=False)]
+
+    st.write(f"✅ Total Colleges Found: **{len(filtered_df)}**")
+
+    st.markdown("---")
+
+    for i, row in filtered_df.iterrows():
+        with st.container():
+            st.markdown(f"### 🏫 {row['College']}")
+            st.write(f"📍 City: **{row['City']}**")
+            st.link_button("🌐 Open Official Website", row["Website"])
+            st.markdown("---")
 
 # =================================================
 # ✅ PAGE 3: CHOICE LIST (PREMIUM)
@@ -598,6 +655,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
