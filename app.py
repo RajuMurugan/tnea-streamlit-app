@@ -6,13 +6,12 @@ import requests
 import io
 import uuid
 import time
-from datetime import datetime
+from datetime import timedelta, datetime
 import os
+import plotly.express as px
+from openpyxl import load_workbook
 import json
 from zoneinfo import ZoneInfo
-from PIL import Image, ImageDraw, ImageFont
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
 
 # -------------------------------------------------
 # ✅ Page Config (MUST BE FIRST Streamlit command)
@@ -77,10 +76,10 @@ try:
     user_data = config["credentials"]["users"]
 except Exception:
     user_data = {}
-    # st.warning("⚠️ config.yaml not loaded (Login will not work)")
+    st.warning("⚠️ config.yaml not loaded (Login will not work)")
 
 # -------------------------------------------------
-# ✅ Load device_session.yaml (optional)
+# ✅ Load device_session.yaml
 # -------------------------------------------------
 try:
     with open(device_session_path) as session_file:
@@ -119,37 +118,17 @@ col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     if is_premium:
         menu_options = ["Home", "Cutoff Calculator", "College List", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
-        menu_icons = ["house", "calculator", "bank", "list-check", "table"]
+        menu_icons = ["house", "calculator", "building", "list-check", "table"]
     else:
         menu_options = ["Home", "Cutoff Calculator", "College List"]
-        menu_icons = ["house", "calculator", "bank"]
+        menu_icons = ["house", "calculator", "building"]
 
     selected = option_menu(
         menu_title=None,
         options=menu_options,
         icons=menu_icons,
         default_index=0,
-        orientation="horizontal",
-        styles={
-            "container": {"padding": "0!important", "background-color": "#ffffff"},
-            "icon": {"color": "#0d6efd", "font-size": "18px"},
-            "nav-link": {
-                "font-size": "13px",
-                "font-weight": "bold",
-                "text-align": "center",
-                "margin": "2px",
-                "color": "#0d6efd",
-                "--hover-color": "#d0e7ff",
-                "background-color": "#f4faff",
-                "border-radius": "8px"
-            },
-            "nav-link-selected": {
-                "background-color": "#0d6efd",
-                "color": "white",
-                "font-weight": "bold",
-                "border-radius": "8px"
-            }
-        }
+        orientation="horizontal"
     )
 
 # =================================================
@@ -157,6 +136,7 @@ with col2:
 # =================================================
 if selected == "Home":
 
+    # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
@@ -184,6 +164,8 @@ if selected == "Home":
     st.markdown("""
     <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
     📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
+    📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
+    📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
     </div>
     """, unsafe_allow_html=True)
 
@@ -209,8 +191,12 @@ if selected == "Home":
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
 elif selected == "Cutoff Calculator":
+    from PIL import Image, ImageDraw, ImageFont
+    from reportlab.pdfgen import canvas
+    from reportlab.lib.pagesizes import A4
 
     st.markdown("## 📚 TNEA 2026 Cut off Mark Calculator")
+
     ist_time_str = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%d-%m-%Y %I:%M %p")
 
     def reset_marks():
@@ -342,7 +328,158 @@ elif selected == "Cutoff Calculator":
 elif selected == "College List":
 
     st.markdown("## 🏫 Tamil Nadu College List (Free)")
-    st.caption("Search colleges and open official websites ✅")
+    st.caption("✅ Branch code table + College website list")
+
+    # -------------------------------------------------
+    # ✅ Branch Code + Branch Name Table (From PDF)
+    # Source: TNEA PDF Page 1-3 :contentReference[oaicite:1]{index=1}
+    # -------------------------------------------------
+    st.markdown("### 📌 Branch Code & Branch Name (TNEA)")
+    st.caption("Reference taken from official TNEA branch code list PDF.")
+
+    branch_data = [
+        {"Branch Code": "AO", "Branch Name": "AEROSPACE ENGINEERING"},
+        {"Branch Code": "AE", "Branch Name": "AERONAUTICAL ENGINEERING"},
+        {"Branch Code": "AG", "Branch Name": "AGRICULTURAL ENGINEERING"},
+        {"Branch Code": "€", "Branch Name": "ANIMATION AND GRAPHICS"},
+        {"Branch Code": "AP", "Branch Name": "APPAREL TECHNOLOGY (SS)"},
+        {"Branch Code": "AR", "Branch Name": "ARCHITECTURE"},
+        {"Branch Code": "BA", "Branch Name": "ARCHITECTURE (SS)"},
+        {"Branch Code": "AD", "Branch Name": "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE"},
+        {"Branch Code": "AT", "Branch Name": "ARTIFICIAL INTELLIGENCE AND DATA SCIENCE (SS)"},
+        {"Branch Code": "AL", "Branch Name": "ARTIFICIAL INTELLIGENCE AND MACHINE LEARNING"},
+        {"Branch Code": "AU", "Branch Name": "AUTOMOBILE ENGINEERING"},
+        {"Branch Code": "AS", "Branch Name": "AUTOMOBILE ENGINEERING (SS)"},
+        {"Branch Code": "BP", "Branch Name": "B.PLAN"},
+        {"Branch Code": "DA", "Branch Name": "BACHELOR OF DESIGN"},
+        {"Branch Code": "BM", "Branch Name": "BIO MEDICAL ENGINEERING"},
+        {"Branch Code": "BY", "Branch Name": "BIO MEDICAL ENGINEERING (SS)"},
+        {"Branch Code": "BT", "Branch Name": "BIO TECHNOLOGY"},
+        {"Branch Code": "BS", "Branch Name": "BIO TECHNOLOGY (SS)"},
+        {"Branch Code": "BC", "Branch Name": "BIO TECHNOLOGY AND BIO CHEMICAL ENGINEERING"},
+        {"Branch Code": "CR", "Branch Name": "CERAMIC TECHNOLOGY (SS)"},
+        {"Branch Code": "CH", "Branch Name": "CHEMICAL ENGINEERING"},
+        {"Branch Code": "CL", "Branch Name": "CHEMICAL ENGINEERING (SS)"},
+        {"Branch Code": "CC", "Branch Name": "CHEMICAL AND ELECTRO CHEMICAL ENGINEERING (SS)"},
+        {"Branch Code": "CX", "Branch Name": "CHEMICAL AND ELECTROCHEMICAL ENGINEERING"},
+        {"Branch Code": "CE", "Branch Name": "CIVIL ENGINEERING"},
+        {"Branch Code": "CN", "Branch Name": "CIVIL ENGINEERING (SS)"},
+        {"Branch Code": "CZ", "Branch Name": "CIVIL AND STRUCTUTURAL ENGINEERING"},
+        {"Branch Code": "XC", "Branch Name": "CIVIL ENGINEERING (TAMIL MEDIUM)"},
+        {"Branch Code": "CK", "Branch Name": "CIVIL ENGINEERING (ENVIRONMENTAL ENGINEERING)"},
+        {"Branch Code": "CO", "Branch Name": "COMPUTER AND COMMUNICATION ENGINEERING"},
+        {"Branch Code": "CW", "Branch Name": "COMPUTER SCIENCE AND BUSINESS SYSTEM (SS)"},
+        {"Branch Code": "CB", "Branch Name": "COMPUTER SCIENCE AND BUSINESS SYSTEM"},
+        {"Branch Code": "CD", "Branch Name": "COMPUTER SCIENCE AND DESIGN"},
+        {"Branch Code": "CS", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING"},
+        {"Branch Code": "AM", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (AI & ML)"},
+        {"Branch Code": "CG", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (AI & ML) (SS)"},
+        {"Branch Code": "SC", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (CYBER SECURITY)"},
+        {"Branch Code": "CF", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (DATA SCIENCE)"},
+        {"Branch Code": "SB", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (IOT + CYBER SECURITY + BLOCKCHAIN)"},
+        {"Branch Code": "CI", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (INTERNET OF THINGS)"},
+        {"Branch Code": "CM", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (SS)"},
+        {"Branch Code": "XS", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (TAMIL)"},
+        {"Branch Code": "CA", "Branch Name": "COMPUTER SCIENCE AND ENGINEERING (ARTIFICIAL INTELLIGENCE)"},
+        {"Branch Code": "TS", "Branch Name": "COMPUTER SCIENCE AND TECHNOLOGY"},
+        {"Branch Code": "CT", "Branch Name": "COMPUTER TECHNOLOGY"},
+        {"Branch Code": "CY", "Branch Name": "CYBER SECURITY"},
+        {"Branch Code": "EF", "Branch Name": "ELECTRICAL AND COMPUTER ENGINEERING"},
+        {"Branch Code": "ES", "Branch Name": "ELECTRICAL AND ELECTRONICS (SANDWICH) (SS)"},
+        {"Branch Code": "EE", "Branch Name": "ELECTRICAL AND ELECTRONICS ENGINEERING"},
+        {"Branch Code": "EY", "Branch Name": "ELECTRICAL AND ELECTRONICS ENGINEERING (SS)"},
+        {"Branch Code": "ET", "Branch Name": "ELECTRONICS AND TELECOMMUNICATION ENGINEERING"},
+        {"Branch Code": "EA", "Branch Name": "ELECTRONICS AND COMMUNICATION (ADVANCED COMMUNICATION TECHNOLOGY)"},
+        {"Branch Code": "EC", "Branch Name": "ELECTRONICS AND COMMUNICATION ENGINEERING"},
+        {"Branch Code": "EM", "Branch Name": "ELECTRONICS AND COMMUNICATION ENGINEERING (SS)"},
+        {"Branch Code": "EX", "Branch Name": "ELECTRONICS AND COMPUTER ENGINEERING"},
+        {"Branch Code": "EI", "Branch Name": "ELECTRONICS AND INSTRUMENTATION ENGINEERING"},
+        {"Branch Code": "EV", "Branch Name": "ELECTRONICS ENGINEERING (VLSI DESIGN AND TECHNOLOGY)"},
+        {"Branch Code": "EL", "Branch Name": "ELECTRONICS ENGINEERING (VLSI DESIGN AND TECHNOLOGY)"},
+        {"Branch Code": "IX", "Branch Name": "ELECTRONICS INSTRUMENTATION AND CONTROL ENGINEERING"},
+        {"Branch Code": "EN", "Branch Name": "ENVIRONMENTAL ENGINEERING"},
+        {"Branch Code": "FT", "Branch Name": "FASHION TECHNOLOGY"},
+        {"Branch Code": "FY", "Branch Name": "FASHION TECHNOLOGY (SS)"},
+        {"Branch Code": "FD", "Branch Name": "FOOD TECHNOLOGY"},
+        {"Branch Code": "FS", "Branch Name": "FOOD TECHNOLOGY (SS)"},
+        {"Branch Code": "GI", "Branch Name": "GEO INFORMATICS"},
+        {"Branch Code": "HT", "Branch Name": "HANDLOOM AND TEXTILE TECHNOLOGY"},
+        {"Branch Code": "IB", "Branch Name": "INDUSTRIAL BIO TECHNOLOGY"},
+        {"Branch Code": "IS", "Branch Name": "INDUSTRIAL BIO TECHNOLOGY (SS)"},
+        {"Branch Code": "IE", "Branch Name": "INDUSTRIAL ENGINEERING"},
+        {"Branch Code": "IN", "Branch Name": "INDUSTRIAL ENGINEERING AND MANAGEMENT"},
+        {"Branch Code": "SE", "Branch Name": "INFORMATION SCIENCE AND ENGINEERING"},
+        {"Branch Code": "IT", "Branch Name": "INFORMATION TECHNOLOGY"},
+        {"Branch Code": "IM", "Branch Name": "INFORMATION TECHNOLOGY (SS)"},
+        {"Branch Code": "IC", "Branch Name": "INSTRUMENTATION AND CONTROL ENGINEERING"},
+        {"Branch Code": "IY", "Branch Name": "INSTRUMENTATION AND CONTROL ENGINEERING (SS)"},
+        {"Branch Code": "ID", "Branch Name": "INTERIOR DESIGN (SS)"},
+        {"Branch Code": "LE", "Branch Name": "LEATHER TECHNOLOGY"},
+        {"Branch Code": "CJ", "Branch Name": "M.TECH COMPUTER SCIENCE AND ENGINEERING (INTEGRATED 5 YEARS)"},
+        {"Branch Code": "MN", "Branch Name": "MANUFACTURING ENGINEERING"},
+        {"Branch Code": "MR", "Branch Name": "MARINE ENGINEERING"},
+        {"Branch Code": "MA", "Branch Name": "MATERIAL SCIENCE AND ENGINEERING (SS)"},
+        {"Branch Code": "MU", "Branch Name": "MECHANICAL AND AUTOMATION ENGINEERING"},
+        {"Branch Code": "MO", "Branch Name": "MECHANICAL AND MECHATRONICS ENGINEERING (ADDITIVE MANUFACTURING)"},
+        {"Branch Code": "MJ", "Branch Name": "MECHANICAL AND SMART MANUFACTURING"},
+        {"Branch Code": "ME", "Branch Name": "MECHANICAL ENGINEERING"},
+        {"Branch Code": "MM", "Branch Name": "MECHANICAL ENGINEERING (MANUFACTURING)"},
+        {"Branch Code": "MH", "Branch Name": "MECHANICAL ENGINEERING (SANDWICH)"},
+        {"Branch Code": "MS", "Branch Name": "MECHANICAL ENGINEERING (SANDWICH) (SS)"},
+        {"Branch Code": "MF", "Branch Name": "MECHANICAL ENGINEERING (SS)"},
+        {"Branch Code": "XM", "Branch Name": "MECHANICAL ENGINEERING (TAMIL MEDIUM)"},
+        {"Branch Code": "MB", "Branch Name": "MECHANICAL ENGINEERING (AUTOMOBILE)"},
+        {"Branch Code": "MC", "Branch Name": "MECHATRONICS"},
+        {"Branch Code": "MG", "Branch Name": "MECHATRONICS (SS)"},
+        {"Branch Code": "MZ", "Branch Name": "MECHATRONICS ENGINEERING"},
+        {"Branch Code": "MD", "Branch Name": "MEDICAL ELECTRONICS ENGINEERING"},
+        {"Branch Code": "MT", "Branch Name": "METALLURGICAL ENGINEERING"},
+        {"Branch Code": "MY", "Branch Name": "METALLURGICAL ENGINEERING (SS)"},
+        {"Branch Code": "MI", "Branch Name": "MINING ENGINEERING"},
+        {"Branch Code": "PD", "Branch Name": "PETRO CHEMICAL ENGINEERING"},
+        {"Branch Code": "PC", "Branch Name": "PETRO CHEMICAL TECHNOLOGY"},
+        {"Branch Code": "PE", "Branch Name": "PETROLEUM ENGINEERING"},
+        {"Branch Code": "PP", "Branch Name": "PETROLEUM ENGINEERING AND TECHNOLOGY (SS)"},
+        {"Branch Code": "PH", "Branch Name": "PHARMACEUTICAL TECHNOLOGY"},
+        {"Branch Code": "PM", "Branch Name": "PHARMACEUTICAL TECHNOLOGY (SS)"},
+        {"Branch Code": "PA", "Branch Name": "PLASTIC TECHNOLOGY"},
+        {"Branch Code": "PT", "Branch Name": "PRINTING AND PACKING TECHNOLOGY"},
+        {"Branch Code": "PR", "Branch Name": "PRODUCTION ENGINEERING"},
+        {"Branch Code": "PS", "Branch Name": "PRODUCTION ENGINEERING (SANDWICH) (SS)"},
+        {"Branch Code": "PN", "Branch Name": "PRODUCTION ENGINEERING (SS)"},
+        {"Branch Code": "RI", "Branch Name": "ROBOTICS AND ARTIFICIAL INTELLIGENCE"},
+        {"Branch Code": "RM", "Branch Name": "ROBOTICS AND AUTOMATION"},
+        {"Branch Code": "RA", "Branch Name": "ROBOTICS AND AUTOMATION (SS)"},
+        {"Branch Code": "RP", "Branch Name": "RUBBER AND PLASTIC TECHNOLOGY"},
+        {"Branch Code": "SF", "Branch Name": "SAFETY AND FIRE ENGINEERING"},
+        {"Branch Code": "TC", "Branch Name": "TEXTILE CHEMISTRY"},
+        {"Branch Code": "TX", "Branch Name": "TEXTILE TECHNOLOGY"},
+        {"Branch Code": "TT", "Branch Name": "TEXTILE TECHNOLOGY (SS)"},
+    ]
+
+    df_branch = pd.DataFrame(branch_data)
+
+    colb1, colb2 = st.columns([2, 1])
+    with colb1:
+        branch_search = st.text_input("🔍 Search Branch (Code or Name)", placeholder="ex: CS, AI, Civil...")
+    with colb2:
+        st.write("")
+        st.write(f"✅ Total Branches: **{len(df_branch)}**")
+
+    df_branch_show = df_branch.copy()
+    if branch_search.strip():
+        df_branch_show = df_branch_show[
+            df_branch_show["Branch Code"].str.contains(branch_search, case=False, na=False)
+            | df_branch_show["Branch Name"].str.contains(branch_search, case=False, na=False)
+        ]
+
+    st.dataframe(df_branch_show, use_container_width=True, height=350)
+
+    # -------------------------------------------------
+    # ✅ College List Table (Your original feature)
+    # -------------------------------------------------
+    st.markdown("---")
+    st.markdown("### 🏫 College List (Official Website Links)")
 
     college_data = [
         {"College": "Madras Institute of Technology (MIT)", "City": "Chennai", "Website": "https://mitindia.edu/"},
@@ -368,11 +505,11 @@ elif selected == "College List":
     colS1, colS2 = st.columns([2, 1])
 
     with colS1:
-        search_text = st.text_input("🔍 Search College", placeholder="Type college name...", key="college_search")
+        search_text = st.text_input("🔍 Search College", placeholder="Type college name...")
 
     with colS2:
         city_list = ["All"] + sorted(df_colleges["City"].unique().tolist())
-        selected_city = st.selectbox("📍 Filter by City", city_list, key="college_city")
+        selected_city = st.selectbox("📍 Filter by City", city_list)
 
     filtered_df = df_colleges.copy()
 
@@ -385,11 +522,13 @@ elif selected == "College List":
     st.write(f"✅ Total Colleges Found: **{len(filtered_df)}**")
     st.markdown("---")
 
-    for _, row in filtered_df.iterrows():
-        st.markdown(f"### 🏫 {row['College']}")
-        st.write(f"📍 City: **{row['City']}**")
-        st.link_button("🌐 Open Official Website", row["Website"])
-        st.markdown("---")
+    for i, row in filtered_df.iterrows():
+        with st.container():
+            st.markdown(f"### 🏫 {row['College']}")
+            st.write(f"📍 City: **{row['City']}**")
+            st.link_button("🌐 Open Official Website", row["Website"])
+            st.markdown("---")
+
 
 # =================================================
 # ✅ PAGE 4: CHOICE LIST (PREMIUM)
@@ -636,6 +775,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
