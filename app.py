@@ -199,12 +199,14 @@ if selected == "Home":
     for entry in chat_data[-100:]:
         st.markdown(f"**{entry.get('user','Guest')}**: {entry.get('message','')}")
 
-    new_message = st.text_input("Type your message...")
-    if st.button("Send") and new_message.strip():
-        chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
-        with open(chat_path, "w") as f:
-            json.dump(chat_data, f, indent=2)
-        st.rerun()
+    new_message = st.text_input("Type your message...", key="chat_message_input")
+
+if st.button("Send", key="chat_send_btn") and new_message.strip():
+    chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
+    with open(chat_path, "w") as f:
+        json.dump(chat_data, f, indent=2)
+    st.rerun()
+
 
 # =================================================
 # ✅ PAGE: CUTOFF CALCULATOR (FREE + PREMIUM)
@@ -735,6 +737,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
