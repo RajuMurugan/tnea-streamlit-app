@@ -183,6 +183,8 @@ if selected == "Home":
         style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
     📗 <a href='https://static.tneaonline.org/docs/7_List_of_TFCs.pdf?t=1768660504718' target='_blank'
         style='text-decoration: none; color: #007bff; font-weight: bold;'>LIST OF TNEA FACILITATION CENTERS</a><br>
+    📘 <a href='https://static.tneaonline.org/docs/TNEA_Tent_Schedule_2025.pdf' target='_blank'
+        style='text-decoration: none; color: #007bff; font-weight: bold;'>TNEA 2025 Schedule </a><br>
     </div>
     """, unsafe_allow_html=True)
 
@@ -841,6 +843,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
