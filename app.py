@@ -181,7 +181,8 @@ else:
 
         c.setFont("Helvetica", 12)
         c.drawString(50, height - 110, f"Name: {student_name}")
-        c.drawString(50, height - 130, f"Date: {datetime.now().strftime('%d-%m-%Y %I:%M %p')}")
+        c.drawString(50, height - 130, f"Date (IST): {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y %I:%M %p')}")
+
 
         c.line(50, height - 150, 550, height - 150)
 
@@ -722,6 +723,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
