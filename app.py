@@ -6,12 +6,13 @@ import requests
 import io
 import uuid
 import time
-from datetime import timedelta, datetime
+from datetime import datetime
 import os
-import plotly.express as px
-from openpyxl import load_workbook
 import json
 from zoneinfo import ZoneInfo
+from PIL import Image, ImageDraw, ImageFont
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import A4
 
 # -------------------------------------------------
 # ✅ Page Config (MUST BE FIRST Streamlit command)
@@ -76,10 +77,10 @@ try:
     user_data = config["credentials"]["users"]
 except Exception:
     user_data = {}
-    st.warning("⚠️ config.yaml not loaded (Login will not work)")
+    # st.warning("⚠️ config.yaml not loaded (Login will not work)")
 
 # -------------------------------------------------
-# ✅ Load device_session.yaml
+# ✅ Load device_session.yaml (optional)
 # -------------------------------------------------
 try:
     with open(device_session_path) as session_file:
@@ -118,18 +119,37 @@ col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     if is_premium:
         menu_options = ["Home", "Cutoff Calculator", "College List", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
-        menu_icons = ["house", "calculator", "building", "list-check", "table"]
+        menu_icons = ["house", "calculator", "bank", "list-check", "table"]
     else:
         menu_options = ["Home", "Cutoff Calculator", "College List"]
-        menu_icons = ["house", "calculator", "building"]
-
+        menu_icons = ["house", "calculator", "bank"]
 
     selected = option_menu(
         menu_title=None,
         options=menu_options,
         icons=menu_icons,
         default_index=0,
-        orientation="horizontal"
+        orientation="horizontal",
+        styles={
+            "container": {"padding": "0!important", "background-color": "#ffffff"},
+            "icon": {"color": "#0d6efd", "font-size": "18px"},
+            "nav-link": {
+                "font-size": "13px",
+                "font-weight": "bold",
+                "text-align": "center",
+                "margin": "2px",
+                "color": "#0d6efd",
+                "--hover-color": "#d0e7ff",
+                "background-color": "#f4faff",
+                "border-radius": "8px"
+            },
+            "nav-link-selected": {
+                "background-color": "#0d6efd",
+                "color": "white",
+                "font-weight": "bold",
+                "border-radius": "8px"
+            }
+        }
     )
 
 # =================================================
@@ -137,7 +157,6 @@ with col2:
 # =================================================
 if selected == "Home":
 
-    # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
@@ -192,12 +211,8 @@ if selected == "Home":
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
 elif selected == "Cutoff Calculator":
-    from PIL import Image, ImageDraw, ImageFont
-    from reportlab.pdfgen import canvas
-    from reportlab.lib.pagesizes import A4
 
     st.markdown("## 📚 TNEA 2026 Cut off Mark Calculator")
-
     ist_time_str = datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%d-%m-%Y %I:%M %p")
 
     def reset_marks():
@@ -323,8 +338,9 @@ elif selected == "Cutoff Calculator":
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
 
-
-
+# =================================================
+# ✅ PAGE 3: COLLEGE LIST (FREE)
+# =================================================
 elif selected == "College List":
 
     st.markdown("## 🏫 Tamil Nadu College List (Free)")
@@ -354,11 +370,11 @@ elif selected == "College List":
     colS1, colS2 = st.columns([2, 1])
 
     with colS1:
-        search_text = st.text_input("🔍 Search College", placeholder="Type college name...")
+        search_text = st.text_input("🔍 Search College", placeholder="Type college name...", key="college_search")
 
     with colS2:
         city_list = ["All"] + sorted(df_colleges["City"].unique().tolist())
-        selected_city = st.selectbox("📍 Filter by City", city_list)
+        selected_city = st.selectbox("📍 Filter by City", city_list, key="college_city")
 
     filtered_df = df_colleges.copy()
 
@@ -369,71 +385,38 @@ elif selected == "College List":
         filtered_df = filtered_df[filtered_df["College"].str.contains(search_text, case=False, na=False)]
 
     st.write(f"✅ Total Colleges Found: **{len(filtered_df)}**")
-
     st.markdown("---")
 
-    for i, row in filtered_df.iterrows():
-        with st.container():
-            st.markdown(f"### 🏫 {row['College']}")
-            st.write(f"📍 City: **{row['City']}**")
-            st.link_button("🌐 Open Official Website", row["Website"])
-            st.markdown("---")
+    for _, row in filtered_df.iterrows():
+        st.markdown(f"### 🏫 {row['College']}")
+        st.write(f"📍 City: **{row['City']}**")
+        st.link_button("🌐 Open Official Website", row["Website"])
+        st.markdown("---")
 
 # =================================================
-# ✅ PAGE 3: CHOICE LIST (PREMIUM)
+# ✅ PAGE 4: CHOICE LIST (PREMIUM)
 # =================================================
 elif selected == "Create TNEA Choice List":
+    if not is_premium:
+        st.warning("🔒 Premium only feature. Click 💳 Go Premium button (top right).")
+        st.stop()
+
     st.title("📊 TNEA 2025 Cutoff & Rank Finder")
     st.success("✅ Premium Feature Enabled ✅")
     st.info("👉 Paste your full Choice List code here ✅")
 
 # =================================================
-# ✅ PAGE 4: SEAT MATRIX (PREMIUM)
+# ✅ PAGE 5: SEAT MATRIX (PREMIUM)
 # =================================================
 elif selected == "TNEA Vacancy Seat Matrix":
+    if not is_premium:
+        st.warning("🔒 Premium only feature. Click 💳 Go Premium button (top right).")
+        st.stop()
+
     st.title("📊 TNEA Vacancy Seat Matrix")
     st.success("✅ Premium Feature Enabled ✅")
     st.info("👉 Paste your full Seat Matrix code here ✅")
 
-
-    # --- MAIN FILTERED DATA ---
-    show_data = False
-    filtered_df = df.copy()
-
-    if selected_college != "All":
-        show_data = True
-        selected_cl = selected_college.split(" - ")[0].strip()
-        filtered_df = filtered_df[filtered_df['CL'].astype(str) == selected_cl]
-    else:
-        if 'zone' in locals() and zone != "All":
-            filtered_df = filtered_df[filtered_df['zone'] == zone]
-            show_data = True
-        if 'department' in locals() and department != "All":
-            filtered_df = filtered_df[filtered_df['Br'] == department]
-            show_data = True
-
-    if selected_college == "All" and 'community' in locals() and community != "All":
-        cols_to_show = ['CL', 'College', 'Br', f'{community}_C', f'{community}_GR', 'zone']
-    else:
-        cols_to_show = ['CL', 'College', 'Br', 'zone'] + [col for col in df.columns if col.endswith("_C") or col.endswith("_GR")]
-
-    format_dict = {
-        col: '{:.2f}' if '_C' in col else '{:.0f}'
-        for col in cols_to_show
-        if '_C' in col or '_GR' in col
-    }
-
-    st.markdown("### 🔎 Filtered Results")
-    if show_data:
-        st.dataframe(
-            filtered_df[cols_to_show]
-            .style
-            .format(format_dict)
-            .hide(axis='index'),
-            height=600
-        )
-    else:
-        st.info("Please apply filters to see the results.")
 
 
 # --- PAGE 3: TNEA VACANCY SEAT MATRIX ---
@@ -655,6 +638,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
