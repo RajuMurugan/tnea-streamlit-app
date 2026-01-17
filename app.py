@@ -214,7 +214,10 @@ if selected == "Home":
         st.markdown("## 🔒 Premium Features")
         st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
         st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
-        st.info("👉 Click 💳 Go Premium button (top right) to unlock Premium ✅")
+        st.info("✅ Unlock Premium Features by clicking below 👇")
+
+        st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
+
 
     # ✅ Previous Year Question Papers (FREE for all)
     st.markdown("---")
@@ -890,6 +893,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
