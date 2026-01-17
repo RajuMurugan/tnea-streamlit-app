@@ -166,10 +166,10 @@ with col2:
         orientation="horizontal"
     )
 
-# =================================================
-# ✅ PAGE: HOME
-# =================================================
+# --- PAGE 1: HOME ---
 if selected == "Home":
+
+    # ✅ Welcome Text
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
@@ -181,16 +181,27 @@ if selected == "Home":
             &copy; 2025 TNEA Info App. All rights reserved.
         </div>
     """, unsafe_allow_html=True)
-# ✅ Previous Year Question Papers (FREE for all users)
-st.markdown("### 📚 Previous Year Question Papers")
 
-st.markdown("""
-<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
-📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
-📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
-</div>
-""", unsafe_allow_html=True)
+    # ✅ Premium Offer (ONLY for Free users)
+    if not is_premium:
+        st.markdown("---")
+        st.markdown("## 🔒 Premium Features")
+        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
+        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+        st.info("👉 Click 💳 Go Premium button (top right) to unlock Premium ✅")
+
+    # ✅ Previous Year Question Papers (FREE for all)
+    st.markdown("---")
+    st.markdown("### 📚 Previous Year Question Papers")
+
+    st.markdown("""
+    <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+    📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
+    📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
+    📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
+    </div>
+    """, unsafe_allow_html=True)
+
 
     if not is_premium:
         st.markdown("---")
@@ -746,6 +757,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
