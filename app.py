@@ -150,7 +150,7 @@ if selected == "Home":
 
     # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
-        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA Info Web App</h1>
+        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA SmartGuide 2026 </h1>
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
             <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
             <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
@@ -843,6 +843,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
