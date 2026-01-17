@@ -122,8 +122,8 @@ with col2:
             "Cutoff Calculator",
             "Branch List",
             "College List",
-            "Create TNEA Choice List",
-            "TNEA Vacancy Seat Matrix"
+            "2024-TNEA  Cut off and rank details",
+            "2025-TNEA Vacancy Seat Matrix"
         ]
         menu_icons = ["house", "calculator", "book", "building", "list-check", "table"]
     else:
@@ -432,7 +432,7 @@ elif selected == "College List":
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
-elif selected == "Create TNEA Choice List":
+elif selected == "2024-TNEA  Cut off and rank details":
 
     # ✅ Premium restriction
     if not is_premium:
@@ -581,14 +581,14 @@ elif selected == "Create TNEA Choice List":
 # =================================================
 # ✅ PAGE 6: TNEA VACANCY SEAT MATRIX (PREMIUM ONLY)
 # =================================================
-elif selected == "TNEA Vacancy Seat Matrix":
+elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     # ✅ Premium restriction
     if not is_premium:
         st.warning("🔒 Premium only feature. Click 💳 Go Premium button (top right).")
         st.stop()
 
-    st.title("📊 TNEA Vacancy Seat Matrix")
+    st.title("📊 2025-TNEA Vacancy Seat Matrix")
     st.success("✅ Premium Feature Enabled ✅")
 
     import plotly.express as px
@@ -839,3 +839,4 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
