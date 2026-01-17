@@ -171,7 +171,7 @@ if selected == "Home":
 
     # ✅ Previous Year Question Papers (FREE for all)
     st.markdown("---")
-    st.markdown("### 📚 Quick Links")
+    st.markdown("### 📚 Very useful web Links")
 
     st.markdown("""
     <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
@@ -843,6 +843,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
