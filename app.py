@@ -132,7 +132,7 @@ if st.session_state.logged_in:
 
 else:
     # --- Cut off Mark Calculation (Inside App) ---
-    st.markdown("### 📚 TNEA Cut off Mark Calculation (Inside App)")
+    st.markdown("### 📚 TNEA 2026 Cut off Mark Calculation (Inside App)")
 
     with st.form("cutoff_form"):
         col1, col2, col3 = st.columns(3)
@@ -616,6 +616,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
