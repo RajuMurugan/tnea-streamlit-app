@@ -129,14 +129,37 @@ if st.session_state.logged_in:
                 logout_user()
                 st.rerun()
 else:
-    # --- Quick Access to Cut off Mark Calculation ---
-    st.markdown("### 📚 Cut off Mark Calculation")
+    # --- Cut off Mark Calculation (Inside App) ---
+st.markdown("### 📚 TNEA Cut off Mark Calculation (Inside App)")
 
-    st.markdown("""
-<div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
-📗 <a href='https://globaleduhub4u.blogspot.com/2025/03/tnea-2025-admission-cur-off-mark.html' target='_blank' style='text-decoration: none; color: #007bff; font-weight: bold;'>Calculate your Engineering Cut off marks/TNEA Cut off marks</a><br>
-</div>
-    """, unsafe_allow_html=True)
+with st.form("cutoff_form"):
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        maths = st.number_input("✏️ Maths (0 - 100)", min_value=0.0, max_value=100.0, value=80.0, step=1.0)
+
+    with col2:
+        physics = st.number_input("⚡ Physics (0 - 100)", min_value=0.0, max_value=100.0, value=70.0, step=1.0)
+
+    with col3:
+        chemistry = st.number_input("🧪 Chemistry (0 - 100)", min_value=0.0, max_value=100.0, value=75.0, step=1.0)
+
+    calc_btn = st.form_submit_button("✅ Calculate Cutoff")
+
+if calc_btn:
+    cutoff = maths + (physics / 2) + (chemistry / 2)
+
+    st.success(f"🎯 Your TNEA Cutoff Mark is: **{cutoff:.2f} / 200**")
+
+    st.info(
+        f"""
+        ✅ Calculation Breakdown:
+        - Maths = {maths:.2f} / 100
+        - Physics = {physics:.2f} / 100 → {physics/2:.2f} / 50
+        - Chemistry = {chemistry:.2f} / 100 → {chemistry/2:.2f} / 50
+        """
+    )
+
 
     # --- Quick Access to Previous Year Question Papers ---
     st.markdown("### 📚 Previous Year Question Papers")
@@ -572,4 +595,5 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
