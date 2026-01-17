@@ -14,6 +14,19 @@ import random
 import json
 from zoneinfo import ZoneInfo
 
+# ✅ PREMIUM FLAG (from URL)
+premium_flag = "0"
+
+try:
+    # New Streamlit
+    premium_flag = st.query_params.get("premium", "0")
+except:
+    # Old Streamlit fallback
+    premium_flag = st.experimental_get_query_params().get("premium", ["0"])[0]
+
+is_premium = str(premium_flag) == "1"
+
+st.write("Premium Status:", is_premium)
 
 
 # --- Page Config ---
@@ -734,6 +747,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
