@@ -356,42 +356,43 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-# ✅ Menu options based on Normal / Premium mode
-if is_premium:
-    menu_options = ["Home", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
-    menu_icons = ["house", "list-check", "table"]
-else:
-    menu_options = ["Home"]
-    menu_icons = ["house"]
 
-selected = option_menu(
-    menu_title=None,
-    options=menu_options,
-    icons=menu_icons,
-    default_index=0,
-    orientation="horizontal",
-    styles={
-        "container": {"padding": "0!important", "background-color": "#ffffff"},
-        "icon": {"color": "#3399ff", "font-size": "18px"},
-        "nav-link": {
-            "font-size": "13px",
-            "font-weight": "bold",
-            "text-align": "center",
-            "margin": "2px",
-            "color": "#3399ff",
-            "--hover-color": "#d0e7ff",
-            "background-color": "#f4faff",
-            "border-radius": "8px"
-        },
-        "nav-link-selected": {
-            "background-color": "#0d6efd",
-            "color": "white",
-            "font-weight": "bold",
-            "border-radius": "8px"
+with col2:
+    # ✅ Menu options based on Normal / Premium mode
+    if is_premium:
+        menu_options = ["Home", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
+        menu_icons = ["house", "list-check", "table"]
+    else:
+        menu_options = ["Home"]
+        menu_icons = ["house"]
+
+    selected = option_menu(
+        menu_title=None,
+        options=menu_options,
+        icons=menu_icons,
+        default_index=0,
+        orientation="horizontal",
+        styles={
+            "container": {"padding": "0!important", "background-color": "#ffffff"},
+            "icon": {"color": "#3399ff", "font-size": "18px"},
+            "nav-link": {
+                "font-size": "13px",
+                "font-weight": "bold",
+                "text-align": "center",
+                "margin": "2px",
+                "color": "#3399ff",
+                "--hover-color": "#d0e7ff",
+                "background-color": "#f4faff",
+                "border-radius": "8px"
+            },
+            "nav-link-selected": {
+                "background-color": "#0d6efd",
+                "color": "white",
+                "font-weight": "bold",
+                "border-radius": "8px"
+            }
         }
-    }
-)
+    )
 
 
 
@@ -771,6 +772,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
