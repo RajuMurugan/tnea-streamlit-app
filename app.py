@@ -120,6 +120,7 @@ if st.session_state.logged_in:
             else:
                 st.error("❌ Invalid mobile number or password")
         st.stop()
+
     else:
         update_session(st.session_state.mobile, st.session_state.device_id)
         with st.expander("🔐 Session Info", expanded=False):
@@ -128,38 +129,47 @@ if st.session_state.logged_in:
             if st.button("🚪 Logout"):
                 logout_user()
                 st.rerun()
+
 else:
     # --- Cut off Mark Calculation (Inside App) ---
-st.markdown("### 📚 TNEA Cut off Mark Calculation (Inside App)")
+    st.markdown("### 📚 TNEA Cut off Mark Calculation (Inside App)")
 
-with st.form("cutoff_form"):
-    col1, col2, col3 = st.columns(3)
+    with st.form("cutoff_form"):
+        col1, col2, col3 = st.columns(3)
 
-    with col1:
-        maths = st.number_input("✏️ Maths (0 - 100)", min_value=0.0, max_value=100.0, value=80.0, step=1.0)
+        with col1:
+            maths = st.number_input(
+                "✏️ Maths (0 - 100)",
+                min_value=0.0, max_value=100.0, value=80.0, step=1.0
+            )
 
-    with col2:
-        physics = st.number_input("⚡ Physics (0 - 100)", min_value=0.0, max_value=100.0, value=70.0, step=1.0)
+        with col2:
+            physics = st.number_input(
+                "⚡ Physics (0 - 100)",
+                min_value=0.0, max_value=100.0, value=70.0, step=1.0
+            )
 
-    with col3:
-        chemistry = st.number_input("🧪 Chemistry (0 - 100)", min_value=0.0, max_value=100.0, value=75.0, step=1.0)
+        with col3:
+            chemistry = st.number_input(
+                "🧪 Chemistry (0 - 100)",
+                min_value=0.0, max_value=100.0, value=75.0, step=1.0
+            )
 
-    calc_btn = st.form_submit_button("✅ Calculate Cutoff")
+        calc_btn = st.form_submit_button("✅ Calculate Cutoff")
 
-if calc_btn:
-    cutoff = maths + (physics / 2) + (chemistry / 2)
+    if calc_btn:
+        cutoff = maths + (physics / 2) + (chemistry / 2)
 
-    st.success(f"🎯 Your TNEA Cutoff Mark is: **{cutoff:.2f} / 200**")
+        st.success(f"🎯 Your TNEA Cutoff Mark is: **{cutoff:.2f} / 200**")
 
-    st.info(
-        f"""
-        ✅ Calculation Breakdown:
-        - Maths = {maths:.2f} / 100
-        - Physics = {physics:.2f} / 100 → {physics/2:.2f} / 50
-        - Chemistry = {chemistry:.2f} / 100 → {chemistry/2:.2f} / 50
-        """
-    )
-
+        st.info(
+            f"""
+            ✅ Calculation Breakdown:
+            - Maths = {maths:.2f} / 100
+            - Physics = {physics:.2f} / 100 → {physics/2:.2f} / 50
+            - Chemistry = {chemistry:.2f} / 100 → {chemistry/2:.2f} / 50
+            """
+        )
 
     # --- Quick Access to Previous Year Question Papers ---
     st.markdown("### 📚 Previous Year Question Papers")
@@ -176,12 +186,14 @@ if calc_btn:
     st.title("🔐 Login to Access TNEA App")
     mobile = st.text_input("📱 Mobile Number")
     password = st.text_input("🔑 Password", type="password")
+
     if st.button("Login"):
         if mobile in user_data and user_data[mobile]["password"] == password:
             existing = session_data["active_users"].get(mobile)
             if existing and existing["device_id"] != st.session_state.device_id and (time.time() - existing["timestamp"]) < SESSION_TIMEOUT:
                 st.error("⚠️ Already logged in on another device.")
                 st.stop()
+
             update_session(mobile, st.session_state.device_id)
             st.session_state.logged_in = True
             st.session_state.mobile = mobile
@@ -189,6 +201,7 @@ if calc_btn:
             st.rerun()
         else:
             st.error("❌ Invalid mobile number or password")
+
     st.stop()
 
 # --- Navigation Bar ---
@@ -227,6 +240,7 @@ with col2:
             }
         }
     )
+
 
 # --- PAGE 1: HOME ---
 if selected == "Home":
@@ -595,5 +609,6 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
