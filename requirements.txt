@@ -5,3 +5,6 @@ openpyxl
 pyyaml
 plotly
 requests
+reportlab
+pillow
+
