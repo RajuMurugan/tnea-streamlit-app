@@ -136,45 +136,25 @@ if st.session_state.logged_in:
 else:
     import io
     from datetime import datetime
+    from zoneinfo import ZoneInfo
     from PIL import Image, ImageDraw, ImageFont
     from reportlab.pdfgen import canvas
     from reportlab.lib.pagesizes import A4
 
     st.markdown("## 📚 TNEA 2026 Cut off Mark Calculator")
-   #st.caption("Maths (100) + Physics (50) + Chemistry (50) = Total Cutoff (200)")
+    # st.caption("Maths (100) + Physics (50) + Chemistry (50) = Total Cutoff (200)")
 
-# ---- Reset Function ----
-def reset_marks():
-    for k in ["student_name", "maths_mark", "physics_mark", "chemistry_mark"]:
-        if k in st.session_state:
-            del st.session_state[k]
+    # ✅ Current IST time (for use everywhere)
+    ist_now = datetime.now(ZoneInfo("Asia/Kolkata"))
+    ist_time_str = ist_now.strftime("%d-%m-%Y %I:%M %p")
 
-st.markdown("### ✍️ Enter Student Details")
+    # ---- Reset Function (Safe reset for widgets) ----
+    def reset_marks():
+        for k in ["student_name", "maths_mark", "physics_mark", "chemistry_mark"]:
+            if k in st.session_state:
+                del st.session_state[k]
 
-with st.form("cutoff_form"):
-    name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
-
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        maths = st.text_input("✏️ Maths", placeholder="Enter Maths mark", key="maths_mark")
-    with col2:
-        physics = st.text_input("⚡ Physics", placeholder="Enter Physics mark", key="physics_mark")
-    with col3:
-        chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark", key="chemistry_mark")
-
-    # ✅ Buttons row
-    btn1, btn2 = st.columns([1, 1])
-    with btn1:
-        calc_btn = st.form_submit_button("✅ Calculate Cutoff")
-    with btn2:
-        reset_btn = st.form_submit_button("🔄 Reset")
-
-# ✅ Reset action
-if reset_btn:
-    reset_marks()
-    st.rerun()
-
-
+    st.markdown("### ✍️ Enter Student Details")
 
     # ---- Helper: PDF Generator ----
     def generate_pdf(student_name, maths_val, physics_val, chemistry_val, cutoff_val):
@@ -187,8 +167,7 @@ if reset_btn:
 
         c.setFont("Helvetica", 12)
         c.drawString(50, height - 110, f"Name: {student_name}")
-        c.drawString(50, height - 130, f"Date and Time: {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y %I:%M %p')}")
-
+        c.drawString(50, height - 130, f"Date & Time (IST): {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y %I:%M %p')}")
 
         c.line(50, height - 150, 550, height - 150)
 
@@ -225,7 +204,7 @@ if reset_btn:
 
         draw.text((30, 20), "TNEA Cutoff Mark Result (2026)", font=font_title, fill="black")
         draw.text((30, 90), f"Name: {student_name}", font=font_text, fill="black")
-        draw.text((30, 120), f"Date: {datetime.now().strftime('%d-%m-%Y %I:%M %p')}", font=font_text, fill="black")
+        draw.text((30, 120), f"Date & Time (IST): {datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y %I:%M %p')}", font=font_text, fill="black")
 
         draw.line((30, 160, 870, 160), fill="black", width=2)
 
@@ -244,6 +223,30 @@ if reset_btn:
         buffer.seek(0)
         return buffer
 
+    # ---- Inputs + Buttons ----
+    with st.form("cutoff_form"):
+        name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            maths = st.text_input("✏️ Maths", placeholder="Enter Maths mark", key="maths_mark")
+        with col2:
+            physics = st.text_input("⚡ Physics", placeholder="Enter Physics mark", key="physics_mark")
+        with col3:
+            chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark", key="chemistry_mark")
+
+        # ✅ Buttons next to each other
+        btn1, btn2 = st.columns([1, 1])
+        with btn1:
+            calc_btn = st.form_submit_button("✅ Calculate Cutoff")
+        with btn2:
+            reset_btn = st.form_submit_button("🔄 Reset")
+
+    # ✅ Reset action (works without error)
+    if reset_btn:
+        reset_marks()
+        st.rerun()
+
     # ---- Calculation ----
     if calc_btn:
         try:
@@ -260,8 +263,10 @@ if reset_btn:
                     cutoff_val = maths_val + (physics_val / 2) + (chemistry_val / 2)
 
                     st.success(f"🎯 {name} - Your TNEA Cutoff Mark is: **{cutoff_val:.2f} / 200**")
+                    st.caption(f"🕒 Generated Time (IST): {ist_time_str}")
 
                     st.markdown("### 📥 Download Result")
+
                     pdf_file = generate_pdf(name, maths_val, physics_val, chemistry_val, cutoff_val)
                     img_file = generate_image(name, maths_val, physics_val, chemistry_val, cutoff_val)
 
@@ -285,6 +290,9 @@ if reset_btn:
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
 
+    # ✅ Your remaining code (question paper + login) can continue here
+    st.markdown("### 📚 Previous Year Question Papers")
+    # ... continue your code here ...
 
     # ✅ Your remaining code (question paper + login) should also be inside else with same indentation
     st.markdown("### 📚 Previous Year Question Papers")
@@ -729,6 +737,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
