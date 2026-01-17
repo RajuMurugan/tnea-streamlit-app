@@ -145,14 +145,12 @@ else:
 
 # ---- Reset Function ----
 def reset_marks():
-    st.session_state["student_name"] = ""
-    st.session_state["maths_mark"] = ""
-    st.session_state["physics_mark"] = ""
-    st.session_state["chemistry_mark"] = ""
+    for k in ["student_name", "maths_mark", "physics_mark", "chemistry_mark"]:
+        if k in st.session_state:
+            del st.session_state[k]
 
 st.markdown("### ✍️ Enter Student Details")
 
-# ---- Inputs ----
 with st.form("cutoff_form"):
     name = st.text_input("👤 Student Name", placeholder="Enter your name", key="student_name")
 
@@ -164,7 +162,7 @@ with st.form("cutoff_form"):
     with col3:
         chemistry = st.text_input("🧪 Chemistry", placeholder="Enter Chemistry mark", key="chemistry_mark")
 
-    # ✅ Buttons same row
+    # ✅ Buttons row
     btn1, btn2 = st.columns([1, 1])
     with btn1:
         calc_btn = st.form_submit_button("✅ Calculate Cutoff")
@@ -175,6 +173,7 @@ with st.form("cutoff_form"):
 if reset_btn:
     reset_marks()
     st.rerun()
+
 
 
     # ---- Helper: PDF Generator ----
@@ -730,6 +729,7 @@ elif selected == "TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
