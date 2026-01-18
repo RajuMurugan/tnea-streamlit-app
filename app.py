@@ -141,13 +141,11 @@ with col2:
             "Home",
             "Cutoff Calculator",
             "Branch List",
-            "TNEA College List"
         ]
         menu_icons = [
             "house",
             "calculator",
             "list-check",
-            "building"
         ]
 
     selected = option_menu(
@@ -965,6 +963,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
