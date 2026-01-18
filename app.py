@@ -125,8 +125,8 @@ with col2:
             "Cutoff Calculator",
             "Branch List",
             "TNEA College List (PDF)",
-            "Create TNEA Choice List",
-            "TNEA Vacancy Seat Matrix"
+            "2024-TNEA  Cut off and rank details",
+            "2025-TNEA Vacancy Seat Matrix"
         ]
         menu_icons = [
             "house",
@@ -452,7 +452,6 @@ elif selected == "TNEA College List (PDF)":
     st.markdown("## 🏫 TNEA College List (Auto from PDF)")
     st.caption("✅ Extracted from official TNEA College PDF (S.No, College Code, College Name, Website, District)")
 
-    # ✅ Your 2 PDF files (keep in same folder as app.py)
     PDF_FILES = [
         "TNEA_2025_College_full_list_1.pdf",
         "TNEA_2025_College_full_list_2.pdf"
@@ -474,7 +473,6 @@ elif selected == "TNEA College List (PDF)":
                     if len(lines) == 0:
                         continue
 
-                    # ✅ First line (College Code + College Name)
                     first_line = lines[0]
 
                     match = re.match(r"^(\d{1,4})\s+(.*)$", first_line)
@@ -488,21 +486,18 @@ elif selected == "TNEA College List (PDF)":
                         else:
                             continue
 
-                    # ✅ Extract District
                     district = ""
                     for ln in lines:
                         if ln.upper().startswith("DISTRICT"):
                             district = ln.replace("District", "").replace("DISTRICT", "").strip()
                             break
 
-                    # ✅ Extract Website
                     website = ""
                     for ln in lines:
                         if ln.lower().startswith("website"):
                             website = ln.replace("Website", "").replace("WEBSITE", "").strip()
                             break
 
-                    # ✅ Clean Website
                     website = website.replace(" ", "")
                     if website and not website.startswith("http"):
                         website = "https://" + website
@@ -518,16 +513,11 @@ elif selected == "TNEA College List (PDF)":
 
         df = pd.DataFrame(colleges)
 
-        # ✅ Remove duplicates (sometimes PDF has repeated pages)
         df = df.drop_duplicates(subset=["College Code", "College Name"], keep="first")
-
-        # ✅ Re-number S.No properly after removing duplicates
         df = df.reset_index(drop=True)
         df["S.No"] = df.index + 1
-
         return df
 
-    # ✅ Load dataframe
     try:
         with st.spinner("📄 Reading college list from PDF files... Please wait"):
             df_college_pdf = extract_college_list_from_multiple_pdfs(PDF_FILES)
@@ -540,7 +530,6 @@ elif selected == "TNEA College List (PDF)":
         st.code("\n".join(PDF_FILES))
         st.stop()
 
-    # ✅ Search + District filter
     col1, col2 = st.columns([2, 1])
 
     with col1:
@@ -573,35 +562,32 @@ elif selected == "TNEA College List (PDF)":
         ]
 
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
-
     st.dataframe(df_show, use_container_width=True, height=500)
 
-  # ✅ Optional: Open website button list
-st.markdown("---")
-st.markdown("### 🌐 Open College Websites")
-
-for _, row in df_show.head(50).iterrows():  # show only first 50
-    st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
-
-    website = row.get("Website", "")
-
-    # ✅ Fix NaN / None / invalid values
-    if pd.notna(website) and str(website).strip() != "":
-        website = str(website).strip()
-
-        # ✅ Add https if missing
-        if not website.startswith("http"):
-            website = "https://" + website
-
-        st.link_button(
-            "🌐 Open Website",
-            website,
-            key=f"open_{row['College Code']}_{row['S.No']}"
-        )
-    else:
-        st.info("Website not available in PDF")
-
+    # ✅ Optional: Open website button list (✅ NOW INSIDE PAGE)
     st.markdown("---")
+    st.markdown("### 🌐 Open College Websites")
+
+    for _, row in df_show.head(50).iterrows():
+        st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
+
+        website = row.get("Website", "")
+
+        if pd.notna(website) and str(website).strip() != "":
+            website = str(website).strip()
+
+            if not website.startswith("http"):
+                website = "https://" + website
+
+            st.link_button(
+                "🌐 Open Website",
+                website,
+                key=f"open_{row['College Code']}_{row['S.No']}"
+            )
+        else:
+            st.info("Website not available in PDF")
+
+        st.markdown("---")
 
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
@@ -1013,6 +999,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
