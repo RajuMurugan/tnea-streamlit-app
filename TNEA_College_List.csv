@@ -1,0 +1,736 @@
+﻿S.No,College Code,College Name,Category
+1,1,"University Departments of Anna University, Chennai - CEG Campus, Sardar Patel Road,
+Guindy, Chennai 600 025",UNIVERSITY DEPARTMENTS
+2,2,"University Departments of Anna University, Chennai - ACT Campus, Sardar Patel Road,
+Guindy, Chennai 600 025",UNIVERSITY DEPARTMENTS
+3,3,"School of Architecture and Planning, Anna University,Chennai 600025",UNIVERSITY DEPARTMENTS
+4,4,"University Departments of Anna University, Chennai - MIT Campus, Chrompet, Tambaram
+Taluk, Chengalpattu District 600 044",UNIVERSITY DEPARTMENTS
+5,5,"Annamalai University Faculty of Engineering and Technology,Annamalai nagar,Cuddalore",UNIVERSITY DEPARTMENTS
+6,1516,"Thanthai Periyar Government Institute of Technology, Bagayam, Vellore District 632002",Government Colleges
+7,2005,"Government College of Technology (Autonomous), Thadagam Road, Coimbatore District
+641013",Government Colleges
+8,2369,"Government College of Engineering, Chettikkarai Post, Dharmapuri District 635704",Government Colleges
+9,2603,"Government College of Engineering (Autonomous), Bargur, Krishnagiri District 635104",Government Colleges
+10,2615,"Government College of Engineering (Autonomous), Karuppur, Salem District 636011",Government Colleges
+11,2709,"Government College of Engineering (Formerly Institute of Road and Transport Technology),
+Vasavi College Post, Erode District 638316",Government Colleges
+12,3464,"Government College of Engineering, Gandarvakottai Road, Sengipatti, Thanjavur District
+613402",Government Colleges
+13,3465,"Government College of Engineering, Srirangam, Sethurappatti, Tiruchirappalli District
+620012",Government Colleges
+14,4974,"Government College of Engineering, Tirunelveli District 627007",Government Colleges
+15,5009,"Government College of Engineering, Melachokkanathapuram, Bodinayakkanur, Theni
+District 625582",Government Colleges
+16,5901,"Alagappa Chettiar Government College of Engineering and Technology (Autonomous),
+Karaikudi, Sivagangai District 630004",Government Colleges
+17,2006,"PSG College of Technology (Autonomous), Peelamedu, Coimbatore District 641004",GOVERNMENT AIDED COLLEGES
+18,2007,"Coimbatore Institute of Technology (Autonomous), Civil Aerodrome Post, Coimbatore
+District 641014",GOVERNMENT AIDED COLLEGES
+19,5008,"Thiagarajar College of Engineering (Autonomous),Tirupparankundram, Madurai District
+625015",GOVERNMENT AIDED COLLEGES
+20,1321,"Central Institute of Petrochemicals Engineering and Technology (Formerly Central Institute
+of Plastics Engineering and Technology) (CIPET), Guindy, Chennai 600032",CECRI AND CIPET
+21,2343,"Indian Institute of Handloom Technology, Foulke s Compound, Thillai Nagar, Salem District
+636001",CECRI AND CIPET
+22,5012,"Central Electrochemical Research Institute CECRI), Karaikudi, Sivagangai District 630006",CECRI AND CIPET
+23,1013,"University College of Engineering, Villupuram, Kakuppam, Villupuram District 605103",Constituent Colleges
+24,1014,"University College of Engineering, Tindivanam, Melpakkam, Tindivanam, Villupuram District
+604001",Constituent Colleges
+25,1015,"University College of Engineering, Arni, Arni to Devikapuram Road, Thatchur, Arni,
+Thiruvannamalai District 632326",Constituent Colleges
+26,1026,"University College of Engineering, Kancheepuram, Ponnerikarai Campus, NH4, Chennai-
+Bangalore Highway, Karaipettai Village & Post, Kancheepuram District 631552",Constituent Colleges
+27,2025,"Anna University Regional Campus - Coimbatore, Maruthamalai Main Road, Navavoor
+Bharathiyar University Post, Somayampalayam, Coimbatore District 641046",Constituent Colleges
+28,3011,"University College of Engineering, Tiruchirappalli, (Bharathidasan Institute of Technology),
+Tiruchirappalli District 620024",Constituent Colleges
+29,3016,"University College of Engineering, Ariyalur, Kathankudikadu Village, Thelur Post, Ariyalur
+District 621704",Constituent Colleges
+30,3018,"University College of Engineering, Thirukkuvalai, Nagappattinam District 610204",Constituent Colleges
+31,3019,"University College of Engineering, Panruti, Chennai-Kumbakonam Highway,
+Panikkankuppam, Panruti, Cuddalore District 607106",Constituent Colleges
+32,3021,"University College of Engineering, Pattukkottai, ECR Road, Rajamadam, Pattukkottai Taluk,
+Thanjavur District 614701",Constituent Colleges
+33,4020,"Anna University Regional Campus - Tirunelveli, Trivandrum Road, Palayamkottai, Tirunelveli
+District 627007",Constituent Colleges
+34,4023,"University College of Engineering, Nagercoil, Nagercoil Industrial Estate, Konam,
+Kanyakumari District 629004",Constituent Colleges
+35,4024,"University V.O.C. College of Engineering, Thoothukudi, Near V.O.C. College, Millerpuram,
+Thoothukudi District 628008",Constituent Colleges
+36,5010,"Anna University Regional Campus - Madurai, Kanyakumari National Highway, Keelakuilkudi,
+Madurai District 625019",Constituent Colleges
+37,5017,"University College of Engineering, Ramanathapuram, Pullangudi, Ramanathapuram District
+623513",Constituent Colleges
+38,5022,"University College of Engineering, Dindigul, Mangarai Pirivu, Reddiyarchathiram, Dindigul
+District 624622",Constituent Colleges
+39,1101,"Aalim Muhammed Salegh College of Engineering, Muthapudupet, Avadi IAF, Chennai
+600055",Self Financing Engineering Colleges
+40,1102,"Bhajarang Engineering College Near Avadi, Ayathur Village, Veppampattu (Rs) Thiruvallur
+Taluk and District Tamilnadu 602024",Self Financing Engineering Colleges
+41,1106,"Jaya Engineering College, Thirunindravur, Chennai 602024",Self Financing Engineering Colleges
+42,1107,"Jaya Institute of Technology, Kanchipadi Post, Thiruvallur-Tiruttani NH Road, Thiruvallur
+District 631204",Self Financing Engineering Colleges
+43,1110,"Prathyusha Engineering college (Autonomous) , Aranvoyalkuppam, Thiruvallur District
+602025",Self Financing Engineering Colleges
+44,1112,"R M D Engineering College (Autonomous), Kavaraipettai, Gummidipoondi, Thiruvallur
+District 601206",Self Financing Engineering Colleges
+45,1113,"R M K Engineering College (Autonomous), Kavaraipettai, Gummidipoondi, Thiruvallur
+District 601206",Self Financing Engineering Colleges
+46,1114,"S A Engineering College (Autonomous), Thiruverkadu, Chennai 600077",Self Financing Engineering Colleges
+47,1115,"Sri Ram Engineering College, Perumalpattu, Veppampattu (R S), Thiruvallur District 602 024",Self Financing Engineering Colleges
+48,1116,"Sri Venkateswara College of Engineering and Technology, Thirupachur, Thiruvallur District
+631203",Self Financing Engineering Colleges
+49,1118,"Vel Tech Multi Tech Dr. Rangarajan Dr. Sakunthala Engineering College (Autonomous),
+Avadi-Alamathi Road, Chennai 600 062",Self Financing Engineering Colleges
+50,1120,"Velammal Engineering College (Autonomous), Ambattur-Redhills Road, Chennai 600066",Self Financing Engineering Colleges
+51,1121,"Sri Venkateswara Institute of Science and Technology, Kozhundalur, Thiruvallur District
+631203",Self Financing Engineering Colleges
+52,1122,"Vel Tech High Tech Dr. Rangarajan Dr. Sakunthala Engineering College (Autonomous),
+Avadi-Alamathi Road, Chennai 600 062",Self Financing Engineering Colleges
+53,1123,"Gojan School of Business and Technology, Alamathi, Chennai 600062",Self Financing Engineering Colleges
+54,1124,"SAMS College of Engineering and Technology, Panappakkam, Chennai-Tirupathi Road,
+Uthukkottai Taluk, Thiruvallur District 601102",Self Financing Engineering Colleges
+55,1126,"J N N Institute of Engineering (Autonomous), Ushaa Garden, Kannigaipair Village,
+Uthukottai Taluk, Thiruvallur District 601102",Self Financing Engineering Colleges
+56,1127,"St. Peters College of Engineering and Technology, College Road, Avadi, Chennai 600 054",Self Financing Engineering Colleges
+57,1128,"R M K College of Engineering and Technology (Autonomous), Puduvoyal, Gummidipoondi
+Taluk, Thiruvallur District 601206",Self Financing Engineering Colleges
+58,1129,"Jaya School of Architecture, Poonamallee By-Pass Road, Poonamallee, Chennai 600 056",Self Financing Engineering Colleges
+59,1130,"MARG Instiute of Design & Architecture Swarnabhoomi (MIDAS), Marg Swarnabhoomi,
+Velur Village, Cheyyur Post, Chengalpattu District 603302",Self Financing Engineering Colleges
+60,1132,"Rajalakshmi School of Architecture, Thandalam, Sriperumpudur Taluk, Kancheepuram
+District 602105",Self Financing Engineering Colleges
+61,1133,"Annai Veilankannis College of Engineering, Gandhi Road, Nedungundram, Chennai 600048",Self Financing Engineering Colleges
+62,1135,"Aalim Muhammed Salegh Academy of Architecture, Muthapudupet, Avadi IAF, Chennai
+600055",Self Financing Engineering Colleges
+63,1137,"Annai Mira College of Engineering and Technology, Arcot Road, Arappakkam Village, Walaja
+Taulk, Ranipet District 632 517",Self Financing Engineering Colleges
+64,1138,"Da Vinci School of Design and Architecture, Rajiv Gandhi Salai, Karapakkam, Chennai,
+Chengalpattu District 600097",Self Financing Engineering Colleges
+65,1140,"Jeppiaar Institute of Technology,kunnam Village,Sriperumpudur Taulk,Kancheepuram
+District 631604",Self Financing Engineering Colleges
+66,1144,"R V S Padmavathy School of Architecture, Senthil Pakkam Village, Roshanagaram Post,
+Madarapakkam Via, Gummidipoondi Taluk, Thiruvallur District 601202",Self Financing Engineering Colleges
+67,1146,"Misrimal Navajee Munoth Jain School of Architecture, Rajiv Gandhi Salai (OMR),
+Thoraipakkam, Chengalpattu 600096",Self Financing Engineering Colleges
+68,1147,"MMES Academy of Architecture, C.Abdul Hakeem College Campus, Hakeem Nagar,
+Melvisharam, Ranipet District 632509",Self Financing Engineering Colleges
+69,1149,"St. Josephs Institute of Technology (Autonomous), Jeppiaar Nagar, Old Mahabalipuram
+Road (OMR), Chennai 600119",Self Financing Engineering Colleges
+70,1150,"Sri Jayaram Institute of Engineering and Technology, 51 N, Elavur, 58N, Natham,
+Gummidipoondi Taluk, Thiruvallur District 601201",Self Financing Engineering Colleges
+71,1152,"CAAD-Chennai Academy of Architecture and Design, No.516-2, Kannigaiper, Chennai-
+Thirupathi Highway, Near Periyapalayam Amman Temple, Chennai 601102",Self Financing Engineering Colleges
+72,1202,"D M I College of Engineering, Palanchoor, Nazrethpet, Chennai 602103",Self Financing Engineering Colleges
+73,1207,"Kings Engineering College, Sriperumpudur Taluk, Kancheepuram District 602105",Self Financing Engineering Colleges
+74,1209,"Pallavan College of Engineering, Thimmasamudram, Kancheepuram District 631502",Self Financing Engineering Colleges
+75,1210,"Panimalar Engineering College (Autonomous), Nazarethpet, Poonamallee, Chennai 600123",Self Financing Engineering Colleges
+76,1211,"Rajalakshmi Engineering College (Autonomous), Thandalam, Sriperumpudur Taluk,
+Kancheepuram District 602105",Self Financing Engineering Colleges
+77,1212,"Rajiv Gandhi College of Engineering, Nemili, Sriperumpudur Taluk, Kancheepuram District
+602105",Self Financing Engineering Colleges
+78,1216,"Saveetha Engineering College (Autonomous), Thandalam, Sriperumpudur Taluk,
+Kancheepuram District 602105",Self Financing Engineering Colleges
+79,1217,"Sree Sastha Institute of Engineering and Technology, Chembarambakkam, Chennai 600103",Self Financing Engineering Colleges
+80,1218,"Sri Muthukumaran Institute of Technology, Near Mangadu, Chennai 600069",Self Financing Engineering Colleges
+81,1219,"Sri Venkateswara College of Engineering (Autonomous), Post Bag No.1, Chennai-Bengaluru
+High Road, Pennalur, Irungattukottai S.O., Sriperumbudur Taluk, Kancheepuram District
+602105",Self Financing Engineering Colleges
+82,1221,"Jaya College of Engineering and Technology, Parivakkam, Poonamallee, Chennai 600056",Self Financing Engineering Colleges
+83,1222,"P B College of Engineering, Irungkattukottai, Sriperumpudur Taluk, Kancheepuram District
+602117",Self Financing Engineering Colleges
+84,1225,"Loyola Institute of Technology, Mevaloorkuppam, B Village, Palanchoor, Nazarethpet Post,
+Chennai 600123",Self Financing Engineering Colleges
+85,1226,"P T Lee Chengalvaraya Naicker College of Engineering and Technology, Oovery, Veliyur Post,
+Kancheepuram District 631 502",Self Financing Engineering Colleges
+86,1228,"Alpha College of Engineering, No.34, Udayavar Koil Street, Poonamallee, Thirumazhisai,
+Chennai",Self Financing Engineering Colleges
+87,1229,"Indira Institute of Engineering and Technology, VGR Gardens, Pandur, Thiruvallur District
+631203",Self Financing Engineering Colleges
+88,1230,"Apollo Engineering College, Mevaloorkuppam, Valarpuram Post, Sriperumpudur,
+Kancheepuram District 602105",Self Financing Engineering Colleges
+89,1232,"A R M College of Engineering and Technology, Sattamangalam, Maraimalainagar,
+Chengalpattu District 603209",Self Financing Engineering Colleges
+90,1233,"Adhi College of Engineering and Technology, Pazhayaseevaram, Madura Sankarapuram
+Village, Kancheepuram District 631605",Self Financing Engineering Colleges
+91,1235,"Jei Mathaajee College of Engineering, Vishaandikuppam,Karappettai (via), Siruvakkam,
+Kancheepuram District 631 552",Self Financing Engineering Colleges
+92,1237,"Velammal Institute of Technology, Chennai-Kolkatta Highway, Panchetti Village, Ponneri
+Taluk, Thiruvallur District 601204",Self Financing Engineering Colleges
+93,1238,"G R T Institute of Engineering and Technology, GRT Mahalakshmi Nagar, Chennai-Tirupathi
+Highway, Tiruttani Taluk, Thiruvallur District 631209",Self Financing Engineering Colleges
+94,1241,"T J S Engineering College, Peruvoyal, Near Kavaraipettai, Gummidipoondi Taluk, Thiruvallur
+District 601206",Self Financing Engineering Colleges
+95,1243,St. Lourdes Engineering College,Self Financing Engineering Colleges
+96,1301,"Mohammed Sathak A J College of Engineering, Old Mahabalipuram Road (OMR), Egattur,
+Chengalpattu District 603103",Self Financing Engineering Colleges
+97,1303,"Anand Institute of Higher Technology, Old Mahabalipuram Road (OMR), Kazhipattur,
+Chengalpattu District 603103",Self Financing Engineering Colleges
+98,1304,"Easwari Engineering College (Autonomous), Ramapuram, Chennai 600089",Self Financing Engineering Colleges
+99,1306,"Jeppiaar Engineering College, Old Mahabalipuram Road (OMR), Chennai 600119",Self Financing Engineering Colleges
+100,1307,"Jerusalem College of Engineering (Autonomous), Narayanapuram, Pallikaranai, Chennai 600
+100",Self Financing Engineering Colleges
+101,1308,"Measi Academy of Architecture, ""Association Gardens"" 87, Peters Road, Royapettah,
+Chennai 600 014",Self Financing Engineering Colleges
+102,1309,"Meenakshi Sundararajan Engineering College(Autonomous), Kodambakkam, Chennai
+600024",Self Financing Engineering Colleges
+103,1310,"Misrimal Navajee Munoth Jain Engineering College, Rajiv Gandhi Salai (OMR),
+Thorappakkam, Chennai 600096",Self Financing Engineering Colleges
+104,1311,"K C G College of Technology(Autonomous), Karappakkam, Chennai 600096",Self Financing Engineering Colleges
+105,1315,"Sri Sivasubramaniya Nadar College of Engineering (Autonomous), Kalavakkam, Old
+Mahabalipuram Road (OMR), Chengalpattu District 603110",Self Financing Engineering Colleges
+106,1316,"Agni College of Technology (Autonomous), Old Mahabalipuram Road (OMR), Thalambur
+Village, Chengalpattu District 603103",Self Financing Engineering Colleges
+107,1317,"St. Josephs College of Engineering (Autonomous), Old Mahabalipuram Road (OMR),
+Chennai 119",Self Financing Engineering Colleges
+108,1318,"T.J Institute of Technology, Karapakkam, Chennai - 600097",Self Financing Engineering Colleges
+109,1319,"Thangavelu Engineering College, Karappakkam, Chennai 600097",Self Financing Engineering Colleges
+110,1322,"Dhanalakshmi Srinivasan College of Engineering and Technology, East Coast Road, Poonjeri,
+Chennai 603104",Self Financing Engineering Colleges
+111,1325,"St. Joseph College of Engineering, Trinity Campus, Nemili, Sriperumpudur Taluk,
+Kancheepuram District 602105",Self Financing Engineering Colleges
+112,1335,"Sri Krishna Institute of Technology, Panapakkam, Padappai, Chennai 601301",Self Financing Engineering Colleges
+113,1399,"Chennai Institute of Technology, Puduper Village, Nandambakkam Post, Kundrathur,
+Chennai 600069",Self Financing Engineering Colleges
+114,1400,"Mohamed Sathak A.J. Academy of Architecture, No.34, Old Mahabalipuram Road (OMR),
+Chengalpattu District 603103",Self Financing Engineering Colleges
+115,1401,"Adhiparasakthi Engineering College, Melmaruvathur, Chengalpattu District 603319",Self Financing Engineering Colleges
+116,1402,"Annai Teresa College of Engineering, Thirunavalur, Kallakkurichi District 607204",Self Financing Engineering Colleges
+117,1405,"Dhanalakshmi College of Engineering, Manimangalam, Chennai 601301",Self Financing Engineering Colleges
+118,1407,"G K M College of Engineering and Technology, Alappakkam-Mappedu Road, Chennai
+600063",Self Financing Engineering Colleges
+119,1408,"I F E T College of Engineering (Autonomous), Gangarampalayam, Villupuram District
+605108",Self Financing Engineering Colleges
+120,1409,"Karpaga Vinayaga College of Engineering and Technology, Palayanoor Post,
+Maduranthagam Taluk, Chengalpattu District 603308",Self Financing Engineering Colleges
+121,1411,"Madha Engineering College, Kundrathur, Chennai 600069",Self Financing Engineering Colleges
+122,1412,"Mailam Engineering College, Mailam, Villupuram District 604304",Self Financing Engineering Colleges
+123,1413,"Sri Venkateswaraa College of Technology (Autonomous), BHB Nagar, Vadakal Village,
+Oragadam Post, Sriperumbudur Taluk, Kanchipuram District 602118",Self Financing Engineering Colleges
+124,1414,"Prince Shri Venkateshwara Padmavathy Engineering College, Ponmar, Chennai 600048",Self Financing Engineering Colleges
+125,1415,"T S M Jain College of Technology, Melur Village, Kallakurichi District 606201",Self Financing Engineering Colleges
+126,1416,"Jaya Sakthi Engineering College, Thirunindravur, Chennai 602024",Self Financing Engineering Colleges
+127,1419,"Sri Sai Ram Enginering College (Autonomous), West Tambaram, Chennai 600044",Self Financing Engineering Colleges
+128,1420,"Tagore Engineering College, Rathnamangalam, Vandalur Post, Chennai 600048",Self Financing Engineering Colleges
+129,1421,"V R S College of Engineering and Technology, Arasur, Villupuram District 607107",Self Financing Engineering Colleges
+130,1422,"SRM Valliammai Engineering College (Autonomous), Kattankulathur, Chennai 603203",Self Financing Engineering Colleges
+131,1423,"Asan Memorial College of Engineering and Technology,Chengalpattu-603 001.",Self Financing Engineering Colleges
+132,1424,"Dhaanish Ahmed College of Engineering, Padappai, Chennai 601301",Self Financing Engineering Colleges
+133,1426,"Sri Ramanujar Engineering College, Vandalur, Kolappakkam, Chennai 600127",Self Financing Engineering Colleges
+134,1427,"Sri Krishna Engineering College, Panappakkam, Padappai, Chennai 601301",Self Financing Engineering Colleges
+135,1428,"E. S. College of Engineering and Technology, Chennai Trunk Road, Ayyankoilpattu,
+Villupuram District 605602",Self Financing Engineering Colleges
+136,1430,"Maha Bharathi Engineering College, A Vasudevanur, Chinnasalem, Kallakurichi District
+606201",Self Financing Engineering Colleges
+137,1431,"New Prince Shri Bhavani College of Engineering and Technology, Vengaivasal Main Road,
+Gowrivakkam, Chennai 600073",Self Financing Engineering Colleges
+138,1432,"Rajalakshmi Institute of Technology, Irulapalayam, Kuthampakkam Post, Kancheepuram
+District, Chennai 600124",Self Financing Engineering Colleges
+139,1434,"Surya Group of Institutions, GST Road, Vikravandi Village, Villupuram District 605652",Self Financing Engineering Colleges
+140,1436,"A R Engineering College, Vadakuchipalayam, Kappiyampuliyur Post, Villupuram District
+605601",Self Financing Engineering Colleges
+141,1437,"Rrase College of Engineering, Padappai, Kancheepuram 601301",Self Financing Engineering Colleges
+142,1438,"Sree Krishna College of Engineering, Anaicut Post, Unnai Village, Vellore District 632101",Self Financing Engineering Colleges
+143,1441,"A K T Memorial College of Engineering and Technology, Neelamangalam Village,
+Kallakurichi District 606202",Self Financing Engineering Colleges
+144,1442,"Prince Dr. K Vasudevan College of Engineering and Technology, Medavakkam-Mambakkam
+Road, Ponmar, Chennai 600127",Self Financing Engineering Colleges
+145,1444,"R.M. Engineering College Zamin Endathur, Madurantakam (TK), Chengalpattu Dt-603311",Self Financing Engineering Colleges
+146,1445,"Sri Rangapoopathi College of Engineering, Alampoondi Village, Gingee, Villupuram District
+604151",Self Financing Engineering Colleges
+147,1449,"Saraswathy College of Engineering and Technology, NH-45, Main Road, Olakkur,
+Tindivanam Taluk, Villupuram District 604307",Self Financing Engineering Colleges
+148,1450,"Loyola ICAM College of Engineering and Technology, Loyola College Campus,
+Nungambakkam, Chennai 600034",Self Financing Engineering Colleges
+149,1452,"PERI Institute of Technology, Mannivakkam, West Tambaram, Chennai 600048",Self Financing Engineering Colleges
+150,1501,"Adhiparasakthi College of Engineering, Kalavai, Ranipet District 632506",Self Financing Engineering Colleges
+151,1503,"Arulmigu Meenakshi Amman College of Engineering, Vadamavandal,Thiruvannamalai
+District",Self Financing Engineering Colleges
+152,1504,"Arunai Engineering College, Mathur, Thiruvannamalai District 606603",Self Financing Engineering Colleges
+153,1505,"C Abdul Hakeem College of Engineering and Technology, Melvisharam, Ranipet District
+632509",Self Financing Engineering Colleges
+154,1507,"Ganadipathy Tulsis Jain Engineering College, Kaniyambadi, Vellore District 632102",Self Financing Engineering Colleges
+155,1509,"Meenakshi College of Engineering, Vembuliamman Koil Street, K K Nagar (West), Chennai
+600078",Self Financing Engineering Colleges
+156,1510,"Priyadarshini Engineering College, Vaniyambadi Post, Thiruppattur District 635751",Self Financing Engineering Colleges
+157,1511,"Ranipettai Engineering College, Thenkadappanthangal, Ranipet District 632513",Self Financing Engineering Colleges
+158,1512,"S K P Engineering College, Thiruvannamalai District 606611",Self Financing Engineering Colleges
+159,1513,"Sri Balaji Chockalingam Engineering College, Arni, Thiruvannamalai District 632317",Self Financing Engineering Colleges
+160,1517,"Thirumalai Engineering College, Kilambi, Kancheepuram District 631551",Self Financing Engineering Colleges
+161,1518,"Thiruvalluvar College of Engineering and Technology, Vandavasi, Thiruvannamalai District
+505",Self Financing Engineering Colleges
+162,1519,"Bharathidasan Engineering College, Nattrampalli Post, Thiruppathur District 635854",Self Financing Engineering Colleges
+163,1520,"Kingston Engineering College, Chithoor Main Road, Christianpet Village, Katpadi Taluk,
+Vellore District 632059",Self Financing Engineering Colleges
+164,1523,"Global Institute of Engineering and Technology, Bangalore-Chennai Highway, Melvisharam,
+Walajah Taluk, Ranipet District 632506",Self Financing Engineering Colleges
+165,1524,"Annamalaiar College of Engineering, Modaiyur Village, Polur Taluk, Thiruvannamalai District
+606902",Self Financing Engineering Colleges
+166,1525,"Podhigai College of Engineering and Technology, Vinayakapuram, Adiyur Post, Tirupattur
+District 635601",Self Financing Engineering Colleges
+167,1526,"Sri Krishna College of Engineering, Tiruttani High Road, Arakkonam, Ranipet District 631003",Self Financing Engineering Colleges
+168,1529,"Oxford College of Engineering, Venmani Village, Karaipoondi Post, Polur Taluk,
+Thiruvannamalai District 606803",Self Financing Engineering Colleges
+169,1530,"Papni School of Architecture, 302/1, Keeranallur Village, Sriperumbudhur Taluk,
+Kancheepuram District, Chennai 602108",Self Financing Engineering Colleges
+170,1605,"Idhaya Engineering College for Women, Chinnasalem, Kallakkurichi District 606201",Self Financing Engineering Colleges
+171,2302,"Sri Shanmugha College of Engineering and Technology, Morur Bit II Village, Salem District
+637304",Self Financing Engineering Colleges
+172,2327,"N S N College of Engineering and Technology, Karur-Madurai NH7, Manalmedu, Karur
+District 639003",Self Financing Engineering Colleges
+173,2329,"Rathinam Technical Campus, Pollachi Road, Eachanari, Coimbatore District 641021",Self Financing Engineering Colleges
+174,2332,"Aishwarya College of Engineering and Technology, Errattaikaradu Paruvachi Post, Anthiyur
+(Via), Bhavani Taluk, Erode District 638312",Self Financing Engineering Colleges
+175,2338,"Asian College of Engineering and Technology, Asian College Road, Kondayampalayam, Near
+Saravanampatti, Coimbatore District 641110",Self Financing Engineering Colleges
+176,2341,"Ganesh College of Engineering, Attur Main Road, Mettupatti, Salem District 636111",Self Financing Engineering Colleges
+177,2342,"Sri Ranganathar Institute of Engineering and Technology (Autonomous) , Thudialur-
+Kovilpalay Road, Coimbatore District 641110",Self Financing Engineering Colleges
+178,2344,"Kongu School of Architecture, Kongu Engineering College Campus,Perundurai Railway
+Station Road, Thoppupalayam (Post), Perundurai,Erode District 638052",Self Financing Engineering Colleges
+179,2345,"Dhirajlal Gandhi College of Technology, Sikkanampatty, (Opp. to Airport), Omalur Taluk,
+Salem District 636309",Self Financing Engineering Colleges
+180,2346,"Shree Sathyam College of Engineering and Technology, NH-47, Manjakkalpatti, Kuppanur
+Post, Sankari Taluk, Salem District 637301",Self Financing Engineering Colleges
+181,2347,"AVS College of Technology, Attur Main Road, Near AVS College of Arts & Science,
+Chinnagoundapuram, Salem District 636106",Self Financing Engineering Colleges
+182,2348,"San Academy of Architecture, ACC Pirivu,Navakarai Post,Walayar, Coimbatore District
+641105",Self Financing Engineering Colleges
+183,2349,"Dhaanish Ahmed Institute of Technology, Pichanur Post, (Near K G Chavadi), Coimbatore
+District 641105",Self Financing Engineering Colleges
+184,2350,"Jairupaa College of Engineering, Thottiapalayam, Kathankanni Post, Kangayam, Tiruppur
+District 641 604",Self Financing Engineering Colleges
+185,2354,"Pollachi Institute of Engineering and Technology, Main Road, Poosaripatti, Pollachi Taluk,
+Coimbatore District 642205",Self Financing Engineering Colleges
+186,2356,"Arulmurugan College of Engineering, Karvazhi Road, Thennilai Post, Karur District 639206",Self Financing Engineering Colleges
+187,2357,"V S B College of Engineering Technical Campus (Autonomous), Ealur Pirivu,
+Solavampalayam Post, Coimbatore District 642109",Self Financing Engineering Colleges
+188,2360,"Suguna College of Engineering, Kalappatti Road, Civil Aerodrome Post, Coimbatore District
+641014",Self Financing Engineering Colleges
+189,2364,"School of Architecture Coimbatore Institute of Engineering and Technology, Vellimalai
+Pattinam, Narasipuram Post, Thondamuture Via, Coimbatore-641109",Self Financing Engineering Colleges
+190,2365,"Nehru School of Architecture, No.451-D,Palakkad Main Road,Kuniamuthur,Coimbatore
+District 641008",Self Financing Engineering Colleges
+191,2367,"Arjun College of Technology, Chettiyakkapalayam, Kinathukadavu, Coimbatore District
+642120",Self Financing Engineering Colleges
+192,2368,"Vishnu Lakshmi College of Engineering and Technology, Vellalore Post, Coimbatore District
+641111",Self Financing Engineering Colleges
+193,2372,"Park Institute of Architecture AVINASHI ROAD,NH47,KANIYUR, COIMBATORE,641659",Self Financing Engineering Colleges
+194,2373,"Hindusthan School of Architecture, Othakkalmandabam Post, Coimbatore District 641032",Self Financing Engineering Colleges
+195,2376,"Rathinam School of Architecture and Design at Tips Global, Rathinam Techzone campus,
+Pollachi Road, Eachanari, Coimbatore - 641021",Self Financing Engineering Colleges
+196,2377,"PSG Institute of Technology and Applied Research(Autonomous), Avinashi Road,
+Neelambur, Coimbatore 641062",Self Financing Engineering Colleges
+197,2378,Cheran college of Technology. Kangeyam.,Self Financing Engineering Colleges
+198,2379,"PSG Institute Of Architecture And Planning, PSGITECH CAMPUS, AVINASHI ROA,
+NEELAMBUR 641062",Self Financing Engineering Colleges
+199,2601,"Adhiyamaan College of Engineering (Autonomous), Hosur, Krishnagiri District 635109",Self Financing Engineering Colleges
+200,2602,"Annai Mathammal Sheela Engineering College, Erumapatty Post, Namakkal District 637013",Self Financing Engineering Colleges
+201,2607,"K S Rangasamy College of Technology (Autonomous), Tiruchengode, Namakkal District
+637215",Self Financing Engineering Colleges
+202,2608,"M Kumarasamy College of Engineering (Autonomous), Thalavapalayam, Karur District
+639113",Self Financing Engineering Colleges
+203,2609,"Mahendra Engineering College (Autonomous), Mahendhirapuri, Mallasamudram, Namakkal
+District 637503",Self Financing Engineering Colleges
+204,2610,"Muthayammal Engineering College (Autonomous), Rasipuram, Namakkal District 637408",Self Financing Engineering Colleges
+205,2611,"Paavai Engineering College (Autonomous) , NH-7, Pachal Post, Namakkal District 637018",Self Financing Engineering Colleges
+206,2612,"P G P College of Engineering and Technology, Paramathi Post, Namakkal District 637207",Self Financing Engineering Colleges
+207,2613,"K S R College of Engineering (Autonomous), Tiruchengode, Namakkal District 637215",Self Financing Engineering Colleges
+208,2614,"S S M College of Engineering, Komarapalayam, Namakkal District 638183",Self Financing Engineering Colleges
+209,2616,"Sapthagiri College of Engineering, Periyanahalli Post, Dharmapuri District 635205",Self Financing Engineering Colleges
+210,2617,"Sengunthar Engineering College (Autonomous), Tiruchengode, Namakkal District 637205",Self Financing Engineering Colleges
+211,2618,"Sona College of Technology (Autonomous), Suramangalam Post, Salem District 636005",Self Financing Engineering Colleges
+212,2620,"Vivekanandha College of Engineering for Women (Autonomous), Sathinaickenpalayam,
+Elayampalayam Village, Kumaramangalam, Namakkal District 637205",Self Financing Engineering Colleges
+213,2621,"Er. Perumal Manimekalai College of Engineering, Near Koneripalli, Hosur, Krishnagiri District
+635117",Self Financing Engineering Colleges
+214,2622,"V S B Engineering College (Autonomous), Kovai Road, Karur District 639111",Self Financing Engineering Colleges
+215,2623,"Mahendra College of Engineering, Attur Road, Minnampalli, Valapady, Salem District
+636106",Self Financing Engineering Colleges
+216,2624,"Gnanamani College of Technology (Autonomous), Pachal Post, Namakkal District 637018",Self Financing Engineering Colleges
+217,2625,"The Kavery Engineering College, M Kalipatti Post, Mecheri, Salem District 634456",Self Financing Engineering Colleges
+218,2627,"Selvam College of Technology, Pappanaickenpatti Post, Namakkal District 637003",Self Financing Engineering Colleges
+219,2628,"Paavai College of Engineering, NH-7, Pachal Post, Namakkal District 637018",Self Financing Engineering Colleges
+220,2630,"Chettinad College of Engineering and Technology, NH-67, Trichy Main Road, Puliyur C F,
+Karur District 639114",Self Financing Engineering Colleges
+221,2632,"Mahendra Institute of Technology (Autonomous), Mahendhirapuri, Mallasamudram,
+Namakkal District 637503",Self Financing Engineering Colleges
+222,2633,"Vidyaa Vikas College of Engineering and Technology, Varahoorampatti, Tiruchengode,
+Namakkal District 637 214",Self Financing Engineering Colleges
+223,2634,"Excel Engineering College (Autonomous), NH-544, Salem Main Road, Pallakapalayam,
+Sankari West Post, Komarapalayam Taluk, Namakkal District - 637303",Self Financing Engineering Colleges
+224,2635,"CMS College of Engineering, Emapuram Post, Namakkal District 637003",Self Financing Engineering Colleges
+225,2636,"A V S Engineering College, Military Road, Ammapet, Salem District 636003",Self Financing Engineering Colleges
+226,2638,"Mahendra Engineering College for Women, Kumaramangalam, Namakkal District 637205",Self Financing Engineering Colleges
+227,2639,"R P Sarathy Institute of Technology, Poosaripatty Village, Omalur Taluk, Salem District
+636305",Self Financing Engineering Colleges
+228,2640,"Jayalakshmi Institute of Technology, Thoppur, Dharmapuri District 635352",Self Financing Engineering Colleges
+229,2641,"Varuvan Vadivelan Institute of Technology, Nallanahalli, Dharmapuri District 636701",Self Financing Engineering Colleges
+230,2642,"P S V College of Engineeering and Technology, Mittapalli, Balinayanapalli Post, Elathagiri,
+Krishnagiri District 635108",Self Financing Engineering Colleges
+231,2643,"Bharathiyar Institute of Engineering for Women, Deviayakurichi, Attur Taluk, Salem District
+636112",Self Financing Engineering Colleges
+232,2646,"Tagore Institute of Engineering and Technology, Deviyakurichi, Attur Taluk, Salem District
+636112",Self Financing Engineering Colleges
+233,2647,"J K K Nataraja College of Engineering and Technology, Komarapalayam Amani,
+Thattankuttai Panchayat, Namakkal District 638183",Self Financing Engineering Colleges
+234,2648,"Annapoorana Engineering College (Autonomous), Sankari Main Road, NH-47,
+Periaseeragapadi, Salem District 636308",Self Financing Engineering Colleges
+235,2650,"Christ The King Engineering College, Cecilia Gardens, Chikkarampalayam Village,
+Coimbatore District 641104",Self Financing Engineering Colleges
+236,2651,"Jai Shriram Engineering College, Dharapuram Road, Avinashi Palayam, Tiruppur District
+638660",Self Financing Engineering Colleges
+237,2652,"AL-Ameen Engineering College (Autonomous), Karundevan Palayam, Nanjai Uthukuli Post,
+Erode District 638104",Self Financing Engineering Colleges
+238,2653,"Knowledge Institute of Technology, KIOT Campus, Kakapalayam Post, Salem District 637504",Self Financing Engineering Colleges
+239,2656,"Builders Engineering college, Nathakadaiyur, Erode Road, Palayakottai Village, Kangeyam,
+Tiruppur District 638108",Self Financing Engineering Colleges
+240,2658,"V S A Group of Institutions, NH-47, Uthamasola Puram Post, Salem District 636010",Self Financing Engineering Colleges
+241,2659,"Salem College of Engineering and Technology, Salem-Attur Main Road, NH-68, Mettupatty
+Perumapalayam, Salem District 636111",Self Financing Engineering Colleges
+242,2667,"Excel College of Architecture and Planning, NH-544, Salem Main Road, Pallakapalayam,
+Sankari West Post, Komarapalayam Taluk, Namakkal District 637303",Self Financing Engineering Colleges
+243,2673,"Sree Sakthi Engineering College, Bettathapuram, Bilichi Village, Karamadai, Coimbatore
+District 641104",Self Financing Engineering Colleges
+244,2683,"Shreenivasa Engineering College, B Pallipatti, Bommidi, Pappireddipatti Taluk, Dharmapuri
+District 635301",Self Financing Engineering Colleges
+245,2684,"TIPS School of Architecture, SF 361/1A, Karuvalur Road, MGC Palayam, S.S. Kulam Post,
+Coimbatore 641 107",Self Financing Engineering Colleges
+246,2702,"Bannari Amman Institute of Technology (Autonomous), Sathyamanagalam, Erode District
+401",Self Financing Engineering Colleges
+247,2704,"Coimbatore Institute of Engineering and Technolgoy (Autonomous), Narasipuram Post,
+Coimbatore District 641109",Self Financing Engineering Colleges
+248,2705,"CSI College of Engineering, Ketti, The Nilgiris 643215",Self Financing Engineering Colleges
+249,2706,"Dr. Mahalingam College of Engineering and Technology (Autonomous), Mackinaickenpatti
+Post, Pollachi Taluk, Coimbatore District 642003",Self Financing Engineering Colleges
+250,2707,"Erode Sengunthar Engineering College (Autonomous), Thudupathi Post, Erode District
+638057",Self Financing Engineering Colleges
+251,2708,"Hindusthan College of Engineering and Technology (Autonomous), Othakkalmandapam
+Post, Coimbatore District 641032",Self Financing Engineering Colleges
+252,2710,"Karpagam College of Engineering (Autonomous), Othakkalmandapam, Coimbatore District
+641032",Self Financing Engineering Colleges
+253,2711,"Kongu Engineering College (Autonomous), Perundurai, Erode District 638052",Self Financing Engineering Colleges
+254,2712,"Kumaraguru College of Technology (Autonomous), Chinnavedampatti Post, Coimbatore
+District 641006",Self Financing Engineering Colleges
+255,2713,"M P Nachimuthu M Jaganathan Engineering College, Chennimalai, Erode District 638112",Self Financing Engineering Colleges
+256,2715,"Nandha Engineering College (Autonomous), Pitchandampalayam Post, Erode District
+638052",Self Financing Engineering Colleges
+257,2716,"Park College of Engineering and Technology, Kaniyur, Coimbatore District 641659",Self Financing Engineering Colleges
+258,2717,"Sasurie College of Engineering, Vijayamangalam, Tiruppur District 638056",Self Financing Engineering Colleges
+259,2718,"Sri Krishna College of Enginering and Technology (Autonomous) , Kuniamuthur, Coimbatore
+District 641008",Self Financing Engineering Colleges
+260,2719,"Sri Ramakrishna Engineering College (Autonomous), Vattamalaipalayam, Coimbatore
+District 641022",Self Financing Engineering Colleges
+261,2721,"Tamilnadu College of Engineering, Karumathampatti Post, Coimbatore District 641659",Self Financing Engineering Colleges
+262,2723,"Velalar College of Engineering and Technology (Autonomous), Thindal Post, Erode District
+638012",Self Financing Engineering Colleges
+263,2725,"Sri Ramakrishna Institute of Technology (Autonomous), Pachapalayam, Coimbatore District
+641010",Self Financing Engineering Colleges
+264,2726,"SNS College of Technology (Autonomous), Kalappatti Post, Coimbatore District 641035",Self Financing Engineering Colleges
+265,2727,"Sri Shakthi Institute of Engineering and Technology (Autonomous), L&T Bye-Pass,
+Venkitapuram Post, Comibatore District 641062",Self Financing Engineering Colleges
+266,2728,"Tamilnadu School of Architecture, Tamilnadu College of Engineering Campus,
+Karumathampatti Post, Coimbatore District 641659",Self Financing Engineering Colleges
+267,2729,"Nehru Institute of Engineering and Technology, Thirumalayampalayam Post, Coimbatore
+District 641105",Self Financing Engineering Colleges
+268,2731,"R V S College of Engineering and Technology, Kannampalayam, Sulur, Coimbatore District
+641402",Self Financing Engineering Colleges
+269,2732,"Info Institute of Engineering, Sarkar Samakulam, Coimbatore District 641107",Self Financing Engineering Colleges
+270,2733,"Angel College of Engineering and Technology, P.K.Palayam, Ugayanur Village, Tirupur
+District 641 665",Self Financing Engineering Colleges
+271,2735,"Karpagam Institute of Technology, Seerapalayam Village, L&T By pass Road, Coimbatore
+District 641021",Self Financing Engineering Colleges
+272,2736,"Dr. N G P Institute of Technology (Autonomous), Kalapatti Road, Coimbatore District
+641035",Self Financing Engineering Colleges
+273,2737,"Sri Sai Ranganathan Engineering College, Zahirnaickenpalayam Village, Viraliyur Post,
+Thondamuthur Via, Coimbatore District 641109",Self Financing Engineering Colleges
+274,2739,"Sri Eshwar College of Engineering (Autonomous), Kondampatti Post, Vadasithur (Via),
+Kinathukadavu, Coimbatore District 641202",Self Financing Engineering Colleges
+275,2740,"Hindusthan Institute of Technology (Autonomous), Othakkalmandapam, Coimbatore
+District 032",Self Financing Engineering Colleges
+276,2741,"P A College of Engineering and Technology (Autonomous), Palladam Road, Pollachi,
+Coimbatore District 642002",Self Financing Engineering Colleges
+277,2743,"Dhanalakshmi Srinivasan College of Engineering (CBE), NH47, Palakkad Main Road,
+Navakkarai Post, Near Nandhi Temple, Coimbatore District 641105",Self Financing Engineering Colleges
+278,2744,"Adithya Institute of Technology, Kurumbapalayam Village, Coimbatore District 641107",Self Financing Engineering Colleges
+279,2745,"Kathir College of Engineering, Neelambur, Avinashi Road, Coimbatore District 641062",Self Financing Engineering Colleges
+280,2747,"Shree Venkateshwara Hi-Tech Engineering College, Othakuthirai, K Mettupalayam Post,
+Gobichettipalayam, Erode District 638455",Self Financing Engineering Colleges
+281,2748,"Surya Engineering College, Mettukadai, Kathirampatti Post, Erode District 638107",Self Financing Engineering Colleges
+282,2749,"Easa College of Engineering and Technology (Autonomous), NH-47, Coimbatore-Palakkad
+Main Road, Navakarai Post, Coimbatore District 641105",Self Financing Engineering Colleges
+283,2750,"KIT - Kalaignar Karunanidhi Institute of Technology (Autonomous), Kannampalayam,
+Coimbatore District 641402",Self Financing Engineering Colleges
+284,2751,"KGISL Institute of Technology, KGISL Campus, Thudiyalur Road, Saravanampatti,
+Coimbatore District 641035",Self Financing Engineering Colleges
+285,2752,"Nandha College of Technology, Pitchandampalayam Post, Erode District 638052",Self Financing Engineering Colleges
+286,2753,"PPG Institute of Technology, Vilankurichi Village, Coimbatore District 641035",Self Financing Engineering Colleges
+287,2755,"Nehru Institute of Technology, Thirumalayampalayam Post, Coimbatore District 641105",Self Financing Engineering Colleges
+288,2758,"J K K Munirajah College of Technology, T N Palayam, Gobi Taluk, Erode District 638506",Self Financing Engineering Colleges
+289,2759,"McGan s Ooty School of Architecture, 5/635, Perar, Kothagiri Road, Mynala Post, Ooty, The
+Nilgiris 643002",Self Financing Engineering Colleges
+290,2761,"United Institute of Technology, Periyanaickenpalayam, Coimbatore District 641020",Self Financing Engineering Colleges
+291,2762,"Jansons Institute of Technology, Karumathampatty, Somaur, Coimbatore District 641659",Self Financing Engineering Colleges
+292,2763,"Akshaya College of Engineering and Technology, Kinathukadavu, Coimbatore District
+642109",Self Financing Engineering Colleges
+293,2764,"K P R Institute of Engineering and Technology (Autonomous), Kollupalayam Village, Arasur
+Panchayat, Coimbatore District 641407",Self Financing Engineering Colleges
+294,2767,"SRG Engineering College, Aniyapuram Post, Namakkal District 637017",Self Financing Engineering Colleges
+295,2768,"Park College of Technology, Prema Ravi Nagar, Karumathampatti, Coimbatore - 641 659",Self Financing Engineering Colleges
+296,2769,"JCT College of Engineering and Technology ( Autonomous ), Pichanur, Coimbatore. 641105.",Self Financing Engineering Colleges
+297,2770,"Studyworld College of Engineering, Madukarai Post, Coimbatore - 641 105.",Self Financing Engineering Colleges
+298,2772,"C M S College of Engineering and Technology, Appachigoundenpathy, Kumittipathi Post,
+Coimbatore District 641032",Self Financing Engineering Colleges
+299,2776,"R V S Technical Campus-Coimbatore, Kumaran Kottam Campus, Kannampalayam, Sulur,
+Coimbatore District 641 402",Self Financing Engineering Colleges
+300,2778,"R.V.S. School of Architecture (CBE), Kumaran Kottam Campus, Trichy Road,
+Kannampalayam Post, Coimbatore District 641402",Self Financing Engineering Colleges
+301,2779,"Ranganathan Architecture College, REC Kalvi Nagar, Viraliyur Post, Thondamuthur Via,
+Coimbatore District 641109",Self Financing Engineering Colleges
+302,3410,"Krishnasamy College of Engineering and Technology, S Kumarapuram, Cuddalore District
+607109",Self Financing Engineering Colleges
+303,3425,"C K College of Engineering and Technology, Chellangkuppam, Cuddalore District 607003",Self Financing Engineering Colleges
+304,3446,"Prime College of Architecture and Planning, Main Road, Kilvelur, Nagapattinam District
+611104",Self Financing Engineering Colleges
+305,3454,"Sri Ramakrishna College of Engineering, Sri Saradha Nagar, NH-45, Perambalur District
+621113",Self Financing Engineering Colleges
+306,3456,"K S K College of Engineering and Technology, Thanjavur Main Road, Darasuram,
+Kumbakonam, Thanjavur District 612702",Self Financing Engineering Colleges
+307,3461,"Arifa Institute of Technology(Formly Haji sheik Ismail Engineering College), Esanoor,
+Keelaiyur Post, Thirukkuvalai Taluk, Nagapattinam District 611103",Self Financing Engineering Colleges
+308,3466,"Nelliandavar Institute of Technology, Nerunjikorai Village, Pudhupalayam, Ariyalur Taluk,
+Ariyalur District 621704",Self Financing Engineering Colleges
+309,3467,"Prime Nest College of Architecture and Planning,V.J.P.Campus,Trichy-Chennai Highway,
+Navaladiyan Nagar, Siruganur, Tiruchirappalli District 621105",Self Financing Engineering Colleges
+310,3701,"K Ramakrishnan College of Technology (Autonomous), Kariyamanickam Road,
+Samayapuram, Manachanallur Taluk, Tiruchirappalli District 621112",Self Financing Engineering Colleges
+311,3760,"Sir Issac Newton College of Engineering and Technology, Anthanapeetai Post, Papakoil,
+Nagappattinam District 611102",Self Financing Engineering Colleges
+312,3766,"Star Lion College of Engineering and Technology, Manankorai Main Road, Manankorai
+Village, Thanjavur District 614206",Self Financing Engineering Colleges
+313,3782,"OASYS Institute of Technology , Pulivalam Village, Musiri Taluk, Tiruchirappalli District
+621006",Self Financing Engineering Colleges
+314,3783,"M.A.M. School of Architecture, Trichy-Chennai Trunk Road, Siruganur, Tiruchirappalli
+District 621105",Self Financing Engineering Colleges
+315,3784,"C.A.R.E School of Architecture, No.27, Thayanur Village, Kuttapatti, Srirangam Taluk,
+Tiruchirappalli District 620009",Self Financing Engineering Colleges
+316,3786,"M.A.M. School of Engineering, Siruganur, Tiruchirappalli District 621105",Self Financing Engineering Colleges
+317,3795,"SRM TRP Engineering College, Irungalur, Manachanallur Taluk, Tiruchirappalli District
+621105",Self Financing Engineering Colleges
+318,3801,"A V C College of Engineering, Mannampandal Post, MayiladuthuraiDistrict 609305",Self Financing Engineering Colleges
+319,3803,"Anjalai Ammal Mahalingam Engineering College, Kovilvenni, Thiruvarur District 614403",Self Financing Engineering Colleges
+320,3804,"Arasu Engineering College, Chennai Main Road, Kumbakonam, Thanjavur District 612501",Self Financing Engineering Colleges
+321,3805,"Dhanalakshmi Srinivasan Engineering College (Autonomous), Thuraiyur Road, Perambalur
+District 621212",Self Financing Engineering Colleges
+322,3806,"E G S Pillay Engineering College (Autonomous), Nagapattinam District 611002",Self Financing Engineering Colleges
+323,3807,"J J College of Engineering and Technology, Poolankulathupatti Post, Thiruchirappalli District
+620009",Self Financing Engineering Colleges
+324,3808,"Jayaram College of Engineering and Technology, Karattampatti, Pagalavadi Po,Thuraivur,
+Trichy-621014",Self Financing Engineering Colleges
+325,3810,"MAM College of Engineering, Siruganur, Tiruchirappalli District 621105",Self Financing Engineering Colleges
+326,3811,"M I E T Engineering College, Trichy-Pudukkottai Road, Tiruchirappalli District 620007",Self Financing Engineering Colleges
+327,3812,"Mookambigai College of Engineering, Keeranur, Pudukkottai District 622502",Self Financing Engineering Colleges
+328,3813,"Oxford Engineering College,Karumandapam,Pirattiyur,Trichy-620 009",Self Financing Engineering Colleges
+329,3815,"Pavendar Bharathidasan College of Engineering and Technology, Pudukkottai Main Road,
+Tiruchirappalli District 622515",Self Financing Engineering Colleges
+330,3817,"Roever Engineering College, Elambalur, Perambalur District 621212",Self Financing Engineering Colleges
+331,3819,"Saranathan College of Engineering, Panjappur, Tiruchirappalli District 620012",Self Financing Engineering Colleges
+332,3820,"Trichy Engineering College, Konalai, Tiruchirappalli District 621132",Self Financing Engineering Colleges
+333,3821,"A R J College of Engineering and Technology, Mannargudi Taluk, Thiruvarur District 614001",Self Financing Engineering Colleges
+334,3822,Tittagudi Sengunthar Engineering College,Self Financing Engineering Colleges
+335,3825,"St. Joseph s College of Engineering and Technology, Elupatti Village, Rawaspatti Post,
+Thanjavur District 613403",Self Financing Engineering Colleges
+336,3826,"Kongunadu College of Engineering and Technology (Autonomous), Tholurpatti, Thottiyam,
+Tiruchirappalli District 621215",Self Financing Engineering Colleges
+337,3829,"M.A.M. College of Engineering and Technology, Trichy-Chennai Trunk Road, Siruganur,
+Tiruchirappalli District 621105",Self Financing Engineering Colleges
+338,3830,"K Ramakrishnan College of Engineering (Autonomous), Kariyamanickam Road,
+Samayapuram, Manachanallur Taluk, Tiruchirappalli District 621112",Self Financing Engineering Colleges
+339,3831,"Indra Ganesan College of Engineering, Madurai Main Road, Manikandam, Tiruchirappalli
+District 620012",Self Financing Engineering Colleges
+340,3833,"Parisutham Institute of Technology and Science, Ring Road, Nanjikottai, Thanjavur District
+613006",Self Financing Engineering Colleges
+341,3841,"CARE College of Engineering (Formerly C.A.R.E Group of Institutions), Thayanoor Village,
+Thayanoor Village, Kuttappatti, Srirangam Taluk, Tiruchirappalli District 620009",Self Financing Engineering Colleges
+342,3843,"M R K Institute of Technology, Nattarmangalam Village, Kattumannarkoil, Cuddalore District
+608306",Self Financing Engineering Colleges
+343,3844,"Shivani Engineering College, Trichy-Dindigul NH Road, Poolangulathupatti, Tiruchirappalli -
+620009",Self Financing Engineering Colleges
+344,3845,"Imayam College of Engineering, Kannanur, Thuraiyur, Tiruchirappalli District 621206",Self Financing Engineering Colleges
+345,3846,"Mother Terasa College of Engineering and Technology, Mettusalai Post and Taluk,
+Pudukkottai District 622102",Self Financing Engineering Colleges
+346,3848,"Vandayar Engineering College, Pulavarnatham Post, Mariamman Koil (Via), Thanjavur
+District 613001",Self Financing Engineering Colleges
+347,3849,"Annai College of Engineering and Technology, Anakudi Road, Kovilacheri, Kumbakonam,
+Thanjavur District 612503",Self Financing Engineering Colleges
+348,3852,"Sri Bharathi Engineering College for Women, Kaikkuruchi Village, Alangudi Taluk,
+Pudukkottai District 622303",Self Financing Engineering Colleges
+349,3854,"Mahath Amma Institute of Engineering and Technology (MIET), Ariyur, Annavasal Road,
+Illupur Taluk, Pudukkottai District 622101",Self Financing Engineering Colleges
+350,3855,"As-Salam College of Engineering and Technology, Thirumangalakudi, Aduthurai,
+Thiruvidaimaruthur, Thanjavur District 612102",Self Financing Engineering Colleges
+351,3857,"Meenakshi Ramaswamy Engineering College, Trichy Main Road, Thathanur,
+Udayarpalayam, Ariyalur District 621804",Self Financing Engineering Colleges
+352,3860,"St. Anne s College of Engineering and Technology, Anguchettypalayam, Siruvathur Post,
+Panruti, Cuddalore District 607110",Self Financing Engineering Colleges
+353,3905,"Kings College of Engineering, Punalkulam, Pudukkottai District 613303",Self Financing Engineering Colleges
+354,3908,"Mount Zion College of Engineering and Technology, Pilivalam Post, Pudukkottai District
+622507",Self Financing Engineering Colleges
+355,3918,"Shanmuganathan Engineering College, Pillivalam Post, Pudukkottai District 622507",Self Financing Engineering Colleges
+356,3920,"Sudharsan Engineering College, Sathiyamangalam Post, Pudukkottai District 622501",Self Financing Engineering Colleges
+357,3923,"M N S K College of Engineering, Vallathirakkottai Post, Pudukkottai District 622305",Self Financing Engineering Colleges
+358,3926,"Chendhuran College of Engineering and Technology, Madurai Road, Lenavilakku, Pilivalam
+Post, Pudukkottai - 622 507",Self Financing Engineering Colleges
+359,4669,"Thamirabharani Engineering College, Chathirampudukulam Village, Thatchanallur,
+Tirunelveli District 627358",Self Financing Engineering Colleges
+360,4670,"Rohini College of Engineering & Technology, Anjugramam-Kanyakumari Main Road,
+Palkulam, Variyoor Post, Kanyakumari District 629401",Self Financing Engineering Colleges
+361,4671,"Sigma College of Architecture, Moododu, Anucode Post, Marthandam, Kanyakumari
+District 629168",Self Financing Engineering Colleges
+362,4672,"Stella Mary s College of Engineering, Arunthengan Vilai, Azhikal Post, Kanyakumari District
+629202",Self Financing Engineering Colleges
+363,4675,"Universal College of Engineering and Technology, Anbagam Campus, Radhapuram Road,
+Vallioor, Tirunelveli District 627117",Self Financing Engineering Colleges
+364,4676,"Renganayagi Varatharaj College of Engineering, Salvarpatti, Sivakasi, Virudhunagar District
+626128",Self Financing Engineering Colleges
+365,4677,ARUNACHALA HITECH ENGINEERING COLLEGE,Self Financing Engineering Colleges
+366,4678,"Ramco Institute of Technology, North venganallur Village, Krishnapuram Panchayat,
+Rajapalayam, Virudhunagar District 626117",Self Financing Engineering Colleges
+367,4679,"Arul Tharum VPMM College of Architecture V.P.M.NAGAR, KRISHNANKOIL 626190",Self Financing Engineering Colleges
+368,4680,"AAA College of Engineering and Technology, Kamarajar Educational Road, Amathur Village,
+Sivakasi, Virudhunagar District 626005",Self Financing Engineering Colleges
+369,4686,"Good Shepherd College of Engineering and Technology, Maruthamparai, Kanyakumari
+District 629101",Self Financing Engineering Colleges
+370,4864,"V V College of Engineering, Arasoor Village, Idaichivilai Post, Santhakulam Taluk,
+Thoothukudi District 628656",Self Financing Engineering Colleges
+371,4917,"Sethu Institute of Technology (Autonomous), Kariapatti Post, Virudhunagar District 626115",Self Financing Engineering Colleges
+372,4925,"Sun College of Engineering and Technology, Ammandivilai & Post, Kanyakumari District -
+629204",Self Financing Engineering Colleges
+373,4927,"Maria College of Engineering and Technology, Attoor Puliyamoodu Junction, Thiruvattar
+Post, Kanyakumari District 629177",Self Financing Engineering Colleges
+374,4928,"MAR Ephraem College of Engineering & Technology, Malankara Hills, Elavuvillai,
+Marthandam, Kanyakumari District 629171",Self Financing Engineering Colleges
+375,4929,"M E T Engineering College, Mogals Garden, Thovalai Village, Aralvaimozhi Town Panchayat,
+Thovalai, Kanyakumari District 629304",Self Financing Engineering Colleges
+376,4931,"Grace College of Engineering, Chandy Nagar, Mullakkadu, Thoothukudi District 628005",Self Financing Engineering Colleges
+377,4932,"Immanuel Arasar J.J. College of Engineering, Edavilagam, Nattalam, Marthandam,
+Kanyakumari-629165",Self Financing Engineering Colleges
+378,4933,"St. Mother Theresa Engineering College, Vagaikulam, Thoothukudi District 628102",Self Financing Engineering Colleges
+379,4934,"Holy Cross Engineering College, Vagaikulam, Sri Mulakarai, Srivaikuntam, Thoothukudi
+District 628851",Self Financing Engineering Colleges
+380,4938,"Sivaji College of Engineering and Technology, Manivilla Palulai Panchayat, Vilavancode,
+Kanyakumari District 629171",Self Financing Engineering Colleges
+381,4941,"Unnamalai Institute of Technology, Ayyaneri, Kovilpatti, Thoothukudi District 628502",Self Financing Engineering Colleges
+382,4943,"Satyam College of Engineering and Technology,Satyam Nagar,Aralvoimozhi,Kanyakumari-
+629301",Self Financing Engineering Colleges
+383,4944,"Arunachala College of Engineering for Women, Thanka Gardens, Manavilai, Vellichanthai,
+Nagercoil, Kanyakumari District 629203",Self Financing Engineering Colleges
+384,4946,"D M I Engineering College, Aralvaimozhi Village, Thovalai, Kanyakumari District 629301",Self Financing Engineering Colleges
+385,4949,"PSN Institute of Technology and Science,Melathediyoor, Tirunelveli-627 152",Self Financing Engineering Colleges
+386,4952,"C S I Institute of Technology, Thovalai, Kanyakumari District 629302",Self Financing Engineering Colleges
+387,4953,"CAPE Institute of Technology, Levingipuram, Tirunelveli District 627114",Self Financing Engineering Colleges
+388,4954,"Dr. Sivanthi Aditanar College of Engineering, Tiruchendur, Thoothukudi District 628215",Self Financing Engineering Colleges
+389,4955,"Francis Xavier Engineering College (Autonomous), Vannarpettai, Tirunelveli District 627003",Self Financing Engineering Colleges
+390,4956,"Jayamatha Engineering College, Aralvaimozhi, Kanyakumari District - 629301",Self Financing Engineering Colleges
+391,4957,"Jayaraj Annapackiam CSI College of Engineering, Nazareth, Thoothukudi District 628617",Self Financing Engineering Colleges
+392,4959,"Kamaraj College of Engineering and Technology (Autonomous), Virudhunagar District
+626001",Self Financing Engineering Colleges
+393,4960,"Mepco Schlenk Engineering College (Autonomous), Sivakasi, Virudhunagar District 626005",Self Financing Engineering Colleges
+394,4961,"Nellai College of Engineering (Formerly National College of Engineering), Maruthakulam
+Post, Tirunelveli District 627151",Self Financing Engineering Colleges
+395,4962,"National Engineering College (Autonomous), Kovilpatti, Thoothukudi District 628503",Self Financing Engineering Colleges
+396,4964,"PSN College of Engineering and Technology (Autonomous),Melathediyoor, Tirunelveli-627
+152",Self Financing Engineering Colleges
+397,4965,"P S R Engineering College (Autonomous), Appayanaickenpatti, Sevalpatty, Virudhunagar
+District 626140",Self Financing Engineering Colleges
+398,4966,"PET Engineering College, Vallioor Post, Tirunelveli District 627117",Self Financing Engineering Colleges
+399,4967,"S Veerasamy Chettiar College of Engineering and Technology, Puliangudi Post, Tenkasi
+District 627855",Self Financing Engineering Colleges
+400,4968,"Sardar Raja College of Engineering, Alangulam, Tenkasi District 627808",Self Financing Engineering Colleges
+401,4969,"SCAD College of Engineering and Technology, Cheranmahadevi, Tirunelveli District 627414",Self Financing Engineering Colleges
+402,4970,"Sree Sowdambika College of Engineering, Aruppukkottai Taluk, Virudhunagar District
+626134",Self Financing Engineering Colleges
+403,4971,"St. Xavier s Catholic College Of Engineering (Autonomous) , Chunkankadai, Nagercoil,
+Kanyakumari District-629003",Self Financing Engineering Colleges
+404,4975,"Dr. G U Pope College of Engineering, Sawyerpuram, Thoothukudi District 628251",Self Financing Engineering Colleges
+405,4976,"Infant Jesus College of Engineering, Thoothukudi Highway (NH7/A), Thoothukudi District
+628851",Self Financing Engineering Colleges
+406,4977,"Narayanaguru College of Engineering, Manjalumoodu, Kanyakumari District 629151",Self Financing Engineering Colleges
+407,4978,"Udaya School of Engineering, Ammandivilai Post, Kanyakumari District 629204",Self Financing Engineering Colleges
+408,4979,"Arul Tharum VPMM College of Engineering and Technology (Formerly V.P.Muthaiah Pillai
+Meenakshi Ammal Engineering College for Women), Krishnakoil,Virudhunagar-626 190",Self Financing Engineering Colleges
+409,4980,"Einstein College of Engineering, Seethaparpanallur, Tirunelveli District 627012",Self Financing Engineering Colleges
+410,4981,"Ponjesly College of Engineering, Vettornimadam Post, Nagercoil, Kanyakumari District
+629003",Self Financing Engineering Colleges
+411,4982,"Vins Christian College of Engineering, Chunkankadai Post, Nagercoil, Kanyakumari District
+629807",Self Financing Engineering Colleges
+412,4983,"Lord Jegannath College of Engineering and Technology, Kumarapuram, Thoppur Post,
+Kanyakumari District 629402",Self Financing Engineering Colleges
+413,4989,"PSN Engineering College, Melathediyoor, Tirunelveli District 627152",Self Financing Engineering Colleges
+414,4992,"Bethlahem Institute of Engineering, Karungal, Kanyakumari District 629157",Self Financing Engineering Colleges
+415,4993,"Loyola Institute of Technology and Science, Loyola Nagar, P B No.2, Thovalai, Kanyakumari
+District 629302",Self Financing Engineering Colleges
+416,4994,"J P College of Engineering, College Road, Ayakudy, Tenkasi Taluk, Tenkasi District 627852",Self Financing Engineering Colleges
+417,4996,"Sri Vidya College of Engineering and Technology, Sivakasi Main Road, P Kumaralinapuram,
+Virudhunagar District 626005",Self Financing Engineering Colleges
+418,4998,"Mahakavi Bharathiyar College of Engineering and Technology, Vasudevanallur, Tenkasi
+District",Self Financing Engineering Colleges
+419,4999,"Annai Vailankanni College of Engineering, Pothaiyadi Salai, Pottalkulam, Azhagappapuram,
+Kanyakumari District 629401",Self Financing Engineering Colleges
+420,5502,"Sri Raajaraajan College of Engineering & Technology, Amaravathi Village, Amaravathi Pudur
+Post, Karaikudi, Sivagangai District 630301",Self Financing Engineering Colleges
+421,5530,"SSM Institute of Engineering and Technology, Kuttathupatti Village, Sindalaigundu Post,
+Dindigul District 624002",Self Financing Engineering Colleges
+422,5532,"Vaigai College of Engineering, Therkutheru, Melur Taluk, Madurai District 625122",Self Financing Engineering Colleges
+423,5533,"Karaikudi Institute of Technology and Karaikudi Institute of Management, KIT & KIM
+Technical Campus, Keeranipatti, Thalakkuvur, Karaikudi, Sivagangai District 630307",Self Financing Engineering Colleges
+424,5536,"Mangayarkarasi College of Engineering, First Street, Mangayarkarasi Nagar, Paravai,
+Madurai District 625402",Self Financing Engineering Colleges
+425,5537,"Jainee College of Engineering and Technology, Dindigul-Theni Main Road (Near
+Vakkampatti), Dindigul District 624303",Self Financing Engineering Colleges
+426,5544,"Agni School of Architecture and Design Excellence (ASADE),NH45,Trichy Road,Morepatty
+(Post),Vadamadurai (Via),Dindigul District 624 802",Self Financing Engineering Colleges
+427,5703,"Christian College of Engineering and Technology, Oddanchatram, Dindigul District 624619",Self Financing Engineering Colleges
+428,5832,"N P R College of Engineering and Technology, Natham, Dindigul District 624401",Self Financing Engineering Colleges
+429,5842,"Madurai Institute of Engineering and Technology, Pottapalayam Village, Manamadurai
+Taluk, Sivagangai District 630611",Self Financing Engineering Colleges
+430,5851,"Veerammal Engineering College, PVP Nagar, K.Singrakottai, Dindigul-624708",Self Financing Engineering Colleges
+431,5862,"R V S Educational Trusts Groups of Institutions (Integrated Campus), N Paraipatti Post,
+Vedasandur Taluk, Dindigul District 624005",Self Financing Engineering Colleges
+432,5865,"Nadar Saraswathi College of Engineering and Technology, Vadupudupatti, Annanji Post,
+Theni District 625531",Self Financing Engineering Colleges
+433,5902,"Bharath Niketan Engineering College, Thimmarasanaickanoor, Aundipatti, Theni District
+625536",Self Financing Engineering Colleges
+434,5904,"K L N College of Engineering (Autonomous), Pottapalayam, Sivagangai District 630611",Self Financing Engineering Colleges
+435,5907,"Mohamed Sathak Engineering College, Kilakarai, Ramanathapuram District 623806",Self Financing Engineering Colleges
+436,5910,"P S N A Colllege of Engineering and Technology, Dindigul District 624622",Self Financing Engineering Colleges
+437,5911,"P T R College of Engineering and Technology, Thanapandiyan Nagar, Austinpatty Post,
+Madurai District 625008",Self Financing Engineering Colleges
+438,5912,"Pandian Saraswathi Yadav Engineering College, Thirumansolai Post, Sivagangai District 630
+561",Self Financing Engineering Colleges
+439,5913,"R V S College of Engineering, N Paraipatti Post, Dindigul District 624005",Self Financing Engineering Colleges
+440,5914,"Solamalai College of Engineering, Veerapanjan, Madurai District 625020",Self Financing Engineering Colleges
+441,5915,"SACS-M A V M M Engineering College, Kidaripatty Post, Madurai District 625301",Self Financing Engineering Colleges
+442,5919,"St. Michael College of Engineering and Technology, Kalayarkoil, Sivagangai District 630551",Self Financing Engineering Colleges
+443,5921,"Syed Ammal Engineering College, Achuthan Vayal Post, Ramanathapuram District 623502",Self Financing Engineering Colleges
+444,5924,"Ganapathy Chettiar College of Engineering and Technology, Melakavanur Post, Paramakudi,
+Ramanathapuram District 623706",Self Financing Engineering Colleges
+445,5930,"SBM College of Engineering and Technology, Thamaraipady, T N Paraipatti Pirivu, Dindigul
+District 624005",Self Financing Engineering Colleges
+446,5935,"Fatima Michael College of Engineering and Technology, Sengottai Village, Sivagangai Main
+Road, Madurai District 625020",Self Financing Engineering Colleges
+447,5942,"Ultra College of Engineering and Technology, Kodikulam, 1 Bit Village, Madurai-Chennai
+Highway, Madurai District 625104",Self Financing Engineering Colleges
+448,5986,"Velammal College of Engineering and Technology, Madurai District 625009",Self Financing Engineering Colleges
+449,5988,"Theni Kammavar Sangam College of Technology, Theni Main Road, Koduvillarpatti Post,
+Theni District 625534",Self Financing Engineering Colleges
+450,5990,"Latha Mathavan Engineering College, Kidaripatti Post, Alagarkoil (Via), Melur Taluk,
+Madurai District 625301",Self Financing Engineering Colleges
+451,1203,Madras Engineering College,Self Financing Engineering Colleges
+452,1339,"Mahalakshmi Tech Campus No.1, Bharathiar Street Prashanthi Nagar, Chromepet ,Chennai
+60004",Self Financing Engineering Colleges
+453,2777,Hindusthan College Of Engineering,Self Financing Engineering Colleges
+454,3477,"Sri Vignesh college of Engineering and Technology -Trichy - Chennai Trunk Road, (Near No.1
+Tollgate), Koothur, Trichy -621216",Self Financing Engineering Colleges
+455,5545,G.T.N. College Of Technology,Self Financing Engineering Colleges
