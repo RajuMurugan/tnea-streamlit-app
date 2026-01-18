@@ -449,43 +449,71 @@ elif selected == "Branch List":
 # =================================================
 elif selected == "TNEA College List (CSV)":
 
+    import requests
+    from io import StringIO
+
     st.markdown("## 🏫 TNEA College List (Category-wise)")
     st.caption("✅ Loaded from Google Sheet (S.No, College Code, College Name, Category, District, Web link)")
 
-    # ✅ Google Sheet Link (Your sheet)
+    # ✅ Google Sheet
     SHEET_ID = "1inA8d2K9Fk3kSu6M4QgisB_AqLdMzQYtfsHFrdVlGEc"
     CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 
     @st.cache_data(ttl=3600)
     def load_college_google_sheet(csv_url):
-        df = pd.read_csv(csv_url)
+        # ✅ Use requests to avoid Google redirect issues
+        r = requests.get(csv_url)
 
-        # ✅ Clean column names
+        if r.status_code != 200:
+            raise Exception(f"Google Sheet blocked. Status Code = {r.status_code}")
+
+        df = pd.read_csv(StringIO(r.text))
+
+        # ✅ Clean column names (remove extra spaces)
         df.columns = [str(c).strip() for c in df.columns]
+
+        # ✅ Auto-fix if column name is slightly different
+        rename_map = {}
+        for col in df.columns:
+            if col.lower().strip() in ["web link", "weblink", "website", "web"]:
+                rename_map[col] = "Web link"
+            if col.lower().strip() in ["college code", "tnea code", "code"]:
+                rename_map[col] = "College Code"
+            if col.lower().strip() in ["college name", "name"]:
+                rename_map[col] = "College Name"
+            if col.lower().strip() in ["district", "dist"]:
+                rename_map[col] = "District"
+            if col.lower().strip() in ["category", "type"]:
+                rename_map[col] = "Category"
+            if col.lower().strip() in ["s.no", "sno", "s no", "serial no", "serial number"]:
+                rename_map[col] = "S.No"
+
+        df = df.rename(columns=rename_map)
 
         # ✅ Required columns
         required_cols = ["S.No", "College Code", "College Name", "Category", "District", "Web link"]
         for col in required_cols:
             if col not in df.columns:
-                raise ValueError(f"Missing column in Google Sheet: {col}")
+                raise ValueError(f"Missing column in Google Sheet: {col}\n\nFound columns: {list(df.columns)}")
 
         # ✅ Convert numeric
         df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
         df["College Code"] = pd.to_numeric(df["College Code"], errors="coerce")
 
-        # ✅ Clean text columns
+        # ✅ Clean text
         df["College Name"] = df["College Name"].fillna("").astype(str).str.strip()
         df["Category"] = df["Category"].fillna("").astype(str).str.strip()
         df["District"] = df["District"].fillna("").astype(str).str.strip()
         df["Web link"] = df["Web link"].fillna("").astype(str).str.strip()
 
-        # ✅ Drop empty important rows
-        df = df.dropna(subset=["S.No", "College Code", "College Name"])
+        # ✅ Drop empty rows
+        df = df.dropna(subset=["S.No", "College Code"])
+        df = df[df["College Name"].str.strip() != ""]
 
-        # ✅ Fix website links -> must start with http
+        # ✅ Fix website links
         def fix_link(x):
             x = str(x).strip()
-            if x == "" or x.lower() == "none" or x.lower() == "nan":
+            if x == "" or x.lower() in ["none", "nan"]:
                 return ""
             if not x.startswith("http"):
                 return "https://" + x
@@ -498,17 +526,23 @@ elif selected == "TNEA College List (CSV)":
 
         return df
 
-    # ✅ Load Google sheet data
+    # ✅ Load Google Sheet
     try:
-        df_colleges = load_college_google_sheet(CSV_URL)
+        with st.spinner("📥 Loading College list from Google Sheet..."):
+            df_colleges = load_college_google_sheet(CSV_URL)
+
         st.success(f"✅ Total Colleges Loaded: {len(df_colleges)}")
+
     except Exception as e:
         st.error(f"❌ Google Sheet Load Error: {e}")
-        st.info("✅ Make sure your Google Sheet columns are exactly like:")
+        st.info("✅ Fix Checklist:")
+        st.write("1) Google Sheet must be **Anyone with link → Viewer**")
+        st.write("2) File → Share → **Publish to web** (recommended)")
+        st.write("3) Column names must match:")
         st.code("S.No | College Code | College Name | Category | District | Web link")
         st.stop()
 
-    # ✅ Filters row
+    # ✅ Filters
     col1, col2, col3 = st.columns([2, 1, 1])
 
     with col1:
@@ -529,7 +563,6 @@ elif selected == "TNEA College List (CSV)":
         )
         selected_district = st.selectbox("📍 Filter by District", district_list)
 
-    # ✅ Apply filters
     df_show = df_colleges.copy()
 
     if selected_category != "All":
@@ -546,7 +579,7 @@ elif selected == "TNEA College List (CSV)":
 
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
 
-    # ✅ SHOW TABLE WITH CLICKABLE LINKS ✅
+    # ✅ Show Table with clickable links
     st.dataframe(
         df_show,
         use_container_width=True,
@@ -554,13 +587,13 @@ elif selected == "TNEA College List (CSV)":
         column_config={
             "Web link": st.column_config.LinkColumn(
                 "Web link",
-                help="Click to open official website",
-                display_text="Visit Website"
+                help="Click to open website",
+                display_text="🌐 Visit Website"
             )
         }
     )
 
-    # ✅ Download filtered data
+    # ✅ Download filtered CSV
     st.markdown("---")
     csv_out = df_show.to_csv(index=False).encode("utf-8-sig")
 
@@ -570,8 +603,6 @@ elif selected == "TNEA College List (CSV)":
         file_name="TNEA_Filtered_College_List.csv",
         mime="text/csv"
     )
-
-
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
@@ -982,6 +1013,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
