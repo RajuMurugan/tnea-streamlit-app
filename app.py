@@ -444,17 +444,23 @@ elif selected == "Branch List":
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
- elif selected == "TNEA College List (CSV)":
+elif selected == "TNEA College List":
 
     st.markdown("## 🏫 TNEA College List (Category-wise)")
-    st.caption("✅ Loaded from CSV (S.No, College Code, College Name, Category, District)")
+    st.caption("✅ Loaded from Google Sheet (S.No, College Code, College Name, Category, District)")
 
-    # ✅ CSV File Path (Local)
-    CSV_PATH = "TNEA_College_List.csv"   # keep this file in same folder as app.py
+    # ✅ Google Sheet ID (from your link)
+    SHEET_ID = "1inA8d2K9Fk3kSu6M4QgisB_AqLdMzQYtfsHFrdVlGEc"
+
+    # ✅ If your data is in Sheet1 (default), keep this same
+    SHEET_NAME = "Sheet1"
+
+    # ✅ Export as CSV URL
+    GOOGLE_SHEET_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
 
     @st.cache_data(ttl=3600)
-    def load_college_csv(csv_path):
-        df = pd.read_csv(csv_path)
+    def load_college_data_from_google_sheet(csv_url):
+        df = pd.read_csv(csv_url)
 
         # ✅ Clean column names
         df.columns = [c.strip() for c in df.columns]
@@ -482,14 +488,18 @@ elif selected == "Branch List":
 
         return df
 
-    # ✅ Load CSV
+    # ✅ Load Google Sheet
     try:
-        df_colleges = load_college_csv(CSV_PATH)
+        with st.spinner("📥 Loading data from Google Sheet..."):
+            df_colleges = load_college_data_from_google_sheet(GOOGLE_SHEET_CSV_URL)
+
         st.success(f"✅ Total Colleges Loaded: {len(df_colleges)}")
     except Exception as e:
-        st.error(f"❌ CSV Load Error: {e}")
-        st.info("✅ Please keep this file in your app folder:")
-        st.code(CSV_PATH)
+        st.error(f"❌ Google Sheet Load Error: {e}")
+        st.info("✅ Check these points:")
+        st.write("1) Google Sheet must be set to **Anyone with link → Viewer**")
+        st.write("2) Sheet name must match exactly (Example: Sheet1)")
+        st.code(GOOGLE_SHEET_CSV_URL)
         st.stop()
 
     # ✅ Filters
@@ -545,6 +555,7 @@ elif selected == "Branch List":
         file_name="TNEA_Filtered_College_List.csv",
         mime="text/csv"
     )
+
 
 
 # =================================================
@@ -957,6 +968,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
