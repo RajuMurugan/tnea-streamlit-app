@@ -445,7 +445,7 @@ elif selected == "Branch List":
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
 
-elif selected == "TNEA College List (CSV)":
+elif selected == "TNEA College List":
 
     import requests
     from io import StringIO
@@ -988,6 +988,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
