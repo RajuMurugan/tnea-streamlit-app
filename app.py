@@ -118,23 +118,13 @@ col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
     if is_premium:
-        menu_options = [
-            "Home",
-            "Cutoff Calculator",
-            "Branch List",
-            "College List",
-            "2024-TNEA  Cut off and rank details",
-            "2025-TNEA Vacancy Seat Matrix"
-        ]
-        menu_icons = ["house", "calculator", "book", "building", "list-check", "table"]
-    else:
-        menu_options = [
-            "Home",
-            "Cutoff Calculator",
-            "Branch List",
-            "College List"
-        ]
-        menu_icons = ["house", "calculator", "book", "building"]
+        if is_premium:
+    menu_options = ["Home", "Cutoff Calculator", "Branch List", "TNEA College List (PDF)", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
+    menu_icons = ["house", "calculator", "book", "building", "list-check", "table"]
+else:
+    menu_options = ["Home", "Cutoff Calculator", "Branch List", "TNEA College List (PDF)"]
+    menu_icons = ["house", "calculator", "book", "building"]
+
 
     selected = option_menu(
         menu_title=None,
@@ -894,6 +884,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
