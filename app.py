@@ -108,6 +108,7 @@ if "device_id" not in st.session_state:
 # =================================================
 # ✅ MENU
 # =================================================
+
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
         🔽 Select a Feature Below 🔽
@@ -117,13 +118,37 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
+    # ✅ Menu options based on Normal / Premium mode
     if is_premium:
-    menu_options = ["Home", "Cutoff Calculator", "Branch List", "TNEA College List", "Create TNEA Choice List", "TNEA Vacancy Seat Matrix"]
-    menu_icons = ["house", "calculator", "book", "building", "list-check", "table"]
-else:
-    menu_options = ["Home", "Cutoff Calculator", "Branch List", "TNEA College List"]
-    menu_icons = ["house", "calculator", "book", "building"]
-
+        menu_options = [
+            "Home",
+            "Cutoff Calculator",
+            "Branch List",
+            "TNEA College List (PDF)",
+            "Create TNEA Choice List",
+            "TNEA Vacancy Seat Matrix"
+        ]
+        menu_icons = [
+            "house",
+            "calculator",
+            "list-check",
+            "building",
+            "list-check",
+            "table"
+        ]
+    else:
+        menu_options = [
+            "Home",
+            "Cutoff Calculator",
+            "Branch List",
+            "TNEA College List (PDF)"
+        ]
+        menu_icons = [
+            "house",
+            "calculator",
+            "list-check",
+            "building"
+        ]
 
     selected = option_menu(
         menu_title=None,
@@ -979,6 +1004,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
