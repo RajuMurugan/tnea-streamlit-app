@@ -444,64 +444,71 @@ elif selected == "Branch List":
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
-elif selected == "TNEA College List":
+# =================================================
+# ✅ PAGE: TNEA COLLEGE LIST (GOOGLE SHEET)
+# =================================================
+elif selected == "TNEA College List (CSV)":
 
     st.markdown("## 🏫 TNEA College List (Category-wise)")
-    st.caption("✅ Loaded from Google Sheet (S.No, College Code, College Name, Category, District)")
+    st.caption("✅ Loaded from Google Sheet (S.No, College Code, College Name, Category, District, Web link)")
 
-    # ✅ Google Sheet ID (from your link)
+    # ✅ Google Sheet Link (Your sheet)
     SHEET_ID = "1inA8d2K9Fk3kSu6M4QgisB_AqLdMzQYtfsHFrdVlGEc"
-    # ✅ If your data is in Sheet1 (default), keep this same
-    SHEET_NAME = "TNEA_College_List"
-
-    # ✅ Export as CSV URL
-    GOOGLE_SHEET_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
+    CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
 
     @st.cache_data(ttl=3600)
-    def load_college_data_from_google_sheet(csv_url):
+    def load_college_google_sheet(csv_url):
         df = pd.read_csv(csv_url)
 
         # ✅ Clean column names
-        df.columns = [c.strip() for c in df.columns]
+        df.columns = [str(c).strip() for c in df.columns]
 
-        # ✅ Ensure required columns exist
-        required_cols = ["S.No", "College Code", "College Name", "Category", "District"]
+        # ✅ Required columns
+        required_cols = ["S.No", "College Code", "College Name", "Category", "District", "Web link"]
         for col in required_cols:
             if col not in df.columns:
-                raise ValueError(f"Missing column: {col}")
+                raise ValueError(f"Missing column in Google Sheet: {col}")
 
-        # ✅ Convert types
+        # ✅ Convert numeric
         df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
         df["College Code"] = pd.to_numeric(df["College Code"], errors="coerce")
 
         # ✅ Clean text columns
-        df["College Name"] = df["College Name"].astype(str).str.strip()
-        df["Category"] = df["Category"].astype(str).str.strip()
-        df["District"] = df["District"].astype(str).str.strip()
+        df["College Name"] = df["College Name"].fillna("").astype(str).str.strip()
+        df["Category"] = df["Category"].fillna("").astype(str).str.strip()
+        df["District"] = df["District"].fillna("").astype(str).str.strip()
+        df["Web link"] = df["Web link"].fillna("").astype(str).str.strip()
 
-        # ✅ Drop empty rows
+        # ✅ Drop empty important rows
         df = df.dropna(subset=["S.No", "College Code", "College Name"])
+
+        # ✅ Fix website links -> must start with http
+        def fix_link(x):
+            x = str(x).strip()
+            if x == "" or x.lower() == "none" or x.lower() == "nan":
+                return ""
+            if not x.startswith("http"):
+                return "https://" + x
+            return x
+
+        df["Web link"] = df["Web link"].apply(fix_link)
 
         # ✅ Sort properly
         df = df.sort_values(by="S.No").reset_index(drop=True)
 
         return df
 
-    # ✅ Load Google Sheet
+    # ✅ Load Google sheet data
     try:
-        with st.spinner("📥 Loading data from Google Sheet..."):
-            df_colleges = load_college_data_from_google_sheet(GOOGLE_SHEET_CSV_URL)
-
+        df_colleges = load_college_google_sheet(CSV_URL)
         st.success(f"✅ Total Colleges Loaded: {len(df_colleges)}")
     except Exception as e:
         st.error(f"❌ Google Sheet Load Error: {e}")
-        st.info("✅ Check these points:")
-        st.write("1) Google Sheet must be set to **Anyone with link → Viewer**")
-        st.write("2) Sheet name must match exactly (Example: Sheet1)")
-        st.code(GOOGLE_SHEET_CSV_URL)
+        st.info("✅ Make sure your Google Sheet columns are exactly like:")
+        st.code("S.No | College Code | College Name | Category | District | Web link")
         st.stop()
 
-    # ✅ Filters
+    # ✅ Filters row
     col1, col2, col3 = st.columns([2, 1, 1])
 
     with col1:
@@ -522,17 +529,15 @@ elif selected == "TNEA College List":
         )
         selected_district = st.selectbox("📍 Filter by District", district_list)
 
+    # ✅ Apply filters
     df_show = df_colleges.copy()
 
-    # ✅ Apply Category filter
     if selected_category != "All":
         df_show = df_show[df_show["Category"] == selected_category]
 
-    # ✅ Apply District filter
     if selected_district != "All":
         df_show = df_show[df_show["District"] == selected_district]
 
-    # ✅ Apply Search filter
     if search_text.strip():
         df_show = df_show[
             df_show["College Name"].str.contains(search_text, case=False, na=False)
@@ -541,30 +546,21 @@ elif selected == "TNEA College List":
 
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
 
-    # ✅ Show Table
-    # ✅ Make Web link clickable
-df_show["Web link"] = df_show["Web link"].fillna("").astype(str).str.strip()
+    # ✅ SHOW TABLE WITH CLICKABLE LINKS ✅
+    st.dataframe(
+        df_show,
+        use_container_width=True,
+        height=550,
+        column_config={
+            "Web link": st.column_config.LinkColumn(
+                "Web link",
+                help="Click to open official website",
+                display_text="Visit Website"
+            )
+        }
+    )
 
-df_show.loc[df_show["Web link"] != "", "Web link"] = df_show.loc[df_show["Web link"] != "", "Web link"].apply(
-    lambda x: x if x.startswith("http") else "https://" + x
-)
-
-# ✅ Show table with clickable links
-st.dataframe(
-    df_show,
-    use_container_width=True,
-    height=550,
-    column_config={
-        "Web link": st.column_config.LinkColumn(
-            "Web link",
-            help="Click to open college website",
-            display_text="Visit Website"
-        )
-    }
-)
-
-
-    # ✅ Download filtered CSV
+    # ✅ Download filtered data
     st.markdown("---")
     csv_out = df_show.to_csv(index=False).encode("utf-8-sig")
 
@@ -574,7 +570,6 @@ st.dataframe(
         file_name="TNEA_Filtered_College_List.csv",
         mime="text/csv"
     )
-
 
 
 # =================================================
@@ -987,6 +982,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
