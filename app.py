@@ -124,7 +124,7 @@ with col2:
             "Home",
             "Cutoff Calculator",
             "Branch List",
-            "TNEA College List (PDF)",
+            "TNEA College List",
             "2024-TNEA  Cut off and rank details",
             "2025-TNEA Vacancy Seat Matrix"
         ]
@@ -141,7 +141,7 @@ with col2:
             "Home",
             "Cutoff Calculator",
             "Branch List",
-            "TNEA College List (PDF)"
+            "TNEA College List"
         ]
         menu_icons = [
             "house",
@@ -444,117 +444,69 @@ elif selected == "Branch List":
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
-elif selected == "TNEA College List (PDF)":
+elif selected == "TNEA College List":
 
-    import pdfplumber
-    import re
+    st.markdown("## 🏫 TNEA College List (Category-wise)")
+    st.caption("✅ Loaded from CSV (S.No, College Code, College Name, Category)")
 
-    st.markdown("## 🏫 TNEA College List (Auto from PDF)")
-    st.caption("✅ Extracted from official TNEA College PDF (S.No, College Code, College Name, Website, District)")
-
-    PDF_FILES = [
-        "TNEA_2025_College_full_list_1.pdf",
-        "TNEA_2025_College_full_list_2.pdf"
-    ]
+    # ✅ CSV File Path (Local)
+    CSV_PATH = "TNEA_College_List.csv"   # keep this file in same folder as app.py
 
     @st.cache_data(ttl=3600)
-    def extract_college_list_from_multiple_pdfs(pdf_files):
-        colleges = []
-        s_no = 0
+    def load_college_csv(csv_path):
+        df = pd.read_csv(csv_path)
 
-        for pdf_path in pdf_files:
-            with pdfplumber.open(pdf_path) as pdf:
-                for page in pdf.pages:
-                    text = page.extract_text()
-                    if not text:
-                        continue
+        # ✅ Clean column names
+        df.columns = [c.strip() for c in df.columns]
 
-                    lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
-                    if len(lines) == 0:
-                        continue
+        # ✅ Ensure required columns exist
+        required_cols = ["S.No", "College Code", "College Name", "Category"]
+        for col in required_cols:
+            if col not in df.columns:
+                raise ValueError(f"Missing column: {col}")
 
-                    first_line = lines[0]
+        # ✅ Convert types
+        df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
+        df["College Code"] = pd.to_numeric(df["College Code"], errors="coerce")
 
-                    match = re.match(r"^(\d{1,4})\s+(.*)$", first_line)
-                    if match:
-                        college_code = match.group(1).strip()
-                        college_name = match.group(2).strip()
-                    else:
-                        if re.match(r"^\d{1,4}$", first_line) and len(lines) > 1:
-                            college_code = first_line.strip()
-                            college_name = lines[1].strip()
-                        else:
-                            continue
+        # ✅ Drop empty rows
+        df = df.dropna(subset=["S.No", "College Code", "College Name"])
 
-                    district = ""
-                    for ln in lines:
-                        if ln.upper().startswith("DISTRICT"):
-                            district = ln.replace("District", "").replace("DISTRICT", "").strip()
-                            break
+        # ✅ Sort properly
+        df = df.sort_values(by="S.No").reset_index(drop=True)
 
-                    website = ""
-                    for ln in lines:
-                        if ln.lower().startswith("website"):
-                            website = ln.replace("Website", "").replace("WEBSITE", "").strip()
-                            break
-
-                    website = website.replace(" ", "")
-                    if website and not website.startswith("http"):
-                        website = "https://" + website
-
-                    s_no += 1
-                    colleges.append({
-                        "S.No": s_no,
-                        "College Code": college_code,
-                        "College Name": college_name,
-                        "District": district.title() if district else "",
-                        "Website": website
-                    })
-
-        df = pd.DataFrame(colleges)
-
-        df = df.drop_duplicates(subset=["College Code", "College Name"], keep="first")
-        df = df.reset_index(drop=True)
-        df["S.No"] = df.index + 1
         return df
 
+    # ✅ Load CSV
     try:
-        with st.spinner("📄 Reading college list from PDF files... Please wait"):
-            df_college_pdf = extract_college_list_from_multiple_pdfs(PDF_FILES)
-
-        st.success(f"✅ Total Colleges Extracted: {len(df_college_pdf)}")
-
+        df_colleges = load_college_csv(CSV_PATH)
+        st.success(f"✅ Total Colleges Loaded: {len(df_colleges)}")
     except Exception as e:
-        st.error(f"❌ PDF Load Error: {e}")
-        st.info("✅ Make sure BOTH PDF files exist in your app folder:")
-        st.code("\n".join(PDF_FILES))
+        st.error(f"❌ CSV Load Error: {e}")
+        st.info("✅ Please keep this file in your app folder:")
+        st.code(CSV_PATH)
         st.stop()
 
+    # ✅ Filters
     col1, col2 = st.columns([2, 1])
 
     with col1:
         search_text = st.text_input(
-            "🔍 Search College Name or College Code",
-            placeholder="Ex: 1013, Guindy, MIT...",
-            key="college_pdf_search"
+            "🔍 Search College Name / College Code",
+            placeholder="Ex: MIT, Guindy, 1013..."
         )
 
     with col2:
-        district_list = ["All"] + sorted([
-            d for d in df_college_pdf["District"].dropna().unique().tolist()
-            if str(d).strip() != ""
-        ])
-        selected_district = st.selectbox(
-            "📍 Filter by District",
-            district_list,
-            key="college_pdf_district"
-        )
+        category_list = ["All"] + sorted(df_colleges["Category"].dropna().unique().tolist())
+        selected_category = st.selectbox("📌 Filter by Category", category_list)
 
-    df_show = df_college_pdf.copy()
+    df_show = df_colleges.copy()
 
-    if selected_district != "All":
-        df_show = df_show[df_show["District"] == selected_district]
+    # ✅ Apply Category filter
+    if selected_category != "All":
+        df_show = df_show[df_show["Category"] == selected_category]
 
+    # ✅ Apply Search filter
     if search_text.strip():
         df_show = df_show[
             df_show["College Name"].str.contains(search_text, case=False, na=False)
@@ -562,32 +514,20 @@ elif selected == "TNEA College List (PDF)":
         ]
 
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
-    st.dataframe(df_show, use_container_width=True, height=500)
 
-    # ✅ Optional: Open website button list (✅ NOW INSIDE PAGE)
+    # ✅ Show Table
+    st.dataframe(df_show, use_container_width=True, height=550)
+
+    # ✅ Download filtered CSV
     st.markdown("---")
-    st.markdown("### 🌐 Open College Websites")
+    csv_out = df_show.to_csv(index=False).encode("utf-8-sig")
 
-    for _, row in df_show.head(50).iterrows():
-        st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
-
-        website = row.get("Website", "")
-
-        if pd.notna(website) and str(website).strip() != "":
-            website = str(website).strip()
-
-            if not website.startswith("http"):
-                website = "https://" + website
-
-            st.link_button(
-                "🌐 Open Website",
-                website,
-                key=f"open_{row['College Code']}_{row['S.No']}"
-            )
-        else:
-            st.info("Website not available in PDF")
-
-        st.markdown("---")
+    st.download_button(
+        "⬇️ Download Filtered College List (CSV)",
+        data=csv_out,
+        file_name="TNEA_Filtered_College_List.csv",
+        mime="text/csv"
+    )
 
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
@@ -999,6 +939,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
