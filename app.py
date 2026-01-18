@@ -428,92 +428,114 @@ elif selected == "TNEA College List (PDF)":
     st.markdown("## 🏫 TNEA College List (Auto from PDF)")
     st.caption("✅ Extracted from official TNEA College PDF (S.No, College Code, College Name, Website, District)")
 
-    PDF_PATH = "TNEA_2025_College_full_list.pdf"   # ✅ Keep this PDF in your project folder
+    # ✅ Your 2 PDF files (keep in same folder as app.py)
+    PDF_FILES = [
+        "TNEA_2025_College_full_list_1.pdf",
+        "TNEA_2025_College_full_list_2.pdf"
+    ]
 
     @st.cache_data(ttl=3600)
-    def extract_college_list_from_pdf(pdf_path):
+    def extract_college_list_from_multiple_pdfs(pdf_files):
         colleges = []
         s_no = 0
 
-        with pdfplumber.open(pdf_path) as pdf:
-            for page in pdf.pages:
-                text = page.extract_text()
-                if not text:
-                    continue
-
-                lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
-
-                # ✅ Find college code + name (usually first line)
-                # Example:
-                # "1013 University College of Engineering, Villupuram, Kakuppam, Villupuram District 605103"
-                first_line = lines[0]
-
-                match = re.match(r"^(\d{1,4})\s+(.*)$", first_line)
-                if match:
-                    college_code = match.group(1).strip()
-                    college_name = match.group(2).strip()
-                else:
-                    # Some pages like page 1 starts with "1" alone and name in next line
-                    if re.match(r"^\d{1,4}$", first_line) and len(lines) > 1:
-                        college_code = first_line.strip()
-                        college_name = lines[1].strip()
-                    else:
+        for pdf_path in pdf_files:
+            with pdfplumber.open(pdf_path) as pdf:
+                for page in pdf.pages:
+                    text = page.extract_text()
+                    if not text:
                         continue
 
-                # ✅ Extract district
-                district = ""
-                for ln in lines:
-                    if ln.upper().startswith("DISTRICT"):
-                        district = ln.replace("District", "").replace("DISTRICT", "").strip()
-                        break
+                    lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
+                    if len(lines) == 0:
+                        continue
 
-                # ✅ Extract website
-                website = ""
-                for ln in lines:
-                    if ln.lower().startswith("website"):
-                        website = ln.replace("Website", "").replace("WEBSITE", "").strip()
-                        break
+                    # ✅ First line (College Code + College Name)
+                    first_line = lines[0]
 
-                # ✅ Clean website
-                website = website.replace(" ", "")
-                if website and not website.startswith("http"):
-                    # some lines like "www.xxx.com"
-                    website = "https://" + website
+                    match = re.match(r"^(\d{1,4})\s+(.*)$", first_line)
+                    if match:
+                        college_code = match.group(1).strip()
+                        college_name = match.group(2).strip()
+                    else:
+                        if re.match(r"^\d{1,4}$", first_line) and len(lines) > 1:
+                            college_code = first_line.strip()
+                            college_name = lines[1].strip()
+                        else:
+                            continue
 
-                s_no += 1
-                colleges.append({
-                    "S.No": s_no,
-                    "College Code": college_code,
-                    "College Name": college_name,
-                    "District": district.title() if district else "",
-                    "Website": website
-                })
+                    # ✅ Extract District
+                    district = ""
+                    for ln in lines:
+                        if ln.upper().startswith("DISTRICT"):
+                            district = ln.replace("District", "").replace("DISTRICT", "").strip()
+                            break
+
+                    # ✅ Extract Website
+                    website = ""
+                    for ln in lines:
+                        if ln.lower().startswith("website"):
+                            website = ln.replace("Website", "").replace("WEBSITE", "").strip()
+                            break
+
+                    # ✅ Clean Website
+                    website = website.replace(" ", "")
+                    if website and not website.startswith("http"):
+                        website = "https://" + website
+
+                    s_no += 1
+                    colleges.append({
+                        "S.No": s_no,
+                        "College Code": college_code,
+                        "College Name": college_name,
+                        "District": district.title() if district else "",
+                        "Website": website
+                    })
 
         df = pd.DataFrame(colleges)
+
+        # ✅ Remove duplicates (sometimes PDF has repeated pages)
+        df = df.drop_duplicates(subset=["College Code", "College Name"], keep="first")
+
+        # ✅ Re-number S.No properly after removing duplicates
+        df = df.reset_index(drop=True)
+        df["S.No"] = df.index + 1
+
         return df
 
     # ✅ Load dataframe
     try:
-        with st.spinner("📄 Reading college list from PDF... Please wait"):
-            df_college_pdf = extract_college_list_from_pdf(PDF_PATH)
+        with st.spinner("📄 Reading college list from PDF files... Please wait"):
+            df_college_pdf = extract_college_list_from_multiple_pdfs(PDF_FILES)
 
         st.success(f"✅ Total Colleges Extracted: {len(df_college_pdf)}")
 
     except Exception as e:
         st.error(f"❌ PDF Load Error: {e}")
-        st.info("✅ Make sure the file name is correct and exists in your app folder:")
-        st.code(PDF_PATH)
+        st.info("✅ Make sure BOTH PDF files exist in your app folder:")
+        st.code("\n".join(PDF_FILES))
         st.stop()
 
     # ✅ Search + District filter
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        search_text = st.text_input("🔍 Search College Name or College Code", placeholder="Ex: 1013, Guindy, MIT...")
+        search_text = st.text_input(
+            "🔍 Search College Name or College Code",
+            placeholder="Ex: 1013, Guindy, MIT...",
+            key="college_pdf_search"
+        )
 
     with col2:
-        district_list = ["All"] + sorted([d for d in df_college_pdf["District"].dropna().unique().tolist() if d.strip() != ""])
-        selected_district = st.selectbox("📍 Filter by District", district_list)
+        district_list = ["All"] + sorted([
+            d for d in df_college_pdf["District"].dropna().unique().tolist()
+            if str(d).strip() != ""
+        ])
+        selected_district = st.selectbox(
+            "📍 Filter by District",
+            district_list,
+            key="college_pdf_district"
+        )
 
     df_show = df_college_pdf.copy()
 
@@ -532,17 +554,21 @@ elif selected == "TNEA College List (PDF)":
 
     # ✅ Optional: Open website button list
     st.markdown("---")
-    st.markdown("### 🌐 Open College Websites")
+    st.markdown("### 🌐 Open College Websites (Top 50 Results Only)")
 
-    for _, row in df_show.head(50).iterrows():  # ✅ show only first 50 to avoid heavy UI
+    for _, row in df_show.head(50).iterrows():
         st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
+
         if row["Website"]:
-            st.link_button("🌐 Open Website", row["Website"], key=f"open_{row['College Code']}")
+            st.link_button(
+                "🌐 Open Website",
+                row["Website"],
+                key=f"open_{row['College Code']}_{row['S.No']}"
+            )
         else:
             st.info("Website not available in PDF")
+
         st.markdown("---")
-
-
 
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
@@ -954,6 +980,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
