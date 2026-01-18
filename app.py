@@ -420,58 +420,128 @@ elif selected == "Branch List":
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
-elif selected == "College List":
+elif selected == "TNEA College List (PDF)":
 
-    st.markdown("## 🏫 Tamil Nadu College List (Free)")
-    st.caption("Search colleges and open official websites ✅")
+    import pdfplumber
+    import re
 
-    college_data = [
-        {"College": "Madras Institute of Technology (MIT)", "City": "Chennai", "Website": "https://mitindia.edu/"},
-        {"College": "College of Engineering Guindy (CEG)", "City": "Chennai", "Website": "https://ceg.annauniv.edu/"},
-        {"College": "Alagappa College of Technology (ACT)", "City": "Chennai", "Website": "https://www.annauniv.edu/"},
-        {"College": "Anna University Regional Campus Coimbatore", "City": "Coimbatore", "Website": "https://www.aurcc.ac.in/"},
-        {"College": "Anna University Regional Campus Tirunelveli", "City": "Tirunelveli", "Website": "https://www.auttvl.ac.in/"},
-        {"College": "PSG College of Technology", "City": "Coimbatore", "Website": "https://www.psgtech.edu/"},
-        {"College": "Coimbatore Institute of Technology (CIT)", "City": "Coimbatore", "Website": "https://www.cit.edu.in/"},
-        {"College": "Government College of Technology (GCT)", "City": "Coimbatore", "Website": "https://www.gct.ac.in/"},
-        {"College": "Thiagarajar College of Engineering (TCE)", "City": "Madurai", "Website": "https://www.tce.edu/"},
-        {"College": "SSN College of Engineering", "City": "Chennai", "Website": "https://www.ssn.edu.in/"},
-        {"College": "SRM Institute of Science and Technology", "City": "Chennai", "Website": "https://www.srmist.edu.in/"},
-        {"College": "VIT Vellore", "City": "Vellore", "Website": "https://vit.ac.in/"},
-        {"College": "SASTRA Deemed University", "City": "Thanjavur", "Website": "https://www.sastra.edu/"},
-        {"College": "Kumaraguru College of Technology", "City": "Coimbatore", "Website": "https://www.kct.ac.in/"},
-        {"College": "Kongu Engineering College", "City": "Erode", "Website": "https://kongu.ac.in/"},
-        {"College": "Rajalakshmi Engineering College", "City": "Chennai", "Website": "https://www.rajalakshmi.org/"},
-    ]
+    st.markdown("## 🏫 TNEA College List (Auto from PDF)")
+    st.caption("✅ Extracted from official TNEA College PDF (S.No, College Code, College Name, Website, District)")
 
-    df_colleges = pd.DataFrame(college_data)
+    PDF_PATH = "TNEA_2025_College_full_list.pdf"   # ✅ Keep this PDF in your project folder
 
-    colS1, colS2 = st.columns([2, 1])
+    @st.cache_data(ttl=3600)
+    def extract_college_list_from_pdf(pdf_path):
+        colleges = []
+        s_no = 0
 
-    with colS1:
-        search_text = st.text_input("🔍 Search College", placeholder="Type college name...", key="college_search")
+        with pdfplumber.open(pdf_path) as pdf:
+            for page in pdf.pages:
+                text = page.extract_text()
+                if not text:
+                    continue
 
-    with colS2:
-        city_list = ["All"] + sorted(df_colleges["City"].unique().tolist())
-        selected_city = st.selectbox("📍 Filter by City", city_list, key="college_city")
+                lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
 
-    filtered_df = df_colleges.copy()
+                # ✅ Find college code + name (usually first line)
+                # Example:
+                # "1013 University College of Engineering, Villupuram, Kakuppam, Villupuram District 605103"
+                first_line = lines[0]
 
-    if selected_city != "All":
-        filtered_df = filtered_df[filtered_df["City"] == selected_city]
+                match = re.match(r"^(\d{1,4})\s+(.*)$", first_line)
+                if match:
+                    college_code = match.group(1).strip()
+                    college_name = match.group(2).strip()
+                else:
+                    # Some pages like page 1 starts with "1" alone and name in next line
+                    if re.match(r"^\d{1,4}$", first_line) and len(lines) > 1:
+                        college_code = first_line.strip()
+                        college_name = lines[1].strip()
+                    else:
+                        continue
+
+                # ✅ Extract district
+                district = ""
+                for ln in lines:
+                    if ln.upper().startswith("DISTRICT"):
+                        district = ln.replace("District", "").replace("DISTRICT", "").strip()
+                        break
+
+                # ✅ Extract website
+                website = ""
+                for ln in lines:
+                    if ln.lower().startswith("website"):
+                        website = ln.replace("Website", "").replace("WEBSITE", "").strip()
+                        break
+
+                # ✅ Clean website
+                website = website.replace(" ", "")
+                if website and not website.startswith("http"):
+                    # some lines like "www.xxx.com"
+                    website = "https://" + website
+
+                s_no += 1
+                colleges.append({
+                    "S.No": s_no,
+                    "College Code": college_code,
+                    "College Name": college_name,
+                    "District": district.title() if district else "",
+                    "Website": website
+                })
+
+        df = pd.DataFrame(colleges)
+        return df
+
+    # ✅ Load dataframe
+    try:
+        with st.spinner("📄 Reading college list from PDF... Please wait"):
+            df_college_pdf = extract_college_list_from_pdf(PDF_PATH)
+
+        st.success(f"✅ Total Colleges Extracted: {len(df_college_pdf)}")
+
+    except Exception as e:
+        st.error(f"❌ PDF Load Error: {e}")
+        st.info("✅ Make sure the file name is correct and exists in your app folder:")
+        st.code(PDF_PATH)
+        st.stop()
+
+    # ✅ Search + District filter
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        search_text = st.text_input("🔍 Search College Name or College Code", placeholder="Ex: 1013, Guindy, MIT...")
+
+    with col2:
+        district_list = ["All"] + sorted([d for d in df_college_pdf["District"].dropna().unique().tolist() if d.strip() != ""])
+        selected_district = st.selectbox("📍 Filter by District", district_list)
+
+    df_show = df_college_pdf.copy()
+
+    if selected_district != "All":
+        df_show = df_show[df_show["District"] == selected_district]
 
     if search_text.strip():
-        filtered_df = filtered_df[filtered_df["College"].str.contains(search_text, case=False, na=False)]
+        df_show = df_show[
+            df_show["College Name"].str.contains(search_text, case=False, na=False)
+            | df_show["College Code"].astype(str).str.contains(search_text, case=False, na=False)
+        ]
 
-    st.write(f"✅ Total Colleges Found: **{len(filtered_df)}**")
+    st.write(f"✅ Colleges Found: **{len(df_show)}**")
+
+    st.dataframe(df_show, use_container_width=True, height=500)
+
+    # ✅ Optional: Open website button list
     st.markdown("---")
+    st.markdown("### 🌐 Open College Websites")
 
-    for i, row in filtered_df.iterrows():
-        with st.container():
-            st.markdown(f"### 🏫 {row['College']}")
-            st.write(f"📍 City: **{row['City']}**")
-            st.link_button("🌐 Open Official Website", row["Website"])
-            st.markdown("---")
+    for _, row in df_show.head(50).iterrows():  # ✅ show only first 50 to avoid heavy UI
+        st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
+        if row["Website"]:
+            st.link_button("🌐 Open Website", row["Website"], key=f"open_{row['College Code']}")
+        else:
+            st.info("Website not available in PDF")
+        st.markdown("---")
+
 
 
 # =================================================
@@ -884,6 +954,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
