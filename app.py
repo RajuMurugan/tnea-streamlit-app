@@ -189,29 +189,7 @@ if selected == "Home":
         <br>
         🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
         choice list support, and counselling insights in one place.
-        </div>
-        <h2 style="text-align:center; color:#0d6efd;">📌 TNEA – தமிழ்நாடு பொறியியல் சேர்க்கை</h2>
-
-        <div style="font-size:17px; line-height:1.8; text-align:justify; padding:10px;">
-
-        <b>TNEA (Tamil Nadu Engineering Admissions)</b> என்பது தமிழ்நாட்டில் உள்ள 
-        <b>B.E / B.Tech</b> படிப்புகளுக்கான அதிகாரப்பூர்வ கலந்தாய்வு (Counselling) முறையாகும்.
-
-        <br><br>
-
-        ✅ மாணவர்களின் <b>12ஆம் வகுப்பு மதிப்பெண்கள்</b> மற்றும் <b>Cutoff மதிப்பெண் (200ல்)</b> அடிப்படையில் சேர்க்கை வழங்கப்படுகிறது.
-
-        <br><br>
-
-        📌 இந்த TNEA SmartGuide 2026 மூலம் நீங்கள்:
-        <ul>
-        <li>Cutoff கணக்கிடலாம்</li>
-        <li>கல்லூரி / Branch cutoff பார்க்கலாம்</li>
-        <li>Choice List உருவாக்கலாம்</li>
-        <li>Vacancy Seat Matrix ஆய்வு செய்யலாம்</li>
-        </ul>
-
-        </div>
+    
 
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
             <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
@@ -454,7 +432,9 @@ elif selected == "TNEA College List":
 
     # ✅ Google Sheet
     SHEET_ID = "1inA8d2K9Fk3kSu6M4QgisB_AqLdMzQYtfsHFrdVlGEc"
-    CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/export?format=csv"
+    SHEET_NAME = "TNEA_College_List"
+
+    CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
 
     @st.cache_data(ttl=3600)
     def load_college_google_sheet(csv_url):
@@ -468,25 +448,7 @@ elif selected == "TNEA College List":
         # ✅ Clean column names
         df.columns = [str(c).strip() for c in df.columns]
 
-        # ✅ Auto rename support
-        rename_map = {}
-        for col in df.columns:
-            if col.lower().strip() in ["college code", "tnea code", "code"]:
-                rename_map[col] = "College Code"
-            if col.lower().strip() in ["college name", "name"]:
-                rename_map[col] = "College Name"
-            if col.lower().strip() in ["district", "dist"]:
-                rename_map[col] = "District"
-            if col.lower().strip() in ["category", "type"]:
-                rename_map[col] = "Category"
-            if col.lower().strip() in ["s.no", "sno", "s no", "serial no", "serial number"]:
-                rename_map[col] = "S.No"
-            if col.lower().strip() in ["web link", "website", "url", "link", "web"]:
-                rename_map[col] = "Web Link"
-
-        df = df.rename(columns=rename_map)
-
-        # ✅ Required columns (NOW includes Web Link)
+        # ✅ Required columns
         required_cols = ["S.No", "College Code", "College Name", "Category", "District", "Web Link"]
         for col in required_cols:
             if col not in df.columns:
@@ -504,9 +466,11 @@ elif selected == "TNEA College List":
         # ✅ Web Link clean
         df["Web Link"] = df["Web Link"].fillna("").astype(str).str.strip()
 
-        # ✅ Fix missing http/https (optional but recommended)
-        df.loc[(df["Web Link"] != "") & (~df["Web Link"].str.startswith(("http://", "https://"))), "Web Link"] = \
-            "https://" + df["Web Link"]
+        # ✅ Add https:// if missing
+        df.loc[
+            (df["Web Link"] != "") & (~df["Web Link"].str.startswith(("http://", "https://"))),
+            "Web Link"
+        ] = "https://" + df["Web Link"]
 
         # ✅ Drop empty important rows
         df = df.dropna(subset=["S.No", "College Code"])
@@ -526,11 +490,6 @@ elif selected == "TNEA College List":
 
     except Exception as e:
         st.error(f"❌ Google Sheet Load Error: {e}")
-        st.info("✅ Fix Checklist:")
-        st.write("1) Google Sheet must be **Anyone with link → Viewer**")
-        st.write("2) File → Share → **Publish to web** (recommended)")
-        st.write("3) Column names must match exactly:")
-        st.code("S.No | College Code | College Name | Category | District | Web Link")
         st.stop()
 
     # ✅ Filters
@@ -571,7 +530,7 @@ elif selected == "TNEA College List":
 
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
 
-    # ✅ Show Table (Clickable Link)
+    # ✅ Show Table (Clickable link)
     st.dataframe(
         df_show,
         use_container_width=True,
@@ -1006,6 +965,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
