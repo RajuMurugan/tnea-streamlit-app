@@ -444,14 +444,13 @@ elif selected == "Branch List":
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
-
 elif selected == "TNEA College List":
 
     import requests
     from io import StringIO
 
     st.markdown("## 🏫 TNEA College List (Category-wise)")
-    st.caption("✅ Loaded from Google Sheet (S.No, College Code, College Name, Category, District)")
+    st.caption("✅ Loaded from Google Sheet (S.No, College Code, College Name, Category, District, Web Link)")
 
     # ✅ Google Sheet
     SHEET_ID = "1inA8d2K9Fk3kSu6M4QgisB_AqLdMzQYtfsHFrdVlGEc"
@@ -459,7 +458,6 @@ elif selected == "TNEA College List":
 
     @st.cache_data(ttl=3600)
     def load_college_google_sheet(csv_url):
-        # ✅ Use requests to avoid redirect issue
         r = requests.get(csv_url)
 
         if r.status_code != 200:
@@ -483,11 +481,13 @@ elif selected == "TNEA College List":
                 rename_map[col] = "Category"
             if col.lower().strip() in ["s.no", "sno", "s no", "serial no", "serial number"]:
                 rename_map[col] = "S.No"
+            if col.lower().strip() in ["web link", "website", "url", "link", "web"]:
+                rename_map[col] = "Web Link"
 
         df = df.rename(columns=rename_map)
 
-        # ✅ Required columns (NO Web link now)
-        required_cols = ["S.No", "College Code", "College Name", "Category", "District"]
+        # ✅ Required columns (NOW includes Web Link)
+        required_cols = ["S.No", "College Code", "College Name", "Category", "District", "Web Link"]
         for col in required_cols:
             if col not in df.columns:
                 raise ValueError(f"Missing column in Google Sheet: {col}\n\nFound columns: {list(df.columns)}")
@@ -500,6 +500,13 @@ elif selected == "TNEA College List":
         df["College Name"] = df["College Name"].fillna("").astype(str).str.strip()
         df["Category"] = df["Category"].fillna("").astype(str).str.strip()
         df["District"] = df["District"].fillna("").astype(str).str.strip()
+
+        # ✅ Web Link clean
+        df["Web Link"] = df["Web Link"].fillna("").astype(str).str.strip()
+
+        # ✅ Fix missing http/https (optional but recommended)
+        df.loc[(df["Web Link"] != "") & (~df["Web Link"].str.startswith(("http://", "https://"))), "Web Link"] = \
+            "https://" + df["Web Link"]
 
         # ✅ Drop empty important rows
         df = df.dropna(subset=["S.No", "College Code"])
@@ -523,7 +530,7 @@ elif selected == "TNEA College List":
         st.write("1) Google Sheet must be **Anyone with link → Viewer**")
         st.write("2) File → Share → **Publish to web** (recommended)")
         st.write("3) Column names must match exactly:")
-        st.code("S.No | College Code | College Name | Category | District")
+        st.code("S.No | College Code | College Name | Category | District | Web Link")
         st.stop()
 
     # ✅ Filters
@@ -564,8 +571,19 @@ elif selected == "TNEA College List":
 
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
 
-    # ✅ Show Table
-    st.dataframe(df_show, use_container_width=True, height=550)
+    # ✅ Show Table (Clickable Link)
+    st.dataframe(
+        df_show,
+        use_container_width=True,
+        height=550,
+        column_config={
+            "Web Link": st.column_config.LinkColumn(
+                "🌐 Website",
+                help="Click to open college website",
+                display_text="Open"
+            )
+        }
+    )
 
     # ✅ Download filtered CSV
     st.markdown("---")
@@ -988,6 +1006,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
