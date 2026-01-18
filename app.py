@@ -444,10 +444,10 @@ elif selected == "Branch List":
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
-elif selected == "TNEA College List":
+ elif selected == "TNEA College List (CSV)":
 
     st.markdown("## 🏫 TNEA College List (Category-wise)")
-    st.caption("✅ Loaded from CSV (S.No, College Code, College Name, Category)")
+    st.caption("✅ Loaded from CSV (S.No, College Code, College Name, Category, District)")
 
     # ✅ CSV File Path (Local)
     CSV_PATH = "TNEA_College_List.csv"   # keep this file in same folder as app.py
@@ -460,7 +460,7 @@ elif selected == "TNEA College List":
         df.columns = [c.strip() for c in df.columns]
 
         # ✅ Ensure required columns exist
-        required_cols = ["S.No", "College Code", "College Name", "Category"]
+        required_cols = ["S.No", "College Code", "College Name", "Category", "District"]
         for col in required_cols:
             if col not in df.columns:
                 raise ValueError(f"Missing column: {col}")
@@ -468,6 +468,11 @@ elif selected == "TNEA College List":
         # ✅ Convert types
         df["S.No"] = pd.to_numeric(df["S.No"], errors="coerce")
         df["College Code"] = pd.to_numeric(df["College Code"], errors="coerce")
+
+        # ✅ Clean text columns
+        df["College Name"] = df["College Name"].astype(str).str.strip()
+        df["Category"] = df["Category"].astype(str).str.strip()
+        df["District"] = df["District"].astype(str).str.strip()
 
         # ✅ Drop empty rows
         df = df.dropna(subset=["S.No", "College Code", "College Name"])
@@ -488,7 +493,7 @@ elif selected == "TNEA College List":
         st.stop()
 
     # ✅ Filters
-    col1, col2 = st.columns([2, 1])
+    col1, col2, col3 = st.columns([2, 1, 1])
 
     with col1:
         search_text = st.text_input(
@@ -497,14 +502,26 @@ elif selected == "TNEA College List":
         )
 
     with col2:
-        category_list = ["All"] + sorted(df_colleges["Category"].dropna().unique().tolist())
+        category_list = ["All"] + sorted(
+            [c for c in df_colleges["Category"].dropna().unique().tolist() if str(c).strip() != ""]
+        )
         selected_category = st.selectbox("📌 Filter by Category", category_list)
+
+    with col3:
+        district_list = ["All"] + sorted(
+            [d for d in df_colleges["District"].dropna().unique().tolist() if str(d).strip() != ""]
+        )
+        selected_district = st.selectbox("📍 Filter by District", district_list)
 
     df_show = df_colleges.copy()
 
     # ✅ Apply Category filter
     if selected_category != "All":
         df_show = df_show[df_show["Category"] == selected_category]
+
+    # ✅ Apply District filter
+    if selected_district != "All":
+        df_show = df_show[df_show["District"] == selected_district]
 
     # ✅ Apply Search filter
     if search_text.strip():
@@ -528,6 +545,7 @@ elif selected == "TNEA College List":
         file_name="TNEA_Filtered_College_List.csv",
         mime="text/csv"
     )
+
 
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
@@ -939,6 +957,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
