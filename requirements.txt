@@ -7,4 +7,6 @@ plotly
 requests
 reportlab
 pillow
+pdfplumber
+
 
