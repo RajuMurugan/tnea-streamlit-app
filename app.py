@@ -452,7 +452,7 @@ elif selected == "TNEA College List":
     # ✅ Google Sheet ID (from your link)
     SHEET_ID = "1inA8d2K9Fk3kSu6M4QgisB_AqLdMzQYtfsHFrdVlGEc"
     # ✅ If your data is in Sheet1 (default), keep this same
-    SHEET_NAME = "Sheet1"
+    SHEET_NAME = "TNEA_College_List"
 
     # ✅ Export as CSV URL
     GOOGLE_SHEET_CSV_URL = f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={SHEET_NAME}"
@@ -967,6 +967,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
