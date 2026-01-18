@@ -542,7 +542,27 @@ elif selected == "TNEA College List":
     st.write(f"✅ Colleges Found: **{len(df_show)}**")
 
     # ✅ Show Table
-    st.dataframe(df_show, use_container_width=True, height=550)
+    # ✅ Make Web link clickable
+df_show["Web link"] = df_show["Web link"].fillna("").astype(str).str.strip()
+
+df_show.loc[df_show["Web link"] != "", "Web link"] = df_show.loc[df_show["Web link"] != "", "Web link"].apply(
+    lambda x: x if x.startswith("http") else "https://" + x
+)
+
+# ✅ Show table with clickable links
+st.dataframe(
+    df_show,
+    use_container_width=True,
+    height=550,
+    column_config={
+        "Web link": st.column_config.LinkColumn(
+            "Web link",
+            help="Click to open college website",
+            display_text="Visit Website"
+        )
+    }
+)
+
 
     # ✅ Download filtered CSV
     st.markdown("---")
@@ -967,6 +987,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
