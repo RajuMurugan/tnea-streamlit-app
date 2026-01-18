@@ -576,23 +576,32 @@ elif selected == "TNEA College List (PDF)":
 
     st.dataframe(df_show, use_container_width=True, height=500)
 
-    # ✅ Optional: Open website button list
+  # ✅ Optional: Open website button list
+st.markdown("---")
+st.markdown("### 🌐 Open College Websites")
+
+for _, row in df_show.head(50).iterrows():  # show only first 50
+    st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
+
+    website = row.get("Website", "")
+
+    # ✅ Fix NaN / None / invalid values
+    if pd.notna(website) and str(website).strip() != "":
+        website = str(website).strip()
+
+        # ✅ Add https if missing
+        if not website.startswith("http"):
+            website = "https://" + website
+
+        st.link_button(
+            "🌐 Open Website",
+            website,
+            key=f"open_{row['College Code']}_{row['S.No']}"
+        )
+    else:
+        st.info("Website not available in PDF")
+
     st.markdown("---")
-    st.markdown("### 🌐 Open College Websites (Top 50 Results Only)")
-
-    for _, row in df_show.head(50).iterrows():
-        st.markdown(f"**{row['College Code']} - {row['College Name']}** ({row['District']})")
-
-        if row["Website"]:
-            st.link_button(
-                "🌐 Open Website",
-                row["Website"],
-                key=f"open_{row['College Code']}_{row['S.No']}"
-            )
-        else:
-            st.info("Website not available in PDF")
-
-        st.markdown("---")
 
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
@@ -1004,6 +1013,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
