@@ -270,7 +270,7 @@ if selected == "Home":
         with open(chat_path, "w") as f:
             json.dump(chat_data, f, indent=2)
         st.rerun()
-
+    show_disclaimer()
 # =================================================
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
@@ -405,7 +405,7 @@ elif selected == "Cutoff Calculator":
                         )
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
-show_disclaimer()
+    show_disclaimer()
 # =================================================
 # ✅ PAGE 3: BRANCH LIST (FREE)
 # =================================================
@@ -440,7 +440,7 @@ elif selected == "Branch List":
         file_name="TNEA_Branch_List.csv",
         mime="text/csv"
     )
-show_disclaimer()
+    show_disclaimer()
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
@@ -576,7 +576,7 @@ elif selected == "TNEA College List":
         file_name="TNEA_Filtered_College_List.csv",
         mime="text/csv"
     )
-show_disclaimer()
+    show_disclaimer()
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
@@ -725,7 +725,7 @@ elif selected == "2024-TNEA  Cut off and rank details":
         )
     else:
         st.info("Please apply filters to see the results.")
-
+    show_disclaimer()
 # =================================================
 # ✅ PAGE 6: TNEA VACANCY SEAT MATRIX (PREMIUM ONLY)
 # =================================================
@@ -987,7 +987,8 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
-show_disclaimer()
+        show_disclaimer()
+
 
 
 
