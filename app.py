@@ -1,4 +1,12 @@
 import streamlit as st
+
+LOGO_PATH = "Logo.png"
+
+st.sidebar.image(LOGO_PATH, use_container_width=True)
+st.sidebar.markdown("### TNEA 2026 SmartGuide")
+st.sidebar.markdown("---")
+
+import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
 import yaml
@@ -963,6 +971,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
