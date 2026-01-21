@@ -20,6 +20,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+import streamlit as st
+
+def show_disclaimer():
+    st.markdown("""
+    <div style="font-size:14px; color:#6c757d; text-align:center; padding:10px; border-top:1px solid #e0e0e0; margin-top:20px;">
+    ⚠️ <b>Disclaimer:</b> This application is created for <b>student guidance</b> purposes only. It is <b>not an official app</b> of TNEA or DTE Tamil Nadu and is <b>not connected with</b> any government organization. For official updates, please refer to the official TNEA website.
+    </div>
+    """, unsafe_allow_html=True)
 
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -183,25 +191,19 @@ with col2:
 # ✅ PAGE 1: HOME
 # =================================================
 if selected == "Home":
-
     # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
-        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA SmartGuide 2026 </h1>
-
+        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA 2026 SmartGuide</h1>
         <h2 style="text-align:center; color:#0d6efd;">📌 About TNEA – Tamil Nadu Engineering Admissions</h2>
-
         <div style="font-size:17px; line-height:1.8; text-align:justify; padding:10px;">
-
         <b>TNEA (Tamil Nadu Engineering Admissions)</b> is the official counselling process for admission into 
         <b>B.E / B.Tech</b> courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
-
         <br><br>
-
-        ✅ Admission is mainly based on <b>Class 12 Marks</b> (Maths, Physics, Chemistry) and the <b>Cutoff Score (out of 200)</b>.  
+        ✅ Admissions are based on your <b>Class 12</b> <b>Maths, Physics, and Chemistry</b> marks, which are used to calculate your <b>TNEA Cutoff (out of 200)</b>. 
         <br><br>
-
-        📌 Through TNEA SmartGuide 2026 , students can:
+    📌 Through TNEA 2026 SmartGuide  , students can:
         <ul>
+        <li>Calculate and download your cutoff mark instantly</li>
         <li>Check previous year cutoff trends</li>
         <li>Compare colleges and departments</li>
         <li>Create a better <b>choice list</b> for counselling</li>
@@ -211,14 +213,13 @@ if selected == "Home":
         🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
         choice list support, and counselling insights in one place.
     
-
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
             <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
             <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
             📞 Contact: +91-8248696926<br>
             📧 Email: rajumurugannp@gmail.com<br>
             👨‍💻 Developed by Dr. Raju Murugan<br><br>
-            &copy; 2026 TNEA Info App. All rights reserved.
+            &copy;TNEA 2026 SmartGuide Info App. All rights reserved.
         </div>
     """, unsafe_allow_html=True)
 
@@ -269,7 +270,7 @@ if selected == "Home":
         with open(chat_path, "w") as f:
             json.dump(chat_data, f, indent=2)
         st.rerun()
-
+show_disclaimer()
 # =================================================
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
@@ -404,7 +405,7 @@ elif selected == "Cutoff Calculator":
                         )
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
-
+show_disclaimer()
 # =================================================
 # ✅ PAGE 3: BRANCH LIST (FREE)
 # =================================================
@@ -439,7 +440,7 @@ elif selected == "Branch List":
         file_name="TNEA_Branch_List.csv",
         mime="text/csv"
     )
-
+show_disclaimer()
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
@@ -575,7 +576,7 @@ elif selected == "TNEA College List":
         file_name="TNEA_Filtered_College_List.csv",
         mime="text/csv"
     )
-
+show_disclaimer()
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
@@ -986,6 +987,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+show_disclaimer()
 
 
 
