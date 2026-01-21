@@ -358,7 +358,7 @@ if selected == "Home":
         </div>
     </div>
     """, unsafe_allow_html=True)
-        show_disclaimer()
+    show_disclaimer()
 # =================================================
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
@@ -1076,6 +1076,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
