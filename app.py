@@ -187,14 +187,17 @@ with col2:
         orientation="horizontal"
     )
 
+
 import streamlit as st
+from textwrap import dedent
 
 # =================================================
 # ✅ PAGE 1: HOME (ANDROID FRIENDLY)
 # =================================================
 if selected == "Home":
 
-    st.markdown("""
+    # ✅ CSS
+    st.markdown(dedent("""
     <style>
     /* ✅ Mobile friendly container */
     .home-container {
@@ -271,7 +274,7 @@ if selected == "Home":
         line-height: 1.8;
     }
 
-    /* ✅ Buttons look (only for display style) */
+    /* ✅ Buttons look */
     .home-btn {
         display: inline-block;
         background: #0d6efd;
@@ -303,9 +306,10 @@ if selected == "Home":
         .home-text { font-size: 15.5px; }
     }
     </style>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
 
-    st.markdown("""
+    # ✅ HTML BODY
+    st.markdown(dedent("""
     <div class="home-container">
         <div class="home-card">
 
@@ -357,8 +361,11 @@ if selected == "Home":
 
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    """), unsafe_allow_html=True)
+
+    # ✅ Call disclaimer at end
     show_disclaimer()
+
 # =================================================
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
 # =================================================
@@ -1076,6 +1083,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
