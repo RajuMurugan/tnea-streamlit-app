@@ -8,5 +8,8 @@ requests
 reportlab
 pillow
 pdfplumber
+firebase-admin
+
+
 
 
