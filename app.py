@@ -68,13 +68,11 @@ def google_login():
     # ✅ Already logged in
     if "user_email" in st.session_state:
         st.sidebar.success(f"✅ Logged in: {st.session_state.user_email}")
-
         if st.sidebar.button("🚪 Logout"):
             for k in ["user_email", "user_name", "user_pic"]:
                 if k in st.session_state:
                     del st.session_state[k]
             st.rerun()
-
         return st.session_state.user_email
 
     oauth = OAuth2Session(
@@ -84,22 +82,23 @@ def google_login():
         redirect_uri=st.secrets["GOOGLE_OAUTH"]["redirect_uri"],
     )
 
-    # ✅ Handle Google redirect callback
     qp = st.query_params
+
+    # ✅ Handle callback
     if "code" in qp:
         token = oauth.fetch_token(
             TOKEN_URL,
             code=qp["code"],
             grant_type="authorization_code",
         )
-        userinfo = oauth.get(USERINFO_URL, token=token).json()
+
+        # ✅ IMPORTANT FIX
+        oauth.token = token
+        userinfo = oauth.get(USERINFO_URL).json()
 
         st.session_state.user_email = userinfo.get("email")
         st.session_state.user_name = userinfo.get("name")
         st.session_state.user_pic = userinfo.get("picture")
-
-        # ✅ Auto-create Firestore user document
-        create_user_if_not_exists(st.session_state.user_email, st.session_state.user_name)
 
         st.rerun()
 
@@ -107,6 +106,7 @@ def google_login():
     auth_uri, _ = oauth.create_authorization_url(AUTH_URL)
     st.sidebar.link_button("✅ Login with Google", auth_uri)
     return None
+
 
 # -------------------------------------------------
 # ✅ Sidebar Login + Premium Check
@@ -1068,6 +1068,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
