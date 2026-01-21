@@ -12,7 +12,7 @@ logo_base64 = get_base64_image(LOGO_PATH)
 st.markdown(
     f"""
     <div style="display:flex; align-items:center; gap:12px; padding:10px 0;">
-        <img src="data:image/png;base64,{logo_base64}" width="140">
+        <img src="data:image/png;base64,{logo_base64}" width="240">
         <div style="font-size:26px; font-weight:700;">TNEA 2026 SmartGuide</div>
     </div>
     <hr>
@@ -999,6 +999,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
