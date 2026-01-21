@@ -1,53 +1,64 @@
 import base64
 import streamlit as st
-
-LOGO_PATH = "Logo.png"
-
-def get_base64_image(path):
-    with open(path, "rb") as f:
-        return base64.b64encode(f.read()).decode()
-
-logo_base64 = get_base64_image(LOGO_PATH)
-
-st.markdown(
-    f"""
-    <div style="display:flex; align-items:center; gap:12px; padding:10px 0;">
-        <img src="data:image/png;base64,{logo_base64}" width="200">
-        <div style="font-size:26px; font-weight:700;">TNEA 2026 SmartGuide</div>
-    </div>
-    <hr>
-    """,
-    unsafe_allow_html=True
-)
-
-import streamlit as st
-
-def show_disclaimer():
-    st.markdown("""
-    <div style="font-size:14px; color:#6c757d; text-align:center; padding:10px; border-top:1px solid #e0e0e0; margin-top:20px;">
-    ⚠️ <b>Disclaimer:</b> This application is created for <b>student guidance</b> purposes only. It is <b>not an official app</b> of TNEA or DTE Tamil Nadu and is <b>not connected with</b> any government organization. For official updates, please refer to the official TNEA website.
-    </div>
-    """, unsafe_allow_html=True)
-
-import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
 import yaml
 import requests
 import io
 import uuid
-import time
-from datetime import timedelta, datetime
+import json
 import os
+from datetime import datetime
+from zoneinfo import ZoneInfo
 import plotly.express as px
 from openpyxl import load_workbook
-import json
-from zoneinfo import ZoneInfo
 
 # -------------------------------------------------
 # ✅ Page Config (MUST BE FIRST Streamlit command)
 # -------------------------------------------------
 st.set_page_config(page_title="TNEA Full App", layout="wide")
+
+# -------------------------------------------------
+# ✅ LOGO HEADER
+# -------------------------------------------------
+LOGO_PATH = "Logo.png"
+
+def get_base64_image(path):
+    try:
+        with open(path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except:
+        return ""
+
+logo_base64 = get_base64_image(LOGO_PATH)
+
+if logo_base64:
+    st.markdown(
+        f"""
+        <div style="display:flex; align-items:center; gap:12px; padding:10px 0;">
+            <img src="data:image/png;base64,{logo_base64}" width="200">
+            <div style="font-size:26px; font-weight:700;">TNEA 2026 SmartGuide</div>
+        </div>
+        <hr>
+        """,
+        unsafe_allow_html=True
+    )
+else:
+    st.title("📘 TNEA 2026 SmartGuide")
+    st.divider()
+
+# -------------------------------------------------
+# ✅ DISCLAIMER FUNCTION
+# -------------------------------------------------
+def show_disclaimer():
+    st.markdown("""
+    <div style="font-size:14px; color:#6c757d; text-align:center; padding:10px;
+                border-top:1px solid #e0e0e0; margin-top:20px;">
+    ⚠️ <b>Disclaimer:</b> This application is created for <b>student guidance</b> purposes only.
+    It is <b>not an official app</b> of TNEA or DTE Tamil Nadu and is <b>not connected with</b>
+    any government organization. For official updates, please refer to the official TNEA website.
+    </div>
+    """, unsafe_allow_html=True)
 
 # -------------------------------------------------
 # ✅ PREMIUM FLAG (from URL)
@@ -61,7 +72,7 @@ except:
 is_premium = str(premium_flag) == "1"
 
 # -------------------------------------------------
-# ✅ MODE DISPLAY + BUTTON (same row)
+# ✅ MODE DISPLAY + BUTTON
 # -------------------------------------------------
 col_mode, col_btn = st.columns([3, 1])
 
@@ -90,45 +101,15 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # -------------------------------------------------
-# ✅ File Paths
+# ✅ Paths / session init
 # -------------------------------------------------
 base_path = "./"
-config_path = base_path + "config.yaml"
-device_session_path = base_path + "device_session.yaml"
 chat_path = base_path + "chat_messages.json"
 
-SESSION_TIMEOUT = 180  # 3 minutes
-
-# -------------------------------------------------
-# ✅ Load Config.yaml (Login optional)
-# -------------------------------------------------
-try:
-    with open(config_path) as file:
-        config = yaml.safe_load(file)
-    user_data = config["credentials"]["users"]
-except Exception:
-    user_data = {}
-    st.warning("⚠️ config.yaml not loaded (Login will not work)")
-
-# -------------------------------------------------
-# ✅ Load device_session.yaml
-# -------------------------------------------------
-try:
-    with open(device_session_path) as session_file:
-        session_data = yaml.safe_load(session_file)
-except Exception:
-    session_data = {"active_users": {}}
-
-# -------------------------------------------------
-# ✅ Load chat_messages.json
-# -------------------------------------------------
 if not os.path.exists(chat_path):
     with open(chat_path, "w") as f:
         json.dump([], f)
 
-# -------------------------------------------------
-# ✅ Session init
-# -------------------------------------------------
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "mobile" not in st.session_state:
@@ -139,7 +120,6 @@ if "device_id" not in st.session_state:
 # =================================================
 # ✅ MENU
 # =================================================
-
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
         🔽 Select a Feature Below 🔽
@@ -149,7 +129,6 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    # ✅ Menu options based on Normal / Premium mode
     if is_premium:
         menu_options = [
             "Home",
@@ -159,25 +138,10 @@ with col2:
             "2024-TNEA  Cut off and rank details",
             "2025-TNEA Vacancy Seat Matrix"
         ]
-        menu_icons = [
-            "house",
-            "calculator",
-            "list-check",
-            "building",
-            "list-check",
-            "table"
-        ]
+        menu_icons = ["house", "calculator", "list-check", "building", "list-check", "table"]
     else:
-        menu_options = [
-            "Home",
-            "Cutoff Calculator",
-            "Branch List",
-        ]
-        menu_icons = [
-            "house",
-            "calculator",
-            "list-check",
-        ]
+        menu_options = ["Home", "Cutoff Calculator", "Branch List"]
+        menu_icons = ["house", "calculator", "list-check"]
 
     selected = option_menu(
         menu_title=None,
@@ -999,6 +963,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
