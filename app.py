@@ -1,10 +1,25 @@
+import base64
 import streamlit as st
 
 LOGO_PATH = "Logo.png"
 
-st.sidebar.image(LOGO_PATH, use_container_width=True)
-st.sidebar.markdown("### TNEA 2026 SmartGuide")
-st.sidebar.markdown("---")
+def get_base64_image(path):
+    with open(path, "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+logo_base64 = get_base64_image(LOGO_PATH)
+
+st.markdown(
+    f"""
+    <div style="display:flex; align-items:center; gap:12px; padding:10px 0;">
+        <img src="data:image/png;base64,{logo_base64}" width="55">
+        <div style="font-size:26px; font-weight:700;">TNEA 2026 SmartGuide</div>
+    </div>
+    <hr>
+    """,
+    unsafe_allow_html=True
+)
+
 
 import streamlit as st
 from streamlit_option_menu import option_menu
@@ -971,6 +986,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+
 
 
 
