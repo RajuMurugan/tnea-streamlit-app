@@ -193,8 +193,6 @@ with col2:
 # =================================================
 if selected == "Home":
 
-    # ✅ Show Disclaimer (ONLY)
-    show_disclaimer()
 
     # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
@@ -1000,6 +998,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
