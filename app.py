@@ -168,12 +168,9 @@ if selected == "Home":
 
         <b>TNEA (Tamil Nadu Engineering Admissions)</b> is the official counselling process for admission into 
         <b>B.E / B.Tech</b> courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
-
         <br><br>
-
         ✅ Admission is mainly based on <b>Class 12 Marks</b> (Maths, Physics, Chemistry) and the <b>Cutoff Score (out of 200)</b>.  
         <br><br>
-
         📌 Through TNEA SmartGuide 2026 , students can:
         <ul>
         <li>Calculate your cutoff score and download it instantly</li>
@@ -186,7 +183,6 @@ if selected == "Home":
         🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
         choice list support, and counselling insights in one place.
     
-
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
             <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
             <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
@@ -963,6 +959,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
