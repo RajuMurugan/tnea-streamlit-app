@@ -189,56 +189,82 @@ with col2:
 
 
 # =================================================
-# ✅ PAGE 1: HOME (TEXT ONLY - NO HTML)
+# ✅ PAGE 1: HOME (AESTHETIC + TEXT ONLY)
 # =================================================
 if selected == "Home":
 
-    # ✅ Disclaimer first (if you want)
+    # ✅ Disclaimer first
     show_disclaimer()
 
-    # ✅ Title
-    st.title("📘 Welcome to TNEA 2026 SmartGuide")
-    st.subheader("📌 About TNEA – Tamil Nadu Engineering Admissions")
+    st.markdown("")
 
-    # ✅ About text
+    # ✅ Main Title (Big)
+    st.markdown("## 📘 Welcome to **TNEA 2026 SmartGuide**")
+    st.markdown("### 📌 About **TNEA – Tamil Nadu Engineering Admissions**")
+
+    st.markdown("---")
+
+    # ✅ About TNEA (Highlighted)
     st.markdown("""
+### ✅ What is **TNEA**?
 **TNEA (Tamil Nadu Engineering Admissions)** is the official counselling process for admission into  
 **B.E / B.Tech** courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
-
-✅ Admissions are based on your **Class 12 Maths, Physics, and Chemistry** marks, which are used to calculate your  
-**TNEA Cutoff (out of 200)**.
-
-📌 Through **TNEA 2026 SmartGuide**, students can:
-- Calculate and download your cutoff mark instantly
-- Check previous year cutoff trends
-- Compare colleges and departments
-- Create a better **choice list** for counselling
-- Analyze **vacancy seat matrix** round-wise
-
-🎯 **This app is made to help Tamil Nadu students for TNEA 2026 admissions** by providing cutoff tools,  
-choice list support, and counselling insights in one place.
     """)
 
-    # ✅ Feature highlights
-    st.success("✅ Create TNEA Choice List – Filter colleges by cutoff, department, and community")
-    st.info("📊 TNEA Vacancy Seat Matrix – Analyze vacant seats by branch, college, and community")
+    # ✅ Important Content BIG
+    st.warning("""
+✅ **Admissions are based on your Class 12 marks**  
+📌 **Maths + Physics + Chemistry**  
+🎯 Used to calculate your **TNEA Cutoff (out of 200)**
+    """)
 
-    # ✅ Buttons (real buttons)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.button("📌 Cutoff Calculator")
-    with col2:
-        st.button("📋 Choice List")
-
-    # ✅ Footer (text only)
     st.markdown("---")
+
+    # ✅ Features Section BIG
+    st.markdown("## 🚀 What you can do using **TNEA 2026 SmartGuide**")
+
+    st.markdown("""
+✅ **Cutoff Calculator** – Calculate & download cutoff instantly  
+📊 **Previous Year Trends** – Check cutoff changes year by year  
+🏫 **College Comparison** – Compare colleges and departments  
+📋 **Choice List Support** – Create a better counselling choice list  
+📌 **Vacancy Seat Matrix** – Round-wise vacant seats analysis  
+    """)
+
+    st.success("🎯 This app is designed to help **Tamil Nadu students** for **TNEA 2026 admissions** in one place!")
+
+    st.markdown("---")
+
+    # ✅ Highlight Boxes
+    st.info("✅ **Create TNEA Choice List** – Filter colleges by cutoff, department, and community")
+    st.info("📊 **TNEA Vacancy Seat Matrix** – Analyze vacant seats by branch, college, and community")
+
+    st.markdown("")
+
+    # ✅ Big Action Buttons
+    st.markdown("## 📌 Quick Actions")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.button("📌 Cutoff Calculator", use_container_width=True)
+
+    with col2:
+        st.button("📋 Choice List", use_container_width=True)
+
+    st.markdown("---")
+
+    # ✅ Footer (Clean + Professional)
+    st.markdown("### 📞 Contact & Support")
+
     st.markdown("""
 📞 **Contact:** +91-8248696926  
 📧 **Email:** rajumurugannp@gmail.com  
 👨‍💻 **Developed by:** Dr. Raju Murugan  
 
-© 2026 **TNEA 2026 SmartGuide**. All rights reserved.
+✅ © 2026 **TNEA 2026 SmartGuide** — All rights reserved.
     """)
+
 
     show_disclaimer()
 
@@ -959,6 +985,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
