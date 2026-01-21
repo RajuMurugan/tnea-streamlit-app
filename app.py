@@ -578,15 +578,15 @@ elif selected == "TNEA College List":
     )
 
     # ✅ Download filtered CSV
-    st.markdown("---")
-    csv_out = df_show.to_csv(index=False).encode("utf-8-sig")
+    #st.markdown("---")
+   # csv_out = df_show.to_csv(index=False).encode("utf-8-sig")
 
-    st.download_button(
-        "⬇️ Download Filtered College List (CSV)",
-        data=csv_out,
-        file_name="TNEA_Filtered_College_List.csv",
-        mime="text/csv"
-    )
+    #st.download_button(
+     #   "⬇️ Download Filtered College List (CSV)",
+      #  data=csv_out,
+       # file_name="TNEA_Filtered_College_List.csv",
+        #mime="text/csv"
+    #)
     show_disclaimer()
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
@@ -999,6 +999,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
