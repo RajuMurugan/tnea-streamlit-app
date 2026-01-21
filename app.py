@@ -18,6 +18,28 @@ from openpyxl import load_workbook
 # -------------------------------------------------
 st.set_page_config(page_title="TNEA Full App", layout="wide")
 
+import streamlit as st
+import firebase_admin
+from firebase_admin import credentials, firestore
+
+# ✅ Firebase init
+if not firebase_admin._apps:
+    cred = credentials.Certificate(dict(st.secrets["FIREBASE"]))
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+st.success("✅ Firebase connected successfully!")
+
+# ✅ Firestore test (your test document)
+doc = db.collection("users").document("test@gmail.com").get()
+st.write("✅ Firestore test user exists:", doc.exists)
+
+if doc.exists:
+    st.write("📌 Firestore data:", doc.to_dict())
+
+
+
 # -------------------------------------------------
 # ✅ LOGO HEADER
 # -------------------------------------------------
@@ -959,6 +981,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
