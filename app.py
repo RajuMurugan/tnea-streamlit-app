@@ -212,15 +212,18 @@ if selected == "Home":
         <br>
         🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
         choice list support, and counselling insights in one place.
-    
-        <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
-            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
-            <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
-            📞 Contact: +91-8248696926<br>
-            📧 Email: rajumurugannp@gmail.com<br>
-            👨‍💻 Developed by Dr. Raju Murugan<br><br>
-            &copy;TNEA 2026 SmartGuide Info App. All rights reserved.
-        </div>
+<div style="text-align:center; font-size:18px; margin-top:20px; line-height:1.7;">
+    <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
+
+    <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
+
+    📞 Contact: <b>+91-8248696926</b><br>
+    📧 Email: <b>rajumurugannp@gmail.com</b><br>
+    👨‍💻 Developed by <b>Dr. Raju Murugan</b><br><br>
+
+    &copy; 2026 <b>TNEA 2026 SmartGuide</b>. All rights reserved.
+</div>
+
     """, unsafe_allow_html=True)
 
     # ✅ Premium Offer (ONLY Free)
@@ -988,6 +991,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
