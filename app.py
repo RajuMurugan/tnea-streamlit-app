@@ -2,7 +2,6 @@ import base64
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
-import yaml
 import requests
 import io
 import uuid
@@ -15,7 +14,6 @@ from openpyxl import load_workbook
 
 import firebase_admin
 from firebase_admin import credentials, firestore
-from authlib.integrations.requests_client import OAuth2Session
 
 
 # -------------------------------------------------
@@ -35,13 +33,40 @@ db = firestore.client()
 
 
 # -------------------------------------------------
+# ✅ Get user email from Android WebView URL
+# Example:
+# https://tnea-choice-list.streamlit.app/?email=test@gmail.com
+# -------------------------------------------------
+user_email = st.query_params.get("email", "").strip().lower()
+
+
+# -------------------------------------------------
 # ✅ Firestore helper functions
 # -------------------------------------------------
 def get_user(email: str):
+    if not email:
+        return None
     doc = db.collection("users").document(email).get()
     if doc.exists:
         return doc.to_dict()
     return None
+
+
+def create_user_if_not_exists(email: str, name: str = ""):
+    if not email:
+        return
+
+    ref = db.collection("users").document(email)
+    doc = ref.get()
+
+    if not doc.exists:
+        ref.set({
+            "email": email,
+            "name": name,
+            "is_premium": False,
+            "premium_type": "none",
+            "created_on": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        })
 
 
 def is_premium_user(email: str) -> bool:
@@ -51,91 +76,33 @@ def is_premium_user(email: str) -> bool:
     return bool(data.get("is_premium", False))
 
 
-def create_user_if_not_exists(email: str, name: str = ""):
-    ref = db.collection("users").document(email)
-    doc = ref.get()
-    if not doc.exists:
-        ref.set({
-            "email": email,
-            "name": name,
-            "is_premium": False,
-            "premium_type": "none"
-        })
-
-
-# -------------------------------------------------
-# ✅ Google OAuth Login (REAL LOGIN)
-# -------------------------------------------------
-AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
-TOKEN_URL = "https://oauth2.googleapis.com/token"
-USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
-
-
-def google_login():
-    # ✅ Already logged in
-    if "user_email" in st.session_state:
-        st.sidebar.success(f"✅ Logged in: {st.session_state.user_email}")
-        if st.sidebar.button("🚪 Logout"):
-            for k in ["user_email", "user_name", "user_pic"]:
-                if k in st.session_state:
-                    del st.session_state[k]
-            st.rerun()
-        return st.session_state.user_email
-
-    oauth = OAuth2Session(
-        st.secrets["GOOGLE_OAUTH"]["client_id"],
-        st.secrets["GOOGLE_OAUTH"]["client_secret"],
-        scope="openid email profile",
-        redirect_uri=st.secrets["GOOGLE_OAUTH"]["redirect_uri"],
-    )
-
-    qp = st.query_params
-
-    # ✅ Handle callback
-    if "code" in qp:
-        token = oauth.fetch_token(
-            TOKEN_URL,
-            code=qp["code"],
-            grant_type="authorization_code",
-        )
-
-        oauth.token = token
-        userinfo = oauth.get(USERINFO_URL).json()
-
-        st.session_state.user_email = userinfo.get("email")
-        st.session_state.user_name = userinfo.get("name")
-        st.session_state.user_pic = userinfo.get("picture")
-
-        # ✅ Auto create user doc if not exists
-        create_user_if_not_exists(st.session_state.user_email, st.session_state.user_name)
-
-        st.rerun()
-
-    # ✅ show login button
-    auth_uri, _ = oauth.create_authorization_url(AUTH_URL)
-    st.sidebar.link_button("✅ Login with Google", auth_uri)
-    return None
-
-
-# -------------------------------------------------
-# ✅ Sidebar Login + Premium Check (REAL)
-# -------------------------------------------------
-st.sidebar.title("🔐 Login")
-user_email = google_login()
-
-is_premium = False
+# ✅ If user logged in (email received), auto-create Firestore record
 if user_email:
-    is_premium = is_premium_user(user_email)
+    create_user_if_not_exists(user_email)
 
-st.sidebar.markdown("---")
+
+# ✅ Premium check
+is_premium = is_premium_user(user_email) if user_email else False
+
+
+# -------------------------------------------------
+# ✅ Sidebar Login Display (Android controlled)
+# -------------------------------------------------
+st.sidebar.title("👤 Account")
+
 if user_email:
+    st.sidebar.success(f"✅ Logged in: {user_email}")
+
     if is_premium:
         st.sidebar.success("✅ PREMIUM USER")
     else:
         st.sidebar.info("🆓 FREE USER")
         st.sidebar.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+        st.sidebar.caption("✅ Upgrade option will be inside Android App payment screen.")
 else:
-    st.sidebar.warning("Please login with Google ✅")
+    st.sidebar.warning("⚠️ Not logged in")
+    st.sidebar.info("✅ Please login inside Android App")
+    st.sidebar.caption("Then app will open WebView with your email automatically.")
 
 
 # -------------------------------------------------
@@ -143,14 +110,12 @@ else:
 # -------------------------------------------------
 LOGO_PATH = "Logo.png"
 
-
 def get_base64_image(path):
     try:
         with open(path, "rb") as f:
             return base64.b64encode(f.read()).decode()
     except:
         return ""
-
 
 logo_base64 = get_base64_image(LOGO_PATH)
 
@@ -197,10 +162,10 @@ with col_mode:
 
 with col_btn:
     st.markdown("<br>", unsafe_allow_html=True)
+
+    # ✅ In WebView, Premium purchase will be handled in Android App, not here.
     if not is_premium:
-        # ✅ Replace this Play Store link later when Android app is live
-        st.link_button("💳 Go Premium", "https://play.google.com/store")
-        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+        st.caption("💳 Premium purchase will be inside Android App")
 
 
 # -------------------------------------------------
@@ -269,6 +234,7 @@ with col2:
         default_index=0,
         orientation="horizontal"
     )
+
 
 # =================================================
 # ✅ PAGE 1: HOME
@@ -1084,6 +1050,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
         st.warning("⚠️ No data found for the selected college or branch.")
         st.markdown("## ✅ Vacancy Seat Matrix (Premium)")
         show_disclaimer()
+
 
 
 
