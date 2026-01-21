@@ -212,6 +212,7 @@ if selected == "Home":
 
         📌 Through TNEA SmartGuide 2026 , students can:
         <ul>
+        <li>Calculate your cutoff score and download it instantly</li>
         <li>Check previous year cutoff trends</li>
         <li>Compare colleges and departments</li>
         <li>Create a better <b>choice list</b> for counselling</li>
@@ -998,6 +999,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
