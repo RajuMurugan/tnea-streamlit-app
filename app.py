@@ -12,45 +12,120 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import plotly.express as px
 from openpyxl import load_workbook
+
 import firebase_admin
 from firebase_admin import credentials, firestore
+from authlib.integrations.requests_client import OAuth2Session
 
-# ✅ Firebase init
+# -------------------------------------------------
+# ✅ Page Config (MUST BE FIRST Streamlit command)
+# -------------------------------------------------
+st.set_page_config(page_title="TNEA Full App", layout="wide")
+
+# -------------------------------------------------
+# ✅ Firebase init (ONLY ONE TIME)
+# -------------------------------------------------
 if not firebase_admin._apps:
     cred = credentials.Certificate(dict(st.secrets["FIREBASE"]))
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-# ✅ Get user document
+# -------------------------------------------------
+# ✅ Firestore helper functions
+# -------------------------------------------------
 def get_user(email: str):
     doc = db.collection("users").document(email).get()
     if doc.exists:
         return doc.to_dict()
     return None
 
-# ✅ Check premium
 def is_premium_user(email: str) -> bool:
     data = get_user(email)
     if not data:
         return False
     return bool(data.get("is_premium", False))
 
-# ✅ Sidebar login test
-st.sidebar.title("🔐 Login (Test)")
-user_email = st.sidebar.text_input("Enter email", value="test@gmail.com")
+def create_user_if_not_exists(email: str, name: str = ""):
+    ref = db.collection("users").document(email)
+    doc = ref.get()
+    if not doc.exists:
+        ref.set({
+            "email": email,
+            "name": name,
+            "is_premium": False,
+            "premium_type": "none"
+        })
 
-is_premium = is_premium_user(user_email)
+# -------------------------------------------------
+# ✅ Google OAuth Login (REAL LOGIN)
+# -------------------------------------------------
+AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+TOKEN_URL = "https://oauth2.googleapis.com/token"
+USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
+
+def google_login():
+    # ✅ Already logged in
+    if "user_email" in st.session_state:
+        st.sidebar.success(f"✅ Logged in: {st.session_state.user_email}")
+
+        if st.sidebar.button("🚪 Logout"):
+            for k in ["user_email", "user_name", "user_pic"]:
+                if k in st.session_state:
+                    del st.session_state[k]
+            st.rerun()
+
+        return st.session_state.user_email
+
+    oauth = OAuth2Session(
+        st.secrets["GOOGLE_OAUTH"]["client_id"],
+        st.secrets["GOOGLE_OAUTH"]["client_secret"],
+        scope="openid email profile",
+        redirect_uri=st.secrets["GOOGLE_OAUTH"]["redirect_uri"],
+    )
+
+    # ✅ Handle Google redirect callback
+    qp = st.query_params
+    if "code" in qp:
+        token = oauth.fetch_token(
+            TOKEN_URL,
+            code=qp["code"],
+            grant_type="authorization_code",
+        )
+        userinfo = oauth.get(USERINFO_URL, token=token).json()
+
+        st.session_state.user_email = userinfo.get("email")
+        st.session_state.user_name = userinfo.get("name")
+        st.session_state.user_pic = userinfo.get("picture")
+
+        # ✅ Auto-create Firestore user document
+        create_user_if_not_exists(st.session_state.user_email, st.session_state.user_name)
+
+        st.rerun()
+
+    # ✅ Show login button
+    auth_uri, _ = oauth.create_authorization_url(AUTH_URL)
+    st.sidebar.link_button("✅ Login with Google", auth_uri)
+    return None
+
+# -------------------------------------------------
+# ✅ Sidebar Login + Premium Check
+# -------------------------------------------------
+st.sidebar.title("🔐 Login")
+user_email = google_login()
+
+is_premium = False
+if user_email:
+    is_premium = is_premium_user(user_email)
 
 st.sidebar.markdown("---")
-if is_premium:
-    st.sidebar.success("✅ PREMIUM USER")
+if user_email:
+    if is_premium:
+        st.sidebar.success("✅ PREMIUM USER")
+    else:
+        st.sidebar.info("🆓 FREE USER")
 else:
-    st.sidebar.info("🆓 FREE USER")
-
-
-
-
+    st.sidebar.warning("Please login with Google ✅")
 
 # -------------------------------------------------
 # ✅ LOGO HEADER
@@ -993,6 +1068,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
