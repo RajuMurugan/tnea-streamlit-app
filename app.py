@@ -169,7 +169,7 @@ if selected == "Home":
         <b>TNEA (Tamil Nadu Engineering Admissions)</b> is the official counselling process for admission into 
         <b>B.E / B.Tech</b> courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
         <br><br>
-        ✅ Admission is mainly based on <b>Class 12 Marks</b> (Maths, Physics, Chemistry) and the <b>Cutoff Score (out of 200)</b>.  
+        ✅ Admission is based on <b>Class 12 Cutoff Marks</b> calculated from <b>Maths, Physics, and Chemistry</b> (out of <b>200</b>). 
         <br><br>
         📌 Through TNEA SmartGuide 2026 , students can:
         <ul>
@@ -959,6 +959,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
