@@ -12,18 +12,43 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import plotly.express as px
 from openpyxl import load_workbook
-
-# -------------------------------------------------
-# ✅ Page Config (MUST BE FIRST Streamlit command)
-# -------------------------------------------------
 import firebase_admin
 from firebase_admin import credentials, firestore
 
+# ✅ Firebase init
 if not firebase_admin._apps:
     cred = credentials.Certificate(dict(st.secrets["FIREBASE"]))
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
+
+# ✅ Get user document
+def get_user(email: str):
+    doc = db.collection("users").document(email).get()
+    if doc.exists:
+        return doc.to_dict()
+    return None
+
+# ✅ Check premium
+def is_premium_user(email: str) -> bool:
+    data = get_user(email)
+    if not data:
+        return False
+    return bool(data.get("is_premium", False))
+
+# ✅ Sidebar login test
+st.sidebar.title("🔐 Login (Test)")
+user_email = st.sidebar.text_input("Enter email", value="test@gmail.com")
+
+is_premium = is_premium_user(user_email)
+
+st.sidebar.markdown("---")
+if is_premium:
+    st.sidebar.success("✅ PREMIUM USER")
+else:
+    st.sidebar.info("🆓 FREE USER")
+
+
 
 
 
@@ -968,6 +993,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
