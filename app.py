@@ -188,182 +188,58 @@ with col2:
     )
 
 
-import streamlit as st
-from textwrap import dedent
-
 # =================================================
-# ✅ PAGE 1: HOME (ANDROID FRIENDLY)
+# ✅ PAGE 1: HOME (TEXT ONLY - NO HTML)
 # =================================================
 if selected == "Home":
 
-    # ✅ CSS
-    st.markdown(dedent("""
-    <style>
-    /* ✅ Mobile friendly container */
-    .home-container {
-        max-width: 900px;
-        margin: auto;
-        padding: 10px;
-    }
+    # ✅ Disclaimer first (if you want)
+    show_disclaimer()
 
-    /* ✅ Main Card Style */
-    .home-card {
-        background: #ffffff;
-        padding: 18px 18px;
-        border-radius: 18px;
-        border: 1px solid #e9ecef;
-        box-shadow: 0px 8px 20px rgba(0,0,0,0.08);
-        margin-top: 10px;
-    }
+    # ✅ Title
+    st.title("📘 Welcome to TNEA 2026 SmartGuide")
+    st.subheader("📌 About TNEA – Tamil Nadu Engineering Admissions")
 
-    /* ✅ Title */
-    .home-title {
-        text-align: center;
-        font-weight: 800;
-        font-size: 34px;
-        margin-bottom: 5px;
-    }
+    # ✅ About text
+    st.markdown("""
+**TNEA (Tamil Nadu Engineering Admissions)** is the official counselling process for admission into  
+**B.E / B.Tech** courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
 
-    /* ✅ Subtitle */
-    .home-subtitle {
-        text-align: center;
-        font-size: 20px;
-        color: #0d6efd;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
+✅ Admissions are based on your **Class 12 Maths, Physics, and Chemistry** marks, which are used to calculate your  
+**TNEA Cutoff (out of 200)**.
 
-    /* ✅ Body Text */
-    .home-text {
-        font-size: 16.5px;
-        line-height: 1.8;
-        text-align: justify;
-        color: #222;
-    }
+📌 Through **TNEA 2026 SmartGuide**, students can:
+- Calculate and download your cutoff mark instantly
+- Check previous year cutoff trends
+- Compare colleges and departments
+- Create a better **choice list** for counselling
+- Analyze **vacancy seat matrix** round-wise
 
-    /* ✅ Bullet List */
-    .home-text ul {
-        padding-left: 22px;
-        margin-top: 8px;
-        margin-bottom: 5px;
-    }
+🎯 **This app is made to help Tamil Nadu students for TNEA 2026 admissions** by providing cutoff tools,  
+choice list support, and counselling insights in one place.
+    """)
 
-    .home-text li {
-        margin-bottom: 6px;
-    }
+    # ✅ Feature highlights
+    st.success("✅ Create TNEA Choice List – Filter colleges by cutoff, department, and community")
+    st.info("📊 TNEA Vacancy Seat Matrix – Analyze vacant seats by branch, college, and community")
 
-    /* ✅ Highlight Boxes */
-    .feature-box {
-        background: #f8f9fa;
-        border-left: 6px solid #0d6efd;
-        padding: 14px;
-        border-radius: 12px;
-        margin-top: 14px;
-        font-size: 16px;
-        line-height: 1.7;
-    }
+    # ✅ Buttons (real buttons)
+    col1, col2 = st.columns(2)
+    with col1:
+        st.button("📌 Cutoff Calculator")
+    with col2:
+        st.button("📋 Choice List")
 
-    /* ✅ Footer */
-    .home-footer {
-        text-align: center;
-        font-size: 15.5px;
-        margin-top: 16px;
-        padding-top: 15px;
-        border-top: 1px dashed #d0d7de;
-        color: #444;
-        line-height: 1.8;
-    }
+    # ✅ Footer (text only)
+    st.markdown("---")
+    st.markdown("""
+📞 **Contact:** +91-8248696926  
+📧 **Email:** rajumurugannp@gmail.com  
+👨‍💻 **Developed by:** Dr. Raju Murugan  
 
-    /* ✅ Buttons look */
-    .home-btn {
-        display: inline-block;
-        background: #0d6efd;
-        color: white;
-        padding: 10px 16px;
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 700;
-        margin: 8px 5px;
-        font-size: 15px;
-    }
+© 2026 **TNEA 2026 SmartGuide**. All rights reserved.
+    """)
 
-    .home-btn-2 {
-        display: inline-block;
-        background: #198754;
-        color: white;
-        padding: 10px 16px;
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 700;
-        margin: 8px 5px;
-        font-size: 15px;
-    }
-
-    /* ✅ Responsive Title for Android */
-    @media (max-width: 600px) {
-        .home-title { font-size: 26px; }
-        .home-subtitle { font-size: 18px; }
-        .home-text { font-size: 15.5px; }
-    }
-    </style>
-    """), unsafe_allow_html=True)
-
-    # ✅ HTML BODY
-    st.markdown(dedent("""
-    <div class="home-container">
-        <div class="home-card">
-
-            <div class="home-title">📘 Welcome to TNEA 2026 SmartGuide</div>
-            <div class="home-subtitle">📌 About TNEA – Tamil Nadu Engineering Admissions</div>
-
-            <div class="home-text">
-                <b>TNEA (Tamil Nadu Engineering Admissions)</b> is the official counselling process for admission into 
-                <b>B.E / B.Tech</b> courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
-                <br><br>
-
-                ✅ Admissions are based on your <b>Class 12</b> <b>Maths, Physics, and Chemistry</b> marks, which are used to calculate your 
-                <b>TNEA Cutoff (out of 200)</b>.
-                <br><br>
-
-                📌 Through <b>TNEA 2026 SmartGuide</b>, students can:
-                <ul>
-                    <li>Calculate and download your cutoff mark instantly</li>
-                    <li>Check previous year cutoff trends</li>
-                    <li>Compare colleges and departments</li>
-                    <li>Create a better <b>choice list</b> for counselling</li>
-                    <li>Analyze <b>vacancy seat matrix</b> round-wise</li>
-                </ul>
-
-                🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
-                choice list support, and counselling insights in one place.
-            </div>
-
-            <div class="feature-box">
-                ✅ <b>Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community
-            </div>
-
-            <div class="feature-box" style="border-left: 6px solid #198754;">
-                📊 <b>TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community
-            </div>
-
-            <div style="text-align:center; margin-top: 14px;">
-                <span class="home-btn">📌 Cutoff Calculator</span>
-                <span class="home-btn-2">📋 Choice List</span>
-            </div>
-
-            <div class="home-footer">
-                📞 Contact: <b>+91-8248696926</b><br>
-                📧 Email: <b>rajumurugannp@gmail.com</b><br>
-                👨‍💻 Developed by <b>Dr. Raju Murugan</b><br><br>
-
-                &copy; 2026 <b>TNEA 2026 SmartGuide</b>. All rights reserved.
-            </div>
-
-        </div>
-    </div>
-    """), unsafe_allow_html=True)
-
-    # ✅ Call disclaimer at end
     show_disclaimer()
 
 # =================================================
@@ -1083,6 +959,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
