@@ -17,10 +17,12 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from authlib.integrations.requests_client import OAuth2Session
 
+
 # -------------------------------------------------
 # ✅ Page Config (MUST BE FIRST Streamlit command)
 # -------------------------------------------------
 st.set_page_config(page_title="TNEA Full App", layout="wide")
+
 
 # -------------------------------------------------
 # ✅ Firebase init (ONLY ONE TIME)
@@ -31,6 +33,7 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
+
 # -------------------------------------------------
 # ✅ Firestore helper functions
 # -------------------------------------------------
@@ -40,11 +43,13 @@ def get_user(email: str):
         return doc.to_dict()
     return None
 
+
 def is_premium_user(email: str) -> bool:
     data = get_user(email)
     if not data:
         return False
     return bool(data.get("is_premium", False))
+
 
 def create_user_if_not_exists(email: str, name: str = ""):
     ref = db.collection("users").document(email)
@@ -57,12 +62,14 @@ def create_user_if_not_exists(email: str, name: str = ""):
             "premium_type": "none"
         })
 
+
 # -------------------------------------------------
 # ✅ Google OAuth Login (REAL LOGIN)
 # -------------------------------------------------
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
+
 
 def google_login():
     # ✅ Already logged in
@@ -92,7 +99,6 @@ def google_login():
             grant_type="authorization_code",
         )
 
-        # ✅ IMPORTANT FIX
         oauth.token = token
         userinfo = oauth.get(USERINFO_URL).json()
 
@@ -100,16 +106,19 @@ def google_login():
         st.session_state.user_name = userinfo.get("name")
         st.session_state.user_pic = userinfo.get("picture")
 
+        # ✅ Auto create user doc if not exists
+        create_user_if_not_exists(st.session_state.user_email, st.session_state.user_name)
+
         st.rerun()
 
-    # ✅ Show login button
+    # ✅ show login button
     auth_uri, _ = oauth.create_authorization_url(AUTH_URL)
     st.sidebar.link_button("✅ Login with Google", auth_uri)
     return None
 
 
 # -------------------------------------------------
-# ✅ Sidebar Login + Premium Check
+# ✅ Sidebar Login + Premium Check (REAL)
 # -------------------------------------------------
 st.sidebar.title("🔐 Login")
 user_email = google_login()
@@ -124,13 +133,16 @@ if user_email:
         st.sidebar.success("✅ PREMIUM USER")
     else:
         st.sidebar.info("🆓 FREE USER")
+        st.sidebar.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
 else:
     st.sidebar.warning("Please login with Google ✅")
+
 
 # -------------------------------------------------
 # ✅ LOGO HEADER
 # -------------------------------------------------
 LOGO_PATH = "Logo.png"
+
 
 def get_base64_image(path):
     try:
@@ -138,6 +150,7 @@ def get_base64_image(path):
             return base64.b64encode(f.read()).decode()
     except:
         return ""
+
 
 logo_base64 = get_base64_image(LOGO_PATH)
 
@@ -156,6 +169,7 @@ else:
     st.title("📘 TNEA 2026 SmartGuide")
     st.divider()
 
+
 # -------------------------------------------------
 # ✅ DISCLAIMER FUNCTION
 # -------------------------------------------------
@@ -169,16 +183,6 @@ def show_disclaimer():
     </div>
     """, unsafe_allow_html=True)
 
-# -------------------------------------------------
-# ✅ PREMIUM FLAG (from URL)
-# -------------------------------------------------
-premium_flag = "0"
-try:
-    premium_flag = st.query_params.get("premium", "0")  # new streamlit
-except:
-    premium_flag = st.experimental_get_query_params().get("premium", ["0"])[0]  # old streamlit
-
-is_premium = str(premium_flag) == "1"
 
 # -------------------------------------------------
 # ✅ MODE DISPLAY + BUTTON
@@ -194,8 +198,10 @@ with col_mode:
 with col_btn:
     st.markdown("<br>", unsafe_allow_html=True)
     if not is_premium:
-        st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
+        # ✅ Replace this Play Store link later when Android app is live
+        st.link_button("💳 Go Premium", "https://play.google.com/store")
         st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+
 
 # -------------------------------------------------
 # ✅ Style Settings
@@ -209,6 +215,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
+
 # -------------------------------------------------
 # ✅ Paths / session init
 # -------------------------------------------------
@@ -219,15 +226,14 @@ if not os.path.exists(chat_path):
     with open(chat_path, "w") as f:
         json.dump([], f)
 
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False
 if "mobile" not in st.session_state:
     st.session_state.mobile = "Guest"
 if "device_id" not in st.session_state:
     st.session_state.device_id = str(uuid.uuid4())
 
+
 # =================================================
-# ✅ MENU
+# ✅ MENU (LOCKED by Premium)
 # =================================================
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
@@ -249,7 +255,11 @@ with col2:
         ]
         menu_icons = ["house", "calculator", "list-check", "building", "list-check", "table"]
     else:
-        menu_options = ["Home", "Cutoff Calculator", "Branch List"]
+        menu_options = [
+            "Home",
+            "Cutoff Calculator",
+            "Branch List",
+        ]
         menu_icons = ["house", "calculator", "list-check"]
 
     selected = option_menu(
@@ -259,7 +269,6 @@ with col2:
         default_index=0,
         orientation="horizontal"
     )
-
 
 # =================================================
 # ✅ PAGE 1: HOME
@@ -349,6 +358,8 @@ if selected == "Home":
         with open(chat_path, "w") as f:
             json.dump(chat_data, f, indent=2)
         st.rerun()
+    st.markdown("## ✅ Home Page")
+    st.write("Welcome to TNEA SmartGuide 2026")
     show_disclaimer()
 
 # =================================================
@@ -485,6 +496,7 @@ elif selected == "Cutoff Calculator":
                         )
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
+    st.markdown("## ✅ Cutoff Calculator Page")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 3: BRANCH LIST (FREE)
@@ -520,12 +532,15 @@ elif selected == "Branch List":
         file_name="TNEA_Branch_List.csv",
         mime="text/csv"
     )
+    st.markdown("## ✅ Branch List Page")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
 elif selected == "TNEA College List":
-
+    if not is_premium:
+        st.error("🔒 Premium only feature. Please upgrade.")
+        st.stop()
     import requests
     from io import StringIO
 
@@ -656,15 +671,15 @@ elif selected == "TNEA College List":
        # file_name="TNEA_Filtered_College_List.csv",
         #mime="text/csv"
     #)
+    st.markdown("## ✅ College List Page (Premium)")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
 elif selected == "2024-TNEA  Cut off and rank details":
 
-    # ✅ Premium restriction
     if not is_premium:
-        st.warning("🔒 Premium only feature. Click 💳 Go Premium button on top.")
+        st.error("🔒 Premium only feature. Please upgrade.")
         st.stop()
 
     import time
@@ -805,15 +820,15 @@ elif selected == "2024-TNEA  Cut off and rank details":
         )
     else:
         st.info("Please apply filters to see the results.")
+    st.markdown("## ✅ 2024 Cutoff Finder (Premium)")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 6: TNEA VACANCY SEAT MATRIX (PREMIUM ONLY)
 # =================================================
 elif selected == "2025-TNEA Vacancy Seat Matrix":
 
-    # ✅ Premium restriction
     if not is_premium:
-        st.warning("🔒 Premium only feature. Click 💳 Go Premium button (top right).")
+        st.error("🔒 Premium only feature. Please upgrade.")
         st.stop()
 
     st.title("📊 2025-TNEA Vacancy Seat Matrix")
@@ -1067,7 +1082,9 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
+        st.markdown("## ✅ Vacancy Seat Matrix (Premium)")
         show_disclaimer()
+
 
 
 
