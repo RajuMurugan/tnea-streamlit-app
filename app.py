@@ -189,83 +189,98 @@ with col2:
 
 
 # =================================================
-# ✅ PAGE 1: HOME (AESTHETIC + TEXT ONLY)
+# ✅ PAGE 1: HOME
 # =================================================
 if selected == "Home":
 
-    # ✅ Disclaimer first
+    # ✅ Show Disclaimer (ONLY)
     show_disclaimer()
 
-    st.markdown("")
-
-    # ✅ Main Title (Big)
-    st.markdown("## 📘 Welcome to **TNEA 2026 SmartGuide**")
-    st.markdown("### 📌 About **TNEA – Tamil Nadu Engineering Admissions**")
-
-    st.markdown("---")
-
-    # ✅ About TNEA (Highlighted)
+    # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
-### ✅ What is **TNEA**?
-**TNEA (Tamil Nadu Engineering Admissions)** is the official counselling process for admission into  
-**B.E / B.Tech** courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
-    """)
+        <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA SmartGuide 2026 </h1>
 
-    # ✅ Important Content BIG
-    st.warning("""
-✅ **Admissions are based on your Class 12 marks**  
-📌 **Maths + Physics + Chemistry**  
-🎯 Used to calculate your **TNEA Cutoff (out of 200)**
-    """)
+        <h2 style="text-align:center; color:#0d6efd;">📌 About TNEA – Tamil Nadu Engineering Admissions</h2>
 
+        <div style="font-size:17px; line-height:1.8; text-align:justify; padding:10px;">
+
+        <b>TNEA (Tamil Nadu Engineering Admissions)</b> is the official counselling process for admission into 
+        <b>B.E / B.Tech</b> courses in Tamil Nadu Government, Government Aided, and Self-Financing engineering colleges.
+
+        <br><br>
+
+        ✅ Admission is mainly based on <b>Class 12 Marks</b> (Maths, Physics, Chemistry) and the <b>Cutoff Score (out of 200)</b>.  
+        <br><br>
+
+        📌 Through TNEA SmartGuide 2026 , students can:
+        <ul>
+        <li>Check previous year cutoff trends</li>
+        <li>Compare colleges and departments</li>
+        <li>Create a better <b>choice list</b> for counselling</li>
+        <li>Analyze <b>vacancy seat matrix</b> round-wise</li>
+        </ul>
+        <br>
+        🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
+        choice list support, and counselling insights in one place.
+    
+
+        <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
+            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
+            <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
+            📞 Contact: +91-8248696926<br>
+            📧 Email: rajumurugannp@gmail.com<br>
+            👨‍💻 Developed by Dr. Raju Murugan<br><br>
+            &copy; 2026 TNEA Info App. All rights reserved.
+        </div>
+    """, unsafe_allow_html=True)
+
+    # ✅ Premium Offer (ONLY Free)
+    if not is_premium:
+        st.markdown("---")
+        st.markdown("## 🔒 Premium Features")
+        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
+        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
+        st.info("✅ Unlock Premium Features by clicking below 👇")
+
+        st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
+
+
+    # ✅ Previous Year Question Papers (FREE for all)
     st.markdown("---")
-
-    # ✅ Features Section BIG
-    st.markdown("## 🚀 What you can do using **TNEA 2026 SmartGuide**")
-
-    st.markdown("""
-✅ **Cutoff Calculator** – Calculate & download cutoff instantly  
-📊 **Previous Year Trends** – Check cutoff changes year by year  
-🏫 **College Comparison** – Compare colleges and departments  
-📋 **Choice List Support** – Create a better counselling choice list  
-📌 **Vacancy Seat Matrix** – Round-wise vacant seats analysis  
-    """)
-
-    st.success("🎯 This app is designed to help **Tamil Nadu students** for **TNEA 2026 admissions** in one place!")
-
-    st.markdown("---")
-
-    # ✅ Highlight Boxes
-    st.info("✅ **Create TNEA Choice List** – Filter colleges by cutoff, department, and community")
-    st.info("📊 **TNEA Vacancy Seat Matrix** – Analyze vacant seats by branch, college, and community")
-
-    st.markdown("")
-
-    # ✅ Big Action Buttons
-    st.markdown("## 📌 Quick Actions")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.button("📌 Cutoff Calculator", use_container_width=True)
-
-    with col2:
-        st.button("📋 Choice List", use_container_width=True)
-
-    st.markdown("---")
-
-    # ✅ Footer (Clean + Professional)
-    st.markdown("### 📞 Contact & Support")
+    st.markdown("### 📚 Very useful web Links")
 
     st.markdown("""
-📞 **Contact:** +91-8248696926  
-📧 **Email:** rajumurugannp@gmail.com  
-👨‍💻 **Developed by:** Dr. Raju Murugan  
+    <div style='background-color: #f9f9f9; padding: 15px; border-left: 8px solid #4CAF50; border-radius: 10px; font-size: 16px;'>
+    📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/anna-university-previous-year-questions.html' target='_blank'
+        style='text-decoration: none; color: #007bff; font-weight: bold;'>Anna University Previous Year Question Papers</a><br>
+    📗 <a href='https://globaleduhub4u.blogspot.com/p/gate-previous-year-qps.html' target='_blank'
+        style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
+    📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank'
+        style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
+    📗 <a href='https://static.tneaonline.org/docs/7_List_of_TFCs.pdf?t=1768660504718' target='_blank'
+        style='text-decoration: none; color: #007bff; font-weight: bold;'>LIST OF TNEA FACILITATION CENTERS</a><br>
+    📘 <a href='https://static.tneaonline.org/docs/TNEA_Tent_Schedule_2025.pdf' target='_blank'
+        style='text-decoration: none; color: #007bff; font-weight: bold;'>TNEA 2025 Schedule </a><br>
+    </div>
+    """, unsafe_allow_html=True)
 
-✅ © 2026 **TNEA 2026 SmartGuide** — All rights reserved.
-    """)
+    # ✅ Chat Feature
+    st.markdown("---")
+    st.subheader("💬 Community Chat Room")
 
+    with open(chat_path, "r") as f:
+        chat_data = json.load(f)
 
+    for entry in chat_data[-100:]:
+        st.markdown(f"**{entry.get('user','Guest')}**: {entry.get('message','')}")
+
+    new_message = st.text_input("Type your message...", key="chat_message_input")
+
+    if st.button("Send", key="chat_send_btn") and new_message.strip():
+        chat_data.append({"user": st.session_state.mobile, "message": new_message.strip()})
+        with open(chat_path, "w") as f:
+            json.dump(chat_data, f, indent=2)
+        st.rerun()
     show_disclaimer()
 
 # =================================================
@@ -985,6 +1000,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
