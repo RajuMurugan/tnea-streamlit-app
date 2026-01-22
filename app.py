@@ -503,7 +503,8 @@ elif selected == "TNEA College List":
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMI
 # =================================================
-elif selected == "2024-TNEA  Cut off and rank details":
+elif selected == "2024-TNEA Cut off and rank details":
+
 
     import io
     import requests
@@ -944,6 +945,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
