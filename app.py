@@ -501,52 +501,112 @@ elif selected == "TNEA College List":
     #)
     show_disclaimer()
 # =================================================
-# ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
+# ✅ PAGE 5: CHOICE LIST (PREMI
 # =================================================
 elif selected == "2024-TNEA  Cut off and rank details":
 
-    import time
+    import io
+    import requests
+    import pandas as pd
+    import streamlit as st
 
-    # ✅ Performance-optimized loader with caching (10 minutes)
-    @st.cache_data(ttl=600)
-    def load_excel_file_from_url(url):
-        response = requests.get(url)
-        df_loaded = pd.read_excel(io.BytesIO(response.content))
-        return df_loaded
+    st.title("📊 TNEA Cutoff & Rank Finder")
 
     excel_url = "https://docs.google.com/spreadsheets/d/1rASGgYC9RZA0vgmtuFYRG0QO3DOGH_jW/export?format=xlsx"
 
-    with st.spinner("📥 Loading TNEA cutoff data..."):
-        df = load_excel_file_from_url(excel_url)
+    # ✅ Caching (10 minutes)
+    @st.cache_data(ttl=600)
+    def load_excel_file_from_url(url):
+        r = requests.get(url, timeout=30)
 
+        # ✅ IMPORTANT: Check Google is returning Excel file
+        if r.status_code != 200:
+            raise Exception(f"❌ Download failed. Status Code: {r.status_code}")
+
+        # Sometimes Google returns HTML page (permission/login)
+        content_type = r.headers.get("Content-Type", "")
+        if "spreadsheet" not in content_type and "excel" not in content_type and "application/vnd" not in content_type:
+            raise Exception(
+                "❌ Google Sheet blocked or returned non-Excel file.\n\n"
+                f"Content-Type: {content_type}\n\n"
+                "✅ Fix: Set sheet to 'Anyone with link can view' in Google Sheet sharing."
+            )
+
+        df_loaded = pd.read_excel(io.BytesIO(r.content))
+
+        # ✅ Clean column names
+        df_loaded.columns = [str(c).strip() for c in df_loaded.columns]
+
+        return df_loaded
+
+    # ✅ Load Data
+    try:
+        with st.spinner("📥 Loading TNEA cutoff data..."):
+            df = load_excel_file_from_url(excel_url)
+        st.success(f"✅ Loaded rows: {len(df)}")
+
+    except Exception as e:
+        st.error(f"❌ Excel Load Error: {e}")
+        st.stop()
+
+    # ✅ Check required columns
+    required_cols = ["CL", "College", "Br"]
+    for rc in required_cols:
+        if rc not in df.columns:
+            st.error(f"❌ Missing column in file: {rc}")
+            st.write("✅ Columns found:", df.columns.tolist())
+            st.stop()
+
+    # ✅ Fix Zone column issue
+    if "zone" not in df.columns:
+        # Try to auto-detect Zone column
+        for c in df.columns:
+            if c.lower().strip() == "zone":
+                df.rename(columns={c: "zone"}, inplace=True)
+                break
+
+    if "zone" not in df.columns:
+        st.warning("⚠️ Zone column not found. Zone filter will be disabled.")
+
+    # ✅ Convert cutoff columns
     for col in df.columns:
-        if col.endswith("_C") or col.endswith("_GR"):
+        if str(col).endswith("_C") or str(col).endswith("_GR"):
             df[col] = pd.to_numeric(df[col], errors="coerce")
 
-    st.image("https://drive.google.com/thumbnail?id=1FPfkRH3BC1BeQRtQVpZDH3P3ilTSMYNA", width=100)
-    st.title("📊 TNEA 2025 Cutoff & Rank Finder")
-    st.markdown(f"🆔 **Accessed by: {st.session_state.mobile}**")
+    # ✅ College dropdown
+    df["College_Option"] = df["CL"].astype(str).str.strip() + " - " + df["College"].astype(str).str.strip()
+    college_options = sorted(df["College_Option"].dropna().unique().tolist())
 
-    df['College_Option'] = df['CL'].astype(str) + " - " + df['College']
-    college_options = sorted(df['College_Option'].unique().tolist())
     selected_college = st.selectbox("🏛️ Select College", options=["All"] + college_options)
 
+    # ✅ Filters
     st.subheader("🎯 Filter by Community, Department, Zone")
+
+    community = "All"
+    department = "All"
+    zone = "All"
+
     if selected_college == "All":
         community = st.selectbox(
             "Select Community",
             options=["All", "OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"],
             key="main_community"
         )
+
         department = st.selectbox(
             "Select Department (Br)",
-            options=["All"] + sorted(df['Br'].dropna().unique().tolist())
-        )
-        zone = st.selectbox(
-            "Select Zone",
-            options=["All"] + sorted(df['zone'].dropna().unique().tolist())
+            options=["All"] + sorted(df["Br"].dropna().unique().tolist())
         )
 
+        if "zone" in df.columns:
+            zone = st.selectbox(
+                "Select Zone",
+                options=["All"] + sorted(df["zone"].dropna().unique().tolist())
+            )
+        else:
+            st.info("✅ Zone filter disabled (zone column missing)")
+
+    # ✅ Compare colleges
     st.subheader("📌 Compare Up to 5 Colleges")
     compare_colleges = st.multiselect(
         "Select colleges to compare",
@@ -556,11 +616,13 @@ elif selected == "2024-TNEA  Cut off and rank details":
 
     if compare_colleges:
         st.markdown("### 🎯 Filter Inside Compared Colleges")
+
         comp_dept = st.selectbox(
             "Department",
-            options=["All"] + sorted(df['Br'].dropna().unique().tolist()),
+            options=["All"] + sorted(df["Br"].dropna().unique().tolist()),
             key="compare_department"
         )
+
         comp_comm = st.selectbox(
             "Community",
             options=["All", "OC", "BC", "BCM", "MBC", "SC", "SCA", "ST"],
@@ -568,82 +630,63 @@ elif selected == "2024-TNEA  Cut off and rank details":
         )
 
         compare_cls = [c.split(" - ")[0].strip() for c in compare_colleges]
-        compare_df = df[df['CL'].astype(str).isin(compare_cls)]
+        compare_df = df[df["CL"].astype(str).isin(compare_cls)].copy()
 
         if comp_dept != "All":
-            compare_df = compare_df[compare_df['Br'] == comp_dept]
+            compare_df = compare_df[compare_df["Br"] == comp_dept]
 
-        color_palette = ['#f7c6c7', '#c6e2ff', '#d5f5e3', '#fff5ba', '#e0ccff']
-        college_color_map = {cl: color_palette[i] for i, cl in enumerate(compare_cls)}
+        compare_cols = ["CL", "College", "Br"]
+        if "zone" in df.columns:
+            compare_cols.append("zone")
 
-        def highlight_college(row):
-            cl = str(row['CL'])
-            bg_color = college_color_map.get(cl, '#ffffff')
-            return [f'background-color: {bg_color}; color: black;' for _ in row]
-
-        compare_cols = ['CL', 'College', 'Br', 'zone']
         if comp_comm != "All":
             compare_cols += [f"{comp_comm}_C", f"{comp_comm}_GR"]
         else:
-            compare_cols += [col for col in df.columns if col.endswith("_C") or col.endswith("_GR")]
+            compare_cols += [col for col in df.columns if str(col).endswith("_C") or str(col).endswith("_GR")]
 
-        format_dict = {
-            col: '{:.2f}' if '_C' in col else '{:.0f}'
-            for col in compare_cols
-            if '_C' in col or '_GR' in col
-        }
+        # ✅ Avoid missing columns crash
+        compare_cols = [c for c in compare_cols if c in df.columns]
 
-        st.markdown("### 🟨 College Comparison Table")
-        st.dataframe(
-            compare_df[compare_cols]
-            .style
-            .apply(highlight_college, axis=1)
-            .format(format_dict)
-            .hide(axis='index'),
-            height=450
-        )
+        st.dataframe(compare_df[compare_cols], use_container_width=True, height=450)
 
-    # --- MAIN FILTERED DATA ---
-    show_data = False
+    # ✅ MAIN FILTERED RESULTS
     filtered_df = df.copy()
+    show_data = True
 
     if selected_college != "All":
-        show_data = True
         selected_cl = selected_college.split(" - ")[0].strip()
-        filtered_df = filtered_df[filtered_df['CL'].astype(str) == selected_cl]
+        filtered_df = filtered_df[filtered_df["CL"].astype(str).str.strip() == selected_cl]
     else:
-        if 'zone' in locals() and zone != "All":
-            filtered_df = filtered_df[filtered_df['zone'] == zone]
-            show_data = True
-        if 'department' in locals() and department != "All":
-            filtered_df = filtered_df[filtered_df['Br'] == department]
-            show_data = True
+        if community != "All":
+            # Community filter just changes shown columns, not rows
+            pass
 
-    if selected_college == "All" and 'community' in locals() and community != "All":
-        cols_to_show = ['CL', 'College', 'Br', f'{community}_C', f'{community}_GR', 'zone']
+        if department != "All":
+            filtered_df = filtered_df[filtered_df["Br"] == department]
+
+        if "zone" in df.columns and zone != "All":
+            filtered_df = filtered_df[filtered_df["zone"] == zone]
+
+    # ✅ Columns to show
+    cols_to_show = ["CL", "College", "Br"]
+    if "zone" in df.columns:
+        cols_to_show.append("zone")
+
+    if selected_college == "All" and community != "All":
+        cols_to_show += [f"{community}_C", f"{community}_GR"]
     else:
-        cols_to_show = ['CL', 'College', 'Br', 'zone'] + [
-            col for col in df.columns if col.endswith("_C") or col.endswith("_GR")
-        ]
+        cols_to_show += [col for col in df.columns if str(col).endswith("_C") or str(col).endswith("_GR")]
 
-    format_dict = {
-        col: '{:.2f}' if '_C' in col else '{:.0f}'
-        for col in cols_to_show
-        if '_C' in col or '_GR' in col
-    }
+    cols_to_show = [c for c in cols_to_show if c in df.columns]
 
     st.markdown("### 🔎 Filtered Results")
     if show_data:
-        st.dataframe(
-            filtered_df[cols_to_show]
-            .style
-            .format(format_dict)
-            .hide(axis='index'),
-            height=600
-        )
+        st.dataframe(filtered_df[cols_to_show], use_container_width=True, height=600)
     else:
         st.info("Please apply filters to see the results.")
+
     show_disclaimer()
+
 # =================================================
 # ✅ PAGE 6: TNEA VACANCY SEAT MATRIX (PREMIUM ONLY)
 # =================================================
@@ -901,6 +944,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
         show_disclaimer()
+
 
 
 
