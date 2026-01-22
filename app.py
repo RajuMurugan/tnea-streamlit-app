@@ -224,8 +224,11 @@ with col2:
             "Home",
             "Cutoff Calculator",
             "Branch List",
+            "TNEA College List",
+            "2024-TNEA  Cut off and rank details",
+            "2025-TNEA Vacancy Seat Matrix"
         ]
-        menu_icons = ["house", "calculator", "list-check"]
+        menu_icons = ["house", "calculator", "list-check", "building", "list-check", "table"]
 
     selected = option_menu(
         menu_title=None,
@@ -1050,6 +1053,7 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
         st.warning("⚠️ No data found for the selected college or branch.")
         st.markdown("## ✅ Vacancy Seat Matrix (Premium)")
         show_disclaimer()
+
 
 
 
