@@ -12,98 +12,17 @@ from zoneinfo import ZoneInfo
 import plotly.express as px
 from openpyxl import load_workbook
 
-import firebase_admin
-from firebase_admin import credentials, firestore
-
+# -------------------------------------------------
+# ✅ Page Config
+# -------------------------------------------------
+st.set_page_config(page_title="TNEA Full App (FREE)", layout="wide")
 
 # -------------------------------------------------
-# ✅ Page Config (MUST BE FIRST Streamlit command)
+# ✅ Sidebar (FREE ONLY)
 # -------------------------------------------------
-st.set_page_config(page_title="TNEA Full App", layout="wide")
-
-
-# -------------------------------------------------
-# ✅ Firebase init (ONLY ONE TIME)
-# -------------------------------------------------
-if not firebase_admin._apps:
-    cred = credentials.Certificate(dict(st.secrets["FIREBASE"]))
-    firebase_admin.initialize_app(cred)
-
-db = firestore.client()
-
-
-# -------------------------------------------------
-# ✅ Get user email from Android WebView URL
-# Example:
-# https://tnea-choice-list.streamlit.app/?email=test@gmail.com
-# -------------------------------------------------
-user_email = st.query_params.get("email", "").strip().lower()
-
-
-# -------------------------------------------------
-# ✅ Firestore helper functions
-# -------------------------------------------------
-def get_user(email: str):
-    if not email:
-        return None
-    doc = db.collection("users").document(email).get()
-    if doc.exists:
-        return doc.to_dict()
-    return None
-
-
-def create_user_if_not_exists(email: str, name: str = ""):
-    if not email:
-        return
-
-    ref = db.collection("users").document(email)
-    doc = ref.get()
-
-    if not doc.exists:
-        ref.set({
-            "email": email,
-            "name": name,
-            "is_premium": False,
-            "premium_type": "none",
-            "created_on": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        })
-
-
-def is_premium_user(email: str) -> bool:
-    data = get_user(email)
-    if not data:
-        return False
-    return bool(data.get("is_premium", False))
-
-
-# ✅ If user logged in (email received), auto-create Firestore record
-if user_email:
-    create_user_if_not_exists(user_email)
-
-
-# ✅ Premium check
-is_premium = is_premium_user(user_email) if user_email else False
-
-
-# -------------------------------------------------
-# ✅ Sidebar Login Display (Android controlled)
-# -------------------------------------------------
-st.sidebar.title("👤 Account")
-
-if user_email:
-    st.sidebar.success(f"✅ Logged in: {user_email}")
-
-    if is_premium:
-        st.sidebar.success("✅ PREMIUM USER")
-    else:
-        st.sidebar.info("🆓 FREE USER")
-        st.sidebar.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
-        st.sidebar.caption("✅ Upgrade option will be inside Android App payment screen.")
-else:
-    st.sidebar.warning("⚠️ Not logged in")
-    st.sidebar.info("✅ Please login inside Android App")
-    st.sidebar.caption("Then app will open WebView with your email automatically.")
-
+st.sidebar.title("📘 TNEA SmartGuide 2026")
+st.sidebar.success("✅ FREE VERSION")
+st.sidebar.caption("No Login • No Premium • Android Studio App Reference")
 
 # -------------------------------------------------
 # ✅ LOGO HEADER
@@ -134,7 +53,6 @@ else:
     st.title("📘 TNEA 2026 SmartGuide")
     st.divider()
 
-
 # -------------------------------------------------
 # ✅ DISCLAIMER FUNCTION
 # -------------------------------------------------
@@ -148,26 +66,6 @@ def show_disclaimer():
     </div>
     """, unsafe_allow_html=True)
 
-
-# -------------------------------------------------
-# ✅ MODE DISPLAY + BUTTON
-# -------------------------------------------------
-col_mode, col_btn = st.columns([3, 1])
-
-with col_mode:
-    if is_premium:
-        st.success("✅ PREMIUM MODE ENABLED")
-    else:
-        st.info("🆓 NORMAL MODE (Free User)")
-
-with col_btn:
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # ✅ In WebView, Premium purchase will be handled in Android App, not here.
-    if not is_premium:
-        st.caption("💳 Premium purchase will be inside Android App")
-
-
 # -------------------------------------------------
 # ✅ Style Settings
 # -------------------------------------------------
@@ -179,7 +77,6 @@ st.markdown("""
     .stDataFrame div { color: black !important; }
     </style>
 """, unsafe_allow_html=True)
-
 
 # -------------------------------------------------
 # ✅ Paths / session init
@@ -196,9 +93,8 @@ if "mobile" not in st.session_state:
 if "device_id" not in st.session_state:
     st.session_state.device_id = str(uuid.uuid4())
 
-
 # =================================================
-# ✅ MENU (LOCKED by Premium)
+# ✅ MENU (FREE FOR ALL)
 # =================================================
 st.markdown("""
     <h2 style='text-align: center; color: #0d6efd; font-weight: bold;'>
@@ -209,26 +105,15 @@ st.markdown("""
 col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
-    if is_premium:
-        menu_options = [
-            "Home",
-            "Cutoff Calculator",
-            "Branch List",
-            "TNEA College List",
-            "2024-TNEA  Cut off and rank details",
-            "2025-TNEA Vacancy Seat Matrix"
-        ]
-        menu_icons = ["house", "calculator", "list-check", "building", "list-check", "table"]
-    else:
-        menu_options = [
-            "Home",
-            "Cutoff Calculator",
-            "Branch List",
-            "TNEA College List",
-            "2024-TNEA  Cut off and rank details",
-            "2025-TNEA Vacancy Seat Matrix"
-        ]
-        menu_icons = ["house", "calculator", "list-check", "building", "list-check", "table"]
+    menu_options = [
+        "Home",
+        "Cutoff Calculator",
+        "Branch List",
+        "TNEA College List",
+        "2024-TNEA Cut off and rank details",
+        "2025-TNEA Vacancy Seat Matrix"
+    ]
+    menu_icons = ["house", "calculator", "list-check", "building", "list-check", "table"]
 
     selected = option_menu(
         menu_title=None,
@@ -238,14 +123,11 @@ with col2:
         orientation="horizontal"
     )
 
-
 # =================================================
 # ✅ PAGE 1: HOME
 # =================================================
 if selected == "Home":
 
-
-    # ✅ Welcome Text (ONLY ONE TIME)
     st.markdown("""
         <h1 style='text-align: center; font-weight: bold;'>📘 Welcome to TNEA SmartGuide 2026 </h1>
 
@@ -263,16 +145,12 @@ if selected == "Home":
         <li>Calculate your cutoff score and download it instantly</li>
         <li>Check previous year cutoff trends</li>
         <li>Compare colleges and departments</li>
-        <li>Create a better <b>choice list</b> for counselling</li>
         <li>Analyze <b>vacancy seat matrix</b> round-wise</li>
         </ul>
         <br>
-        🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing cutoff tools,
-        choice list support, and counselling insights in one place.
+        🎯 <b>This app is made to help Tamil Nadu students for TNEA 2026 admissions</b> by providing tools and insights.
     
         <div style='text-align: center; font-size: 18px; margin-top: 20px;'>
-            <b>✅ Create TNEA Choice List</b> – Filter colleges by cutoff, department, and community<br><br>
-            <b>📊 TNEA Vacancy Seat Matrix</b> – Analyze vacant seats by branch, college, and community<br><br>
             📞 Contact: +91-8248696926<br>
             📧 Email: rajumurugannp@gmail.com<br>
             👨‍💻 Developed by Dr. Raju Murugan<br><br>
@@ -280,18 +158,7 @@ if selected == "Home":
         </div>
     """, unsafe_allow_html=True)
 
-    # ✅ Premium Offer (ONLY Free)
-    if not is_premium:
-        st.markdown("---")
-        st.markdown("## 🔒 Premium Features")
-        st.warning("Premium unlocks: ✅ Choice List + ✅ Vacancy Seat Matrix")
-        st.markdown("💳 Lifetime Premium: **₹299 (One Time Payment)**")
-        st.info("✅ Unlock Premium Features by clicking below 👇")
-
-        st.link_button("💳 Go Premium", "https://tnea-choice-list.streamlit.app/?premium=1")
-
-
-    # ✅ Previous Year Question Papers (FREE for all)
+    # ✅ Useful Links
     st.markdown("---")
     st.markdown("### 📚 Very useful web Links")
 
@@ -303,10 +170,6 @@ if selected == "Home":
         style='text-decoration: none; color: #007bff; font-weight: bold;'>GATE Previous Year Question Papers</a><br>
     📘 <a href='https://globaleduhub4u.blogspot.com/2025/03/numberiq.html' target='_blank'
         style='text-decoration: none; color: #007bff; font-weight: bold;'>Check Your Maths IQ</a><br>
-    📗 <a href='https://static.tneaonline.org/docs/7_List_of_TFCs.pdf?t=1768660504718' target='_blank'
-        style='text-decoration: none; color: #007bff; font-weight: bold;'>LIST OF TNEA FACILITATION CENTERS</a><br>
-    📘 <a href='https://static.tneaonline.org/docs/TNEA_Tent_Schedule_2025.pdf' target='_blank'
-        style='text-decoration: none; color: #007bff; font-weight: bold;'>TNEA 2025 Schedule </a><br>
     </div>
     """, unsafe_allow_html=True)
 
@@ -327,9 +190,9 @@ if selected == "Home":
         with open(chat_path, "w") as f:
             json.dump(chat_data, f, indent=2)
         st.rerun()
-    st.markdown("## ✅ Home Page")
-    st.write("Welcome to TNEA SmartGuide 2026")
+
     show_disclaimer()
+
 
 # =================================================
 # ✅ PAGE 2: CUTOFF CALCULATOR (FREE + PREMIUM)
@@ -465,7 +328,6 @@ elif selected == "Cutoff Calculator":
                         )
         except:
             st.error("❌ Please enter valid numbers in Maths / Physics / Chemistry.")
-    st.markdown("## ✅ Cutoff Calculator Page")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 3: BRANCH LIST (FREE)
@@ -507,9 +369,6 @@ elif selected == "Branch List":
 # ✅ PAGE 4: COLLEGE LIST (FREE)
 # =================================================
 elif selected == "TNEA College List":
-    if not is_premium:
-        st.error("🔒 Premium only feature. Please upgrade.")
-        st.stop()
     import requests
     from io import StringIO
 
@@ -640,16 +499,11 @@ elif selected == "TNEA College List":
        # file_name="TNEA_Filtered_College_List.csv",
         #mime="text/csv"
     #)
-    st.markdown("## ✅ College List Page (Premium)")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 5: CHOICE LIST (PREMIUM ONLY)
 # =================================================
 elif selected == "2024-TNEA  Cut off and rank details":
-
-    if not is_premium:
-        st.error("🔒 Premium only feature. Please upgrade.")
-        st.stop()
 
     import time
 
@@ -789,16 +643,11 @@ elif selected == "2024-TNEA  Cut off and rank details":
         )
     else:
         st.info("Please apply filters to see the results.")
-    st.markdown("## ✅ 2024 Cutoff Finder (Premium)")
     show_disclaimer()
 # =================================================
 # ✅ PAGE 6: TNEA VACANCY SEAT MATRIX (PREMIUM ONLY)
 # =================================================
 elif selected == "2025-TNEA Vacancy Seat Matrix":
-
-    if not is_premium:
-        st.error("🔒 Premium only feature. Please upgrade.")
-        st.stop()
 
     st.title("📊 2025-TNEA Vacancy Seat Matrix")
     st.success("✅ Premium Feature Enabled ✅")
@@ -1051,8 +900,8 @@ elif selected == "2025-TNEA Vacancy Seat Matrix":
 
     if college_df.empty:
         st.warning("⚠️ No data found for the selected college or branch.")
-        st.markdown("## ✅ Vacancy Seat Matrix (Premium)")
         show_disclaimer()
+
 
 
 
